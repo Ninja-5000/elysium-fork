@@ -216,7 +216,7 @@ client.on('interactionCreate', async interaction => {
             });
             messages.push({
                 role: 'system',
-                content: 'Do not respond something like "User: AI Land\nReplied Message:\n...\nMessage\n...". Just respond to the message above. Do not add any information. Like user, replied message, etc. Only write the message.'
+                content: 'You will NOT respond something like "User: AI Land\nReplied Message:\n...\nMessage\n...". You will only respond with to the message above. No any informations.'
             })
     
             // log last 5 messages
