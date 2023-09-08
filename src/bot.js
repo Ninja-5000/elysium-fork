@@ -169,7 +169,7 @@ client.on('interactionCreate', async interaction => {
 
                 async function done() {
                     if (counter >= 1) {
-                        if (responseMessage) await responseMessage.edit(text);
+                        if (responseMessage) responseMessage.edit(text);
                     }
 
                     user.usage++;
@@ -216,8 +216,8 @@ client.on('interactionCreate', async interaction => {
                 if (foundDone) return await done();
 
                 if (started) {
-                    if (counter >= 10) {
-                        if (responseMessage) await responseMessage.edit(text);
+                    if (counter >= 50) {
+                        if (responseMessage) responseMessage.edit(text);
 
                         counter = 0;
                     }
