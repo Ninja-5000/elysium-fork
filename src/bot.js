@@ -242,6 +242,8 @@ async function runAtMidnight() {
     for (let user in users) {
         await db.set(`users.${user}.usage`, 0);
     };
+
+    console.log('Reset usage');
 };
 
 function startInterval() {
