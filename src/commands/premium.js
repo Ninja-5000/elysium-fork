@@ -2,6 +2,8 @@ const { SlashCommandBuilder, ChatInputCommandInteraction } = require("discord.js
 const timer = require("../modules/timer");
 const { ownerId } = require("../../config");
 
+const db = new QuickDB();
+
 module.exports = {
     category: 'Owner',
     data: new SlashCommandBuilder()
@@ -25,7 +27,7 @@ module.exports = {
 
         let user = interaction.options.getUser('user');
         let github = interaction.options.getString('github');
-        let userData = await interaction.client.db.get(`users.${user.id}`) ?? {
+        let userData = await db.get(`users.${user.id}`) ?? {
             usage: 0,
             premium: false
         };
