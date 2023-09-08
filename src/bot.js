@@ -142,7 +142,7 @@ client.on('interactionCreate', async interaction => {
     .on('messageCreate', async message => {
         try {
             if (message.author.bot) return;
-            if (message.guild) {
+            if (message.guild && !message.mentions.users.has(client.user.id)) {
                 let guild = await db.get(`guilds.${message.guild.id}`) ?? {};
     
                 if (!message.mentions.users.has(client.user.id)) {
