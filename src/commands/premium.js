@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction } = require("discord.js");
 const timer = require("../modules/timer");
 const { ownerId } = require("../../config");
+const { QuickDB } = require("quick.db");
 
 const db = new QuickDB();
 
