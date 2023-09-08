@@ -179,7 +179,7 @@ client.on('interactionCreate', async interaction => {
         messages = messages.map(msg => ({
             role: msg.author.id === client.user.id ? 'assistant' : 'user',
             content: msg.cleanContent,
-            name: msg.author.username
+            name: msg.member?.displayName ?? msg.author.displayName
         }));
 
         messages.unshift({
@@ -189,8 +189,8 @@ client.on('interactionCreate', async interaction => {
 
         if (messages[messages.length - 1].content !== message.content) messages.push({
             role: 'user',
-            content: message.content,
-            name: message.author.username
+            content: message.cleanContent,
+            name: message.member?.displayName ?? message.author.displayName
         });
 
         // log last 5 messages
