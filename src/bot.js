@@ -160,7 +160,7 @@ client.on('interactionCreate', async interaction => {
             };
             let locale = message.locale;
     
-            if (user.usage >= 25 && !user.premium) return message.reply(localize('en-US', 'LIMIT_REACHED', 30));
+            if (user.usage >= 25 && !user.premium) return;
     
             await message.channel.sendTyping();
     
