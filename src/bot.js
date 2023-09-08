@@ -152,7 +152,7 @@ client.on('interactionCreate', async interaction => {
 
         await message.channel.sendTyping();
 
-        let messages = (await message.channel.messages.fetch()).toJSON().filter(msg => sg.content?.length > 0);
+        let messages = (await message.channel.messages.fetch()).toJSON().filter(msg => msg.content?.length > 0);
         let responseMessage;
 
         async function respondStream() {
