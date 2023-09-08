@@ -135,7 +135,7 @@ client.on('interactionCreate', async interaction => {
 })
     .on('messageCreate', async message => {
         if (message.author.bot) return;
-        if (!message.content.includes(`<@${client.user.id}>`)) return;
+        if (!message.mentions.users.has(client.user.id)) return;
 
         let user = await db.get(`users.${message.author.id}`) ?? {
             usage: 0,
@@ -144,6 +144,8 @@ client.on('interactionCreate', async interaction => {
         let locale = message.locale;
 
         if (user.usage >= 30 && !user.premium) return message.reply(localize(locale, 'LIMIT_REACHED', 30));
+
+        await message.channel.sendTyping();
 
         let messages = (await message.channel.messages.fetch()).toJSON().filter(msg => sg.content?.length > 0);
         let responseMessage;
@@ -236,7 +238,7 @@ client.on('interactionCreate', async interaction => {
 
         messages = messages.map(msg => ({
             role: msg.author.id === client.user.id ? 'assistant' : 'user',
-            content: msg.content,
+            content: msg.cleanContent,
             name: msg.author.username
         }));
 
