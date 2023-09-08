@@ -1,4 +1,4 @@
-const { Client, Collection } = require('discord.js');
+const { Client, Collection, ChannelType } = require('discord.js');
 const { readdirSync } = require('node:fs');
 const { default: axios } = require('axios');
 const logger = require('./modules/logger');
@@ -153,6 +153,7 @@ client.on('interactionCreate', async interaction => {
                     if (possibility < (100 - (guild?.randomChat?.possibility ?? 10))) return;
                 } else if (!guild?.aiChannel?.status || message.channel.id !== guild?.aiChannel?.channel) return;
             };
+            if (message.channel.type === ChannelType.GuildAnnouncement) return;
 
             let user = await db.get(`users.${message.author.id}`) ?? {
                 usage: 0,
