@@ -52,8 +52,6 @@ async function deleteMessage(channelId, messageId) {
 module.exports = async (type, settings) => {
     let now = Date.now();
 
-    if (!(await db.has('timers'))) await db.set('timers', []);
-
     await db.push('timers', {
         time: now + settings.time,
         callback: settings.callback ? settings.callback.toString() : undefined,
