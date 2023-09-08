@@ -7,6 +7,9 @@ module.exports = {
     category: 'Moderator',
     data: new SlashCommandBuilder()
         .setName('setting')
+        .setNameLocalizations({
+            tr: 'ayar'
+        })
         .setDescription("Manage the bot's settings")
         .setDescriptionLocalizations({
             tr: 'Bot ayarlarını yönetin'
@@ -26,6 +29,10 @@ module.exports = {
                 .setName('toggle')
                 .setNameLocalizations({
                     tr: 'aç-kapat'
+                })
+                .setDescription('Toggle the random chat')
+                .setDescriptionLocalizations({
+                    tr: 'Rastgele sohbeti açıp kapatın'
                 })
                 .addBooleanOption(option => option
                     .setName('status')
@@ -53,6 +60,10 @@ module.exports = {
                 .setName('toggle')
                 .setNameLocalizations({
                     tr: 'aç-kapat'
+                })
+                .setDescription('Toggle the AI channel')
+                .setDescriptionLocalizations({
+                    tr: 'Yapay zeka kanalını açıp kapatın'
                 })
                 .addBooleanOption(option => option
                     .setName('status')
