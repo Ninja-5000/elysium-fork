@@ -84,6 +84,10 @@ module.exports = {
             let provider;
 
             response.data.on('data', async chunk => {
+                console.log('Chunk:', chunk.toString());
+
+                counter++;
+
                 let data = chunk.toString();
 
                 async function done() {
@@ -133,8 +137,6 @@ module.exports = {
                 if (foundDone) return await done();
 
                 if (started) {
-                    counter++;
-
                     if (counter >= 10) {
                         await interaction.editReply(text);
 
