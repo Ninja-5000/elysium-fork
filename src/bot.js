@@ -161,7 +161,11 @@ client.on('interactionCreate', async interaction => {
                     parse: [],
                     repliedUser: true
                 }
-            })
+            });
+
+            user.usage++;
+
+            db.set(`users.${message.author.id}`, user);
         };
 
         let data = {
@@ -182,6 +186,9 @@ client.on('interactionCreate', async interaction => {
             role: 'system',
             content: 'You are AI Land.'
         });
+
+        // log last 5 messages
+        console.log(messages.slice(-5));
 
         response = await axios.post('https://beta.purgpt.xyz/openai/chat/completions', {
             model: 'gpt-4',
