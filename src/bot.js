@@ -169,8 +169,11 @@ client.on('interactionCreate', async interaction => {
             messages.pop();
     
             function respond() {
+                // if they are, replace "User: <anything>\nReplied Message:\n<anything>\nMessage:" and "User: <anything>\nMessage:" with ""
+                let respondMessage = response.data.choices[0].message.content.replace(/User: .*\nReplied Message:\n.*\nMessage:/g, '').replace(/User: .*\nMessage:/g, '');
+
                 message.reply({
-                    content: response.data.choices[0].message.content,
+                    content: respondMessage,
                     allowedMentions: {
                         parse: [],
                         repliedUser: true
