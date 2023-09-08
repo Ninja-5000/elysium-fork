@@ -83,7 +83,7 @@ module.exports = {
             let model;
             let provider;
 
-            for await (const chunk of response.data) {
+            response.data.on('data', async chunk => {
                 let data = chunk.toString();
 
                 async function done() {
@@ -164,7 +164,7 @@ module.exports = {
                         ] : []
                     });
                 };
-            }
+            });
         };
 
         let data = {
@@ -199,7 +199,7 @@ module.exports = {
         }, {
             ...data,
             responseType: 'stream'
-        }).catch(error => null);
+        }).catch(() => null);
 
         console.log('Response from vicuna-7b-v1.5-16k:', response?.data);
 
