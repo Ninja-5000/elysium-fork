@@ -8,7 +8,12 @@ const { QuickDB } = require('quick.db');
 
 const client = new Client({
     intents: [
-        'Guilds'
+        'Guilds',
+        'GuildMessages',
+        'MessageContent',
+        'DirectMessages',
+        'GuildMessageTyping',
+        'DirectMessageTyping'
     ]
 });
 const db = new QuickDB();
