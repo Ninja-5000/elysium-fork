@@ -187,6 +187,12 @@ client.on('interactionCreate', async interaction => {
             content: 'You are AI Land.'
         });
 
+        if (messages[messages.length - 1].content !== message.content) messages.push({
+            role: 'user',
+            content: message.content,
+            name: message.author.username
+        });
+
         // log last 5 messages
         console.log(messages.slice(-5));
 
