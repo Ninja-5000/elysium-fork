@@ -178,6 +178,11 @@ client.on('interactionCreate', async interaction => {
             name: msg.author.username
         }));
 
+        messages.unshift({
+            role: 'system',
+            content: 'You are AI Land.'
+        });
+
         response = await axios.post('https://beta.purgpt.xyz/openai/chat/completions', {
             model: 'gpt-4',
             messages,
