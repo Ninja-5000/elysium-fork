@@ -184,7 +184,7 @@ client.on('interactionCreate', async interaction => {
             fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
             max_tokens: 4000,
             maxTokens: 4000
-        }).catch(() => null);
+        }, data).catch(() => null);
 
         if (response?.status === 200) return respond();
 
@@ -202,7 +202,7 @@ client.on('interactionCreate', async interaction => {
             stream: true,
             max_tokens: 4000,
             maxTokens: 4000
-        }).catch(() => null);
+        }, data).catch(() => null);
 
         if (response?.status === 200) return respond();
         else return message.reply(localize(locale, 'MODELS_DOWN'));
