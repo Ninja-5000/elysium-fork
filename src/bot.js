@@ -231,4 +231,30 @@ client.on('interactionCreate', async interaction => {
         else return message.reply(localize(locale, 'MODELS_DOWN'));
     });
 
+async function runAtMidnight() {
+    let users = await db.get('users') ?? {};
+
+    for (let user in users) {
+        await db.set(`users.${user}.usage`, 0);
+    };
+};
+
+function startInterval() {
+    const now = new Date();
+    const midnight = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1,
+        0, 0, 0
+    );
+    const timeUntilMidnight = midnight - now;
+
+    setTimeout(() => {
+        runAtMidnight();
+        setInterval(runAtMidnight, 24 * 60 * 60 * 1000);
+    }, timeUntilMidnight);
+};
+
+startInterval();
+
 client.login(process.env.DISCORD_TOKEN);
