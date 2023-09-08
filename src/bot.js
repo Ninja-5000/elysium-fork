@@ -154,6 +154,8 @@ client.on('interactionCreate', async interaction => {
 
         let messages = message.channel.messages.cache.toJSON();
 
+        messages.pop();
+
         function respond() {
             message.reply({
                 content: response.data.choices[0].message.content,
