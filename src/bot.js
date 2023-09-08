@@ -169,22 +169,25 @@ client.on('interactionCreate', async interaction => {
 
                 async function done() {
                     if (counter >= 1) {
-                        if (responseMessage) await responseMessage.edit(text);
-                        else responseMessage = await message.reply({
-                            content: text,
-                            allowedMentions: {
-                                parse: [],
-                                repliedUser: true
-                            }
-                        });
-                    };
+                        if (responseMessage) {
+                            await responseMessage.edit(text);
+                        } else {
+                            responseMessage = await message.reply({
+                                content: text,
+                                allowedMentions: {
+                                    parse: [],
+                                    repliedUser: true
+                                }
+                            });
+                        }
+                    }
 
                     user.usage++;
 
                     await db.set(`users.${message.author.id}`, user);
 
                     console.log(`${message.author.username} used`, user.usage);
-                };
+                }
 
                 if (data === '[DONE]') return await done();
 
@@ -199,7 +202,7 @@ client.on('interactionCreate', async interaction => {
                         foundDone = true;
 
                         return null;
-                    };
+                    }
 
                     let json;
 
@@ -207,7 +210,7 @@ client.on('interactionCreate', async interaction => {
                         json = JSON.parse(d);
                     } catch (error) {
                         return null;
-                    };
+                    }
 
                     if (json.model) model = json.model;
                     if (json.provider) provider = json.provider;
@@ -218,16 +221,26 @@ client.on('interactionCreate', async interaction => {
                 for (let t of data) {
                     if (typeof t === 'object') text += JSON.stringify(t);
                     else text += t;
-                };
+                }
 
                 if (foundDone) return await done();
 
                 if (started) {
                     if (counter >= 10) {
-                        await responseMessage.edit(text);
+                        if (responseMessage) {
+                            await responseMessage.edit(text);
+                        } else {
+                            responseMessage = await message.reply({
+                                content: text,
+                                allowedMentions: {
+                                    parse: [],
+                                    repliedUser: true
+                                }
+                            });
+                        }
 
                         counter = 0;
-                    };
+                    }
                 } else {
                     responseMessage = await message.reply({
                         content: text,
@@ -238,9 +251,9 @@ client.on('interactionCreate', async interaction => {
                     });
 
                     started = true;
-                };
+                }
             });
-        };
+        }
 
         let data = {
             headers: {
