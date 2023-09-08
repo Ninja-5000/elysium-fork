@@ -3,6 +3,7 @@ module.exports = {
     COMMAND_CATEGORY_GENERAL: 'General Commands',
     COMMAND_CATEGORY_DEVELOPER: 'Developer Commands',
     COMMAND_CATEGORY_OWNER: 'Owner Commands',
+    COMMAND_CATEGORY_MODERATOR: 'Moderator Commands',
     LOCALIZATION_PERCENTAGE: '**Language support for {{0}}:** {{1}}%',
     NOT_FOUND: '{{0}} not found!',
     COMMAND_ERROR: '**Error while executing {{0}}:** {{1}}',

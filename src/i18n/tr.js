@@ -3,6 +3,7 @@ module.exports = {
     COMMAND_CATEGORY_GENERAL: 'Genel Komutlar',
     COMMAND_CATEGORY_DEVELOPER: 'Geliştirici Komutları',
     COMMAND_CATEGORY_OWNER: 'Sahip Komutları',
+    COMMAND_CATEGORY_MODERATOR: 'Moderatör Komutları',
     LOCALIZATION_PERCENTAGE: '**{{0}} için dil desteği:** %{{1}}',
     NOT_FOUND: '{{0}} bulunamadı!',
     COMMAND_ERROR: '**{{0}} çalıştırılırken hata oluştu:** {{1}}',

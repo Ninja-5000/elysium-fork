@@ -5,6 +5,7 @@ const logger = require('./modules/logger');
 const { localize } = require('./modules/localization');
 const { ownerId, developerIds } = require('../config');
 const { QuickDB } = require('quick.db');
+const { randomNumber } = require('@tolga1452/toolbox.js');
 
 const client = new Client({
     intents: [
@@ -140,7 +141,17 @@ client.on('interactionCreate', async interaction => {
 })
     .on('messageCreate', async message => {
         if (message.author.bot) return;
-        if (!message.mentions.users.has(client.user.id)) return;
+        if (message.guild) {
+            let guild = await db.get(`guilds.${message.guild.id}`) ?? {};
+
+            if (!message.mentions.users.has(client.user.id)) {
+                if (!guild?.randomChat?.status) return;
+
+                let possibility = randomNumber(0, 100);
+
+                if (possibility > 10) return;
+            } else if (message.channel.id !== guild?.aiChannel?.channel) return;
+        };
 
         let user = await db.get(`users.${message.author.id}`) ?? {
             usage: 0,

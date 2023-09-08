@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@tolga1452/logchu": "^2.0.1",
+    "@tolga1452/toolbox.js": "^1.1.0",
     "axios": "^1.4.0",
     "better-sqlite3": "^8.6.0",
     "chalk": "^4.1.2",
