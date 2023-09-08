@@ -35,7 +35,7 @@ module.exports = {
 
         userData.premium = true;
 
-        await interaction.client.db.set(`users.${user.id}`, userData);
+        await db.set(`users.${user.id}`, userData);
 
         timer('sendUserMessage', { // 1 month
             time: 2592000000,
