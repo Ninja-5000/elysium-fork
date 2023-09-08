@@ -120,6 +120,8 @@ module.exports = {
                 guild.randomChat.status = status;
 
                 await db.set(`guilds.${interaction.guild.id}`, guild);
+                
+                interaction.editReply('Random chat status has been changed');
             };
         } else if (subcommandGroup === 'ai-channel') {
             if (subcommand === 'toggle') {
@@ -133,6 +135,8 @@ module.exports = {
                 guild.aiChannel.status = status;
 
                 await db.set(`guilds.${interaction.guild.id}`, guild);
+
+                interaction.editReply('AI channel status has been changed');
             } else if (subcommand === 'set') {
                 let channel = interaction.options.getChannel('channel');
 
@@ -144,6 +148,8 @@ module.exports = {
                 guild.aiChannel.channel = channel.id;
 
                 await db.set(`guilds.${interaction.guild.id}`, guild);
+
+                interaction.editReply('AI channel has been changed');
             };
         };
     }
