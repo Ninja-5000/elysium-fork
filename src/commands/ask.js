@@ -93,8 +93,8 @@ module.exports = {
                 }
             ],
             fallbacks: ['gpt-3.5-turbo', 'gpt-3.5-turbo-16k'],
-            max_tokens: 4000,
-            maxTokens: 4000
+            max_tokens: 2000,
+            maxTokens: 2000
         }, data).catch(() => null);
 
         if (response?.status === 200) return respond();
@@ -120,8 +120,8 @@ module.exports = {
                     content: question
                 }
             ],
-            max_tokens: 4000,
-            maxTokens: 4000
+            max_tokens: 2000,
+            maxTokens: 2000
         }, data).catch(() => null);
 
         if (response?.status === 200) return respond();

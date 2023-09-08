@@ -235,8 +235,8 @@ client.on('interactionCreate', async interaction => {
                 model: 'gpt-4',
                 messages,
                 fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
-                max_tokens: 4000,
-                maxTokens: 4000
+                max_tokens: 2000,
+                maxTokens: 2000
             }, data).catch(() => null);
 
             if (response?.status === 200) return respond();
@@ -253,8 +253,8 @@ client.on('interactionCreate', async interaction => {
                 model: 'vicuna-7b-v1.5-16k',
                 messages,
                 stream: true,
-                max_tokens: 4000,
-                maxTokens: 4000
+                max_tokens: 2000,
+                maxTokens: 2000
             }, data).catch(() => null);
 
             if (response?.status === 200) return respond();
