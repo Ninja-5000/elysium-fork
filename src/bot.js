@@ -169,17 +169,7 @@ client.on('interactionCreate', async interaction => {
 
                 async function done() {
                     if (counter >= 1) {
-                        if (responseMessage) {
-                            await responseMessage.edit(text);
-                        } else {
-                            responseMessage = await message.reply({
-                                content: text,
-                                allowedMentions: {
-                                    parse: [],
-                                    repliedUser: true
-                                }
-                            });
-                        }
+                        if (responseMessage) await responseMessage.edit(text);
                     }
 
                     user.usage++;
@@ -227,17 +217,7 @@ client.on('interactionCreate', async interaction => {
 
                 if (started) {
                     if (counter >= 10) {
-                        if (responseMessage) {
-                            await responseMessage.edit(text);
-                        } else {
-                            responseMessage = await message.reply({
-                                content: text,
-                                allowedMentions: {
-                                    parse: [],
-                                    repliedUser: true
-                                }
-                            });
-                        }
+                        if (responseMessage) await responseMessage.edit(text);
 
                         counter = 0;
                     }
