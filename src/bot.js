@@ -153,86 +153,16 @@ client.on('interactionCreate', async interaction => {
         await message.channel.sendTyping();
 
         let messages = (await message.channel.messages.fetch()).toJSON().filter(msg => msg.content?.length > 0);
-        let responseMessage;
 
-        async function respondStream() {
-            let started = false;
-            let counter = 0;
-            let text = '';
-
-            response.data.on('data', async chunk => {
-                console.log('Chunk:', chunk.toString());
-
-                counter++;
-
-                let data = chunk.toString();
-
-                async function done() {
-                    if (counter >= 1) {
-                        if (responseMessage) responseMessage.edit(text);
-                    }
-
-                    user.usage++;
-
-                    await db.set(`users.${message.author.id}`, user);
-
-                    console.log(`${message.author.username} used`, user.usage);
+        function respond() {
+            message.reply({
+                content: response.data.choices[0].message.content,
+                allowedMentions: {
+                    parse: [],
+                    repliedUser: true
                 }
-
-                if (data === '[DONE]') return await done();
-
-                data = data.split('\n\n');
-
-                let foundDone = false;
-
-                data = data.map(d => {
-                    d = d.replace('data: ', '');
-
-                    if (d === '[DONE]') {
-                        foundDone = true;
-
-                        return null;
-                    }
-
-                    let json;
-
-                    try {
-                        json = JSON.parse(d);
-                    } catch (error) {
-                        return null;
-                    }
-
-                    if (json.model) model = json.model;
-                    if (json.provider) provider = json.provider;
-
-                    return json.choices[0].delta.content;
-                }).filter(d => d);
-
-                for (let t of data) {
-                    if (typeof t === 'object') text += JSON.stringify(t);
-                    else text += t;
-                }
-
-                if (foundDone) return await done();
-
-                if (started) {
-                    if (counter >= 50) {
-                        if (responseMessage) responseMessage.edit(text);
-
-                        counter = 0;
-                    }
-                } else {
-                    started = true;
-                    responseMessage = await message.reply({
-                        content: text,
-                        allowedMentions: {
-                            parse: [],
-                            repliedUser: true
-                        }
-                    });
-                }
-            });
-        }
+            })
+        };
 
         let data = {
             headers: {
@@ -248,32 +178,15 @@ client.on('interactionCreate', async interaction => {
             name: msg.author.username
         }));
 
-        response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
-            model: 'vicuna-7b-v1.5-16k',
-            messages,
-            stream: true,
-            max_tokens: 4000,
-            maxTokens: 4000
-        }, {
-            ...data,
-            responseType: 'stream'
-        }).catch(() => null);
-
-        if (response?.status === 200) return respondStream();
-
         response = await axios.post('https://beta.purgpt.xyz/openai/chat/completions', {
             model: 'gpt-4',
             messages,
-            fallbacks: ['gpt-3.5-turbo', 'gpt-3.5-turbo-16k'],
-            stream: true,
+            fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
             max_tokens: 4000,
             maxTokens: 4000
-        }, {
-            ...data,
-            responseType: 'stream'
         }).catch(() => null);
 
-        if (response?.status === 200) return respondStream();
+        if (response?.status === 200) return respond();
 
         response = await axios.post('https://beta.purgpt.xyz/hugging-face/chat/completions', {
             model: 'llama-2-70b-chat',
@@ -281,21 +194,17 @@ client.on('interactionCreate', async interaction => {
             fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b']
         }, data).catch(() => null);
 
-        if (response?.status === 200) return respondStream();
+        if (response?.status === 200) return respond();
 
-        response = await axios.post('https://beta.purgpt.xyz/hugging-face/chat/completions', {
-            model: 'llama-2-70b-chat',
+        response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
+            model: 'vicuna-7b-v1.5-16k',
             messages,
-            fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b'],
             stream: true,
             max_tokens: 4000,
             maxTokens: 4000
-        }, {
-            ...data,
-            responseType: 'stream'
         }).catch(() => null);
 
-        if (response?.status === 200) return respondStream();
+        if (response?.status === 200) return respond();
         else return message.reply(localize(locale, 'MODELS_DOWN'));
     });
 
