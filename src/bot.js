@@ -140,111 +140,115 @@ client.on('interactionCreate', async interaction => {
     };
 })
     .on('messageCreate', async message => {
-        if (message.author.bot) return;
-        if (message.guild) {
-            let guild = await db.get(`guilds.${message.guild.id}`) ?? {};
-
-            if (!message.mentions.users.has(client.user.id)) {
-                if (!guild?.randomChat?.status) return;
-
-                let possibility = randomNumber(0, 100);
-
-                if (possibility > 10) return;
-            } else if (message.channel.id !== guild?.aiChannel?.channel) return;
-        };
-
-        let user = await db.get(`users.${message.author.id}`) ?? {
-            usage: 0,
-            premium: false
-        };
-        let locale = message.locale;
-
-        if (user.usage >= 30 && !user.premium) return message.reply(localize('en-US', 'LIMIT_REACHED', 30));
-
-        await message.channel.sendTyping();
-
-        let messages = message.channel.messages.cache.toJSON();
-
-        messages.pop();
-
-        function respond() {
-            message.reply({
-                content: response.data.choices[0].message.content,
-                allowedMentions: {
-                    parse: [],
-                    repliedUser: true
+        try {
+            if (message.author.bot) return;
+            if (message.guild) {
+                let guild = await db.get(`guilds.${message.guild.id}`) ?? {};
+    
+                if (!message.mentions.users.has(client.user.id)) {
+                    if (!guild?.randomChat?.status) return;
+    
+                    let possibility = randomNumber(0, 100);
+    
+                    if (possibility > 10) return;
+                } else if (!guild?.aiChannel?.status || message.channel.id !== guild?.aiChannel?.channel) return;
+            };
+    
+            let user = await db.get(`users.${message.author.id}`) ?? {
+                usage: 0,
+                premium: false
+            };
+            let locale = message.locale;
+    
+            if (user.usage >= 30 && !user.premium) return message.reply(localize('en-US', 'LIMIT_REACHED', 30));
+    
+            await message.channel.sendTyping();
+    
+            let messages = message.channel.messages.cache.toJSON();
+    
+            messages.pop();
+    
+            function respond() {
+                message.reply({
+                    content: response.data.choices[0].message.content,
+                    allowedMentions: {
+                        parse: [],
+                        repliedUser: true
+                    }
+                });
+    
+                user.usage++;
+    
+                db.set(`users.${message.author.id}`, user);
+            };
+    
+            let data = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
                 }
+            };
+            let response;
+    
+            messages = messages.map(msg => ({
+                role: msg.author.id === client.user.id ? 'assistant' : 'user',
+                content: `User: ${msg.member?.displayName ?? msg.author.displayName}\nMessage:\n${msg.cleanContent}`,
+                name: msg.author.id
+            }));
+    
+            messages.push({
+                role: 'system',
+                content: `You are AI Land. You are chatting in a Discord server. Here are some information about your environment:\nServer: ${message.guild?.name ?? 'DMs'}${message.guild ? `\nServer Description: ${message.guild.description ?? 'None'}` : ''}\nChannel: ${message.channel.name}\nChannel Description: ${message.channel.topic ?? 'None'}`,
             });
-
-            user.usage++;
-
-            db.set(`users.${message.author.id}`, user);
+    
+            let reply;
+    
+            if (message.reference?.messageId) reply = await message.fetchReference();
+    
+            messages.push({
+                role: 'user',
+                content: `User: ${message.member?.displayName ?? message.author.displayName}${reply ? `\nReplied Message:\n${reply.cleanContent}` : ''}\nMessage:\n${message.cleanContent}`,
+                name: message.author.id
+            });
+            messages.push({
+                role: 'system',
+                content: 'Do not respond something like "User: AI Land\nMessage\n...". Just respond to the message above. Do not add any information.'
+            })
+    
+            // log last 5 messages
+            console.log(messages.slice(-5));
+    
+            response = await axios.post('https://beta.purgpt.xyz/openai/chat/completions', {
+                model: 'gpt-4',
+                messages,
+                fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
+                max_tokens: 4000,
+                maxTokens: 4000
+            }, data).catch(() => null);
+    
+            if (response?.status === 200) return respond();
+    
+            response = await axios.post('https://beta.purgpt.xyz/hugging-face/chat/completions', {
+                model: 'llama-2-70b-chat',
+                messages,
+                fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b']
+            }, data).catch(() => null);
+    
+            if (response?.status === 200) return respond();
+    
+            response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
+                model: 'vicuna-7b-v1.5-16k',
+                messages,
+                stream: true,
+                max_tokens: 4000,
+                maxTokens: 4000
+            }, data).catch(() => null);
+    
+            if (response?.status === 200) return respond();
+            else return message.reply(localize(locale, 'MODELS_DOWN'));
+        } catch (error) {
+            console.log(error);
         };
-
-        let data = {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
-            }
-        };
-        let response;
-
-        messages = messages.map(msg => ({
-            role: msg.author.id === client.user.id ? 'assistant' : 'user',
-            content: `User: ${msg.member?.displayName ?? msg.author.displayName}\nMessage:\n${msg.cleanContent}`,
-            name: msg.author.id
-        }));
-
-        messages.push({
-            role: 'system',
-            content: `You are AI Land. You are chatting in a Discord server. Here are some information about your environment:\nServer: ${message.guild?.name ?? 'DMs'}${message.guild ? `\nServer Description: ${message.guild.description ?? 'None'}` : ''}\nChannel: ${message.channel.name}\nChannel Description: ${message.channel.topic ?? 'None'}`,
-        });
-
-        let reply;
-
-        if (message.reference?.messageId) reply = await message.fetchReference();
-
-        messages.push({
-            role: 'user',
-            content: `User: ${message.member?.displayName ?? message.author.displayName}${reply ? `\nReplied Message:\n${reply.cleanContent}` : ''}\nMessage:\n${message.cleanContent}`,
-            name: message.author.id
-        });
-        messages.push({
-            role: 'system',
-            content: 'Do not respond something like "User: AI Land\nMessage\n...". Just respond to the message above. Do not add any information.'
-        })
-
-        // log last 5 messages
-        console.log(messages.slice(-5));
-
-        response = await axios.post('https://beta.purgpt.xyz/openai/chat/completions', {
-            model: 'gpt-4',
-            messages,
-            fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
-            max_tokens: 4000,
-            maxTokens: 4000
-        }, data).catch(() => null);
-
-        if (response?.status === 200) return respond();
-
-        response = await axios.post('https://beta.purgpt.xyz/hugging-face/chat/completions', {
-            model: 'llama-2-70b-chat',
-            messages,
-            fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b']
-        }, data).catch(() => null);
-
-        if (response?.status === 200) return respond();
-
-        response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
-            model: 'vicuna-7b-v1.5-16k',
-            messages,
-            stream: true,
-            max_tokens: 4000,
-            maxTokens: 4000
-        }, data).catch(() => null);
-
-        if (response?.status === 200) return respond();
-        else return message.reply(localize(locale, 'MODELS_DOWN'));
     });
 
 async function runAtMidnight() {
