@@ -200,7 +200,7 @@ client.on('interactionCreate', async interaction => {
             for (let msg of oldMessages) {
                 let reply;
 
-                if (message.reference?.messageId) reply = await message.fetchReference();
+                if (msg.reference?.messageId) reply = await msg.fetchReference();
 
                 messages.push({
                     role: msg.author.id === client.user.id ? 'assistant' : 'user',
