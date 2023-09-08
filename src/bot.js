@@ -188,9 +188,14 @@ client.on('interactionCreate', async interaction => {
             role: 'system',
             content: `You are AI Land. You are chatting in a Discord server. Here are some information about your environment:\nServer: ${message.guild?.name ?? 'DMs'}${message.guild ? `\nServer Description: ${message.guild.description ?? 'None'}` : ''}\nChannel: ${message.channel.name}\nChannel Description: ${message.channel.topic ?? 'None'}`,
         });
+
+        let reply;
+
+        if (message.reference?.messageId) reply = await message.fetchReference();
+
         messages.push({
             role: 'user',
-            content: `User: ${message.member?.displayName ?? message.author.displayName}\nMessage:\n${message.cleanContent}`,
+            content: `User: ${message.member?.displayName ?? message.author.displayName}${reply ? `\nReplied Message:\n${reply.cleanContent}` : ''}\nMessage:\n${message.cleanContent}`,
             name: message.author.id
         });
         messages.push({
