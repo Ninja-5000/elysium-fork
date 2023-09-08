@@ -181,7 +181,7 @@ module.exports = {
             maxTokens: 4000
         }, data).catch(() => null);
 
-        console.log('Response from pur-001:', response.data);
+        console.log('Response from pur-001:', response?.data);
 
         if (response?.status === 200) return respond();
 
@@ -201,7 +201,7 @@ module.exports = {
             responseType: 'stream'
         }).catch(error => null);
 
-        console.log('Response from vicuna-7b-v1.5-16k:', response.data);
+        console.log('Response from vicuna-7b-v1.5-16k:', response?.data);
 
         if (response?.status === 200) return respondStream();
 
@@ -222,7 +222,7 @@ module.exports = {
             responseType: 'stream'
         }).catch(() => null);
 
-        console.log('Response from gpt-4:', response.data);
+        console.log('Response from gpt-4:', response?.data);
 
         if (response?.status === 200) return respondStream();
 
@@ -237,7 +237,7 @@ module.exports = {
             fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b']
         }, data).catch(() => null);
 
-        console.log('Response from llama-2-70b-chat:', response.data);
+        console.log('Response from llama-2-70b-chat:', response?.data);
 
         if (response?.status === 200) return respondStream();
 
@@ -258,7 +258,7 @@ module.exports = {
             responseType: 'stream'
         }).catch(() => null);
 
-        console.log('Response from llama-2-70b-chat:', response.data);
+        console.log('Response from llama-2-70b-chat:', response?.data);
 
         if (response?.status === 200) return respondStream();
         else return interaction.editReply(localize(locale, 'MODELS_DOWN'));
