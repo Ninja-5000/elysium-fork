@@ -193,6 +193,10 @@ client.on('interactionCreate', async interaction => {
             content: `User: ${message.member?.displayName ?? message.author.displayName}\nMessage:\n${message.cleanContent}`,
             name: message.author.id
         });
+        messages.push({
+            role: 'system',
+            content: 'Do not respond something like "User: AI Land\nMessage\n...". Just respond to the message above. Do not add any information.'
+        })
 
         // log last 5 messages
         console.log(messages.slice(-5));
