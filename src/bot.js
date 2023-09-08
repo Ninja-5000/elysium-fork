@@ -183,6 +183,8 @@ client.on('interactionCreate', async interaction => {
                 user.usage++;
     
                 db.set(`users.${message.author.id}`, user);
+
+                console.log(`${message.author.username} (${message.author.id}) used the bot. Usage: ${user.usage}`);
             };
     
             let data = {
