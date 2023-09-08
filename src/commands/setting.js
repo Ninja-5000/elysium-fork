@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits } = require("discord.js");
+const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, ChannelType } = require("discord.js");
 const { QuickDB } = require("quick.db");
 
 const db = new QuickDB();
@@ -44,6 +44,29 @@ module.exports = {
                         tr: 'Ayarlamak istediğiniz durum'
                     })
                     .setRequired(true)
+                )
+            )
+            .addSubcommand(subcommand => subcommand
+                .setName('set-possibility')
+                .setNameLocalizations({
+                    tr: 'olasılık-ayarla'
+                })
+                .setDescription('Set the possibility of random chat')
+                .setDescriptionLocalizations({
+                    tr: 'Rastgele sohbetin olasılığını ayarlayın'
+                })
+                .addIntegerOption(option => option
+                    .setName('possibility')
+                    .setNameLocalizations({
+                        tr: 'olasılık'
+                    })
+                    .setDescription('The possibility you want to set. Default: 10%')
+                    .setDescriptionLocalizations({
+                        tr: 'Ayarlamak istediğiniz olasılık. Varsayılan: %10'
+                    })
+                    .setRequired(true)
+                    .setMinValue(1)
+                    .setMaxValue(100)
                 )
             )
         )
@@ -96,6 +119,7 @@ module.exports = {
                         tr: 'Ayarlamak istediğiniz kanal'
                     })
                     .setRequired(true)
+                    .addChannelTypes(ChannelType.GuildText)
                 )
             )
         ),
@@ -114,14 +138,28 @@ module.exports = {
                 let status = interaction.options.getBoolean('status');
 
                 if (!guild.randomChat) guild.randomChat = {
-                    status: false
+                    status: false,
+                    possibility: 10
                 };
 
                 guild.randomChat.status = status;
 
                 await db.set(`guilds.${interaction.guild.id}`, guild);
-                
+
                 interaction.editReply('Random chat status has been changed');
+            } else if (subcommand === 'set-possibility') {
+                let possibility = interaction.options.getInteger('possibility');
+
+                if (!guild.randomChat) guild.randomChat = {
+                    status: false,
+                    possibility: 10
+                };
+
+                guild.randomChat.possibility = possibility;
+
+                await db.set(`guilds.${interaction.guild.id}`, guild);
+
+                interaction.editReply('Random chat possibility has been changed');
             };
         } else if (subcommandGroup === 'ai-channel') {
             if (subcommand === 'toggle') {

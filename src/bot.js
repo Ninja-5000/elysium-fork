@@ -150,7 +150,7 @@ client.on('interactionCreate', async interaction => {
     
                     let possibility = randomNumber(0, 100);
     
-                    if (possibility < 90) return;
+                    if (possibility < (100 - (guild?.randomChat?.possibility ?? 10))) return;
                 } else if (!guild?.aiChannel?.status || message.channel.id !== guild?.aiChannel?.channel) return;
             };
     
