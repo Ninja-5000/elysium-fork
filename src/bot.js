@@ -247,7 +247,7 @@ client.on('interactionCreate', async interaction => {
             if (response?.status === 200) return respond();
             else return message.reply(localize(locale, 'MODELS_DOWN'));
         } catch (error) {
-            console.log(error);
+            console.log('Error', error);
         };
     });
 
