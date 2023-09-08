@@ -10,6 +10,9 @@ module.exports = {
     category: 'General',
     data: new SlashCommandBuilder()
         .setName('ask')
+        .setNameLocalizations({
+            tr: 'sor'
+        })
         .setDescription("Asks something to the AI")
         .setDescriptionLocalizations({
             tr: 'Yapay zekaya bir şey sorar'
@@ -178,6 +181,8 @@ module.exports = {
             maxTokens: 4000
         }, data).catch(() => null);
 
+        console.log('Response from pur-001:', response.data);
+
         if (response?.status === 200) return respond();
 
         response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
@@ -195,6 +200,8 @@ module.exports = {
             ...data,
             responseType: 'stream'
         }).catch(error => null);
+
+        console.log('Response from vicuna-7b-v1.5-16k:', response.data);
 
         if (response?.status === 200) return respondStream();
 
@@ -215,6 +222,8 @@ module.exports = {
             responseType: 'stream'
         }).catch(() => null);
 
+        console.log('Response from gpt-4:', response.data);
+
         if (response?.status === 200) return respondStream();
 
         response = await axios.post('https://beta.purgpt.xyz/hugging-face/chat/completions', {
@@ -227,6 +236,8 @@ module.exports = {
             ],
             fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b']
         }, data).catch(() => null);
+
+        console.log('Response from llama-2-70b-chat:', response.data);
 
         if (response?.status === 200) return respondStream();
 
@@ -246,6 +257,8 @@ module.exports = {
             ...data,
             responseType: 'stream'
         }).catch(() => null);
+
+        console.log('Response from llama-2-70b-chat:', response.data);
 
         if (response?.status === 200) return respondStream();
         else return interaction.editReply(localize(locale, 'MODELS_DOWN'));
