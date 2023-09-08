@@ -170,7 +170,13 @@ client.on('interactionCreate', async interaction => {
                 async function done() {
                     if (counter >= 1) {
                         if (responseMessage) await responseMessage.edit(text);
-                        else await message.reply(text);
+                        else responseMessage = await message.reply({
+                            content: text,
+                            allowedMentions: {
+                                parse: [],
+                                repliedUser: true
+                            }
+                        });
                     };
 
                     user.usage++;
