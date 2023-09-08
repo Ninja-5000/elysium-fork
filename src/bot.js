@@ -154,7 +154,7 @@ client.on('interactionCreate', async interaction => {
 
         let messages = (await message.channel.messages.fetch({
             before: message.id
-        })).toJSON().filter(msg => msg.content?.length > 0);
+        })).toJSON();
 
         function respond() {
             message.reply({
@@ -180,19 +180,18 @@ client.on('interactionCreate', async interaction => {
 
         messages = messages.map(msg => ({
             role: msg.author.id === client.user.id ? 'assistant' : 'user',
-            content: msg.cleanContent,
-            name: msg.member?.displayName ?? msg.author.displayName
+            content: `Server: ${msg.guild.name}\nChannel: ${msg.channel.name}\nUser: ${msg.member?.displayName ?? msg.author.displayName}\nMessage:\n${msg.cleanContent}`,
+            name: msg.author.id
         }));
 
         messages.unshift({
             role: 'system',
             content: 'You are AI Land.'
         });
-
-        if (messages[messages.length - 1].content !== message.content) messages.push({
+        messages.push({
             role: 'user',
-            content: message.cleanContent,
-            name: message.member?.displayName ?? message.author.displayName
+            content: `Server: ${msg.guild.name}\nChannel: ${msg.channel.name}\nUser: ${msg.member?.displayName ?? msg.author.displayName}\nMessage:\n${msg.cleanContent}`,
+            name: message.author.id
         });
 
         // log last 5 messages
