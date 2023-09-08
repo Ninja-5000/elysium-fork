@@ -242,6 +242,7 @@ client.on('interactionCreate', async interaction => {
                         counter = 0;
                     }
                 } else {
+                    started = true;
                     responseMessage = await message.reply({
                         content: text,
                         allowedMentions: {
@@ -249,8 +250,6 @@ client.on('interactionCreate', async interaction => {
                             repliedUser: true
                         }
                     });
-
-                    started = true;
                 }
             });
         }
