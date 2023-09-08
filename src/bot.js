@@ -152,9 +152,7 @@ client.on('interactionCreate', async interaction => {
 
         await message.channel.sendTyping();
 
-        let messages = (await message.channel.messages.fetch({
-            before: message.id
-        })).toJSON();
+        let messages = message.channel.messages.cache.toJSON();
 
         function respond() {
             message.reply({
