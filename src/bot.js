@@ -144,30 +144,30 @@ client.on('interactionCreate', async interaction => {
             if (message.author.bot) return;
             if (message.guild && !message.mentions.users.has(client.user.id)) {
                 let guild = await db.get(`guilds.${message.guild.id}`) ?? {};
-    
+
                 if (!message.mentions.users.has(client.user.id)) {
                     if (!guild?.randomChat?.status) return;
-    
+
                     let possibility = randomNumber(0, 100);
-    
+
                     if (possibility < (100 - (guild?.randomChat?.possibility ?? 10))) return;
                 } else if (!guild?.aiChannel?.status || message.channel.id !== guild?.aiChannel?.channel) return;
             };
-    
+
             let user = await db.get(`users.${message.author.id}`) ?? {
                 usage: 0,
                 premium: false
             };
             let locale = message.locale;
-    
+
             if (user.usage >= 25 && !user.premium) return;
-    
+
             await message.channel.sendTyping();
-    
+
             let messages = message.channel.messages.cache.toJSON();
-    
+
             messages.pop();
-    
+
             function respond() {
                 let respondMessage = response.data.choices[0].message.content.replace(/User: .*\nReplied Message:\n.*\nMessage:/g, '').replace(/User: .*\nMessage:\n/g, '').replace(/Message:\n/g, '');
 
@@ -178,14 +178,14 @@ client.on('interactionCreate', async interaction => {
                         repliedUser: true
                     }
                 });
-    
+
                 user.usage++;
-    
+
                 db.set(`users.${message.author.id}`, user);
 
                 console.log(`${message.author.username} (${message.author.id}) used the bot. Usage: ${user.usage}`);
             };
-    
+
             let data = {
                 headers: {
                     'Content-Type': 'application/json',
@@ -193,22 +193,31 @@ client.on('interactionCreate', async interaction => {
                 }
             };
             let response;
-    
-            messages = messages.map(msg => ({
-                role: msg.author.id === client.user.id ? 'assistant' : 'user',
-                content: `User: ${msg.member?.displayName ?? msg.author.displayName}\nMessage:\n${msg.cleanContent}`,
-                name: msg.author.id
-            }));
-    
+            let oldMessages = messages;
+
+            messages = [];
+
+            for (let msg of oldMessages) {
+                let reply;
+
+                if (message.reference?.messageId) reply = await message.fetchReference();
+
+                messages.push({
+                    role: msg.author.id === client.user.id ? 'assistant' : 'user',
+                    content: msg.author.id === client.user.id ? msg.cleanContent : `User: ${msg.member?.displayName ?? msg.author.displayName}${reply ? `\nReplied Message:\n${reply.cleanContent}` : ''}\nMessage:\n${msg.cleanContent}`,
+                    name: msg.author.id
+                });
+            };
+
             messages.push({
                 role: 'system',
                 content: `You are AI Land. You are chatting in a Discord server. Here are some information about your environment:\nServer: ${message.guild?.name ?? 'DMs'}${message.guild ? `\nServer Description: ${message.guild.description ?? 'None'}` : ''}\nChannel: ${message.channel.name}\nChannel Description: ${message.channel.topic ?? 'None'}`,
             });
-    
+
             let reply;
-    
+
             if (message.reference?.messageId) reply = await message.fetchReference();
-    
+
             messages.push({
                 role: 'user',
                 content: `User: ${message.member?.displayName ?? message.author.displayName}${reply ? `\nReplied Message:\n${reply.cleanContent}` : ''}\nMessage:\n${message.cleanContent}`,
@@ -218,10 +227,10 @@ client.on('interactionCreate', async interaction => {
                 role: 'system',
                 content: 'You will NOT respond something like "User: AI Land\nReplied Message:\n...\nMessage\n...". You will only respond with to the message above. No any informations.'
             })
-    
+
             // log last 5 messages
             console.log(messages.slice(-5));
-    
+
             response = await axios.post('https://beta.purgpt.xyz/openai/chat/completions', {
                 model: 'gpt-4',
                 messages,
@@ -229,17 +238,17 @@ client.on('interactionCreate', async interaction => {
                 max_tokens: 4000,
                 maxTokens: 4000
             }, data).catch(() => null);
-    
+
             if (response?.status === 200) return respond();
-    
+
             response = await axios.post('https://beta.purgpt.xyz/hugging-face/chat/completions', {
                 model: 'llama-2-70b-chat',
                 messages,
                 fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b']
             }, data).catch(() => null);
-    
+
             if (response?.status === 200) return respond();
-    
+
             response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
                 model: 'vicuna-7b-v1.5-16k',
                 messages,
@@ -247,7 +256,7 @@ client.on('interactionCreate', async interaction => {
                 max_tokens: 4000,
                 maxTokens: 4000
             }, data).catch(() => null);
-    
+
             if (response?.status === 200) return respond();
             else return message.reply(localize(locale, 'MODELS_DOWN'));
         } catch (error) {
