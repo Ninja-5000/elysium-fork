@@ -180,17 +180,17 @@ client.on('interactionCreate', async interaction => {
 
         messages = messages.map(msg => ({
             role: msg.author.id === client.user.id ? 'assistant' : 'user',
-            content: `Server: ${msg.guild.name}\nChannel: ${msg.channel.name}\nUser: ${msg.member?.displayName ?? msg.author.displayName}\nMessage:\n${msg.cleanContent}`,
+            content: `User: ${msg.member?.displayName ?? msg.author.displayName}\nMessage:\n${msg.cleanContent}`,
             name: msg.author.id
         }));
 
-        messages.unshift({
+        messages.push({
             role: 'system',
-            content: 'You are AI Land.'
+            content: `You are AI Land. You are chatting in a Discord server. Here are some information about your environment:\nServer: ${message.guild?.name ?? 'DMs'}${message.guild ? `\nServer Description: ${message.guild.description ?? 'None'}` : ''}\nChannel: ${message.channel.name}\nChannel Description: ${message.channel.topic ?? 'None'}`,
         });
         messages.push({
             role: 'user',
-            content: `Server: ${msg.guild.name}\nChannel: ${msg.channel.name}\nUser: ${msg.member?.displayName ?? msg.author.displayName}\nMessage:\n${msg.cleanContent}`,
+            content: `User: ${message.member?.displayName ?? message.author.displayName}\nMessage:\n${message.cleanContent}`,
             name: message.author.id
         });
 
