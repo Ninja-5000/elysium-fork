@@ -9,5 +9,7 @@ module.exports = {
     OWNER_ONLY: 'Bu eylem yalnızca botun sahibi tarafından gerçekleştirilebilir!',
     DEVELOPER_ONLY: 'Bu eylem yalnızca botun geliştiricileri tarafından gerçekleştirilebilir!',
     OUTPUT: 'Çıktı',
-    ERROR: 'Hata'
+    ERROR: 'Hata',
+    LIMIT_REACHED: 'Günlük {{0}} istek limitine ulaştınız. Bu limiti kaldırmak için [premium](https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=309596&preview=false) alabilirsiniz.',
+    MODELS_DOWN: 'Tüm modeller çevrimdışı. Lütfen daha sonra tekrar deneyin.'
 };
