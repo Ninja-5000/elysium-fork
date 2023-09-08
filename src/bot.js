@@ -168,7 +168,10 @@ client.on('interactionCreate', async interaction => {
                 let data = chunk.toString();
 
                 async function done() {
-                    if (counter >= 1) await responseMessage.edit(text);
+                    if (counter >= 1) {
+                        if (responseMessage) await responseMessage.edit(text);
+                        else await message.reply(text);
+                    };
 
                     user.usage++;
 
