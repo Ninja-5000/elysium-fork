@@ -113,6 +113,21 @@ module.exports = {
                 }
             });
 
+            if (!response.ok) {
+                response = await request({
+                    url: 'https://beta.purgpt.xyz/purgpt/chat/completions',
+                    method: RequestMethod.Post,
+                    body: {
+                        model: 'vicuna-7b-v1.5-16k',
+                        messages,
+                        fallbacks: ['pur-001', 'pur-rp']
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                    }
+                });
+            };
             if (!response.ok) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
 
             let message = response.data.choices[0].message;
@@ -205,6 +220,22 @@ module.exports = {
                             Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
                         }
                     });
+
+                    if (!response.ok) {
+                        response = await request({
+                            url: 'https://beta.purgpt.xyz/purgpt/chat/completions',
+                            method: RequestMethod.Post,
+                            body: {
+                                model: 'vicuna-7b-v1.5-16k',
+                                messages,
+                                fallbacks: ['pur-001', 'pur-rp']
+                            },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                            }
+                        });
+                    };
                     if (!response.ok) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
 
                     let responseMessage = response.body.choices[0].message;

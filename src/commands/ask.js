@@ -55,7 +55,6 @@ module.exports = {
                 content: response.body.choices[0].message.content,
                 embeds: debug ? [
                     new EmbedMaker(interaction.client)
-                        .setColor('9b59b6')
                         .setTitle('Debug')
                         .setFields(
                             {
@@ -137,7 +136,8 @@ module.exports = {
                     }
                 ],
                 max_tokens: 2000,
-                maxTokens: 2000
+                maxTokens: 2000,
+                fallbacks: ['pur-001', 'pur-rp']
             },
             headers: {
                 'Content-Type': 'application/json',

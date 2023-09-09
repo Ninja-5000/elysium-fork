@@ -250,7 +250,8 @@ client.on('interactionCreate', async interaction => {
                     model: 'vicuna-7b-v1.5-16k',
                     messages,
                     max_tokens: 2000,
-                    maxTokens: 2000
+                    maxTokens: 2000,
+                    fallbacks: ['pur-001', 'pur-rp']
                 },
                 headers: {
                     'Content-Type': 'application/json',
