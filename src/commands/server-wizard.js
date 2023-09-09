@@ -185,7 +185,7 @@ module.exports = {
                     await int.deferUpdate().catch(() => int.reply(localize(locale, 'SENDING_FOLLOW_UP')).catch(() => int.editReply(localize(locale, 'SENDING_FOLLOW_UP'))));
                     await interaction.editReply({
                         content: ''
-                    })
+                    });
 
                     let message = int.fields.getTextInputValue('message');
 
@@ -222,10 +222,10 @@ module.exports = {
 
                     let responseMessage = response.data.choices[0].message;
 
-                    messages.push(responseMessage);
-
                     try {
                         channels = JSON.parse(responseMessage.content);
+
+                        messages.push(responseMessage);
                     } catch (error) {
                         return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
                     };
