@@ -233,7 +233,6 @@ client.on('interactionCreate', async interaction => {
             response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
                 model: 'vicuna-7b-v1.5-16k',
                 messages,
-                stream: true,
                 max_tokens: 2000,
                 maxTokens: 2000
             }, data).catch(() => null);
