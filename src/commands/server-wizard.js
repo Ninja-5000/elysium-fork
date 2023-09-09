@@ -113,7 +113,12 @@ module.exports = {
                 response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
                     model: 'vicuna-7b-v1.5-16k',
                     messages
-                }, data).catch(() => null);
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                    }
+                }).catch(() => null);
             };
             if (response?.status !== 200) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
 
@@ -206,7 +211,12 @@ module.exports = {
                             model: 'vicuna-7b-v1.5-16k',
                             messages,
                             temperature: 2
-                        }, data).catch(() => null);
+                        }, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                            }
+                        }).catch(() => null);
                     };
                     if (response?.status !== 200) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
 
