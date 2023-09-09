@@ -3,6 +3,7 @@ const { SlashCommandBuilder, ChatInputCommandInteraction } = require("discord.js
 const { QuickDB } = require("quick.db");
 const { localize } = require("../modules/localization");
 const EmbedMaker = require("../modules/embed");
+const { request, RequestMethod } = require("fetchu.js");
 
 const db = new QuickDB();
 
@@ -51,7 +52,7 @@ module.exports = {
 
         async function respond() {
             await interaction.editReply({
-                content: response.data.choices[0].message.content,
+                content: response.body.choices[0].message.content,
                 embeds: debug ? [
                     new EmbedMaker(interaction.client)
                         .setColor('9b59b6')
@@ -59,12 +60,12 @@ module.exports = {
                         .setFields(
                             {
                                 name: 'Model',
-                                value: response.data.model ?? 'Unknown',
+                                value: response.body.model ?? 'Unknown',
                                 inline: true
                             },
                             {
                                 name: 'Provider',
-                                value: response.data.provider ?? 'Unknown',
+                                value: response.body.provider ?? 'Unknown',
                                 inline: true
                             }
                         )
@@ -76,55 +77,75 @@ module.exports = {
             await db.set(`users.${interaction.user.id}`, user);
         };
 
-        let data = {
+        let response;
+
+        response = await request({
+            url: 'https://beta.purgpt.xyz/openai/chat/completions',
+            method: RequestMethod.Post,
+            body: {
+                model: 'gpt-4-32k',
+                messages: [
+                    {
+                        role: 'user',
+                        content: question
+                    }
+                ],
+                fallbacks: ['gpt-4', 'gpt-3.5-turbo', 'gpt-3.5-turbo-16k'],
+                max_tokens: 2000,
+                maxTokens: 2000
+            },
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
             }
-        };
-        let response;
+        });
 
-        response = await axios.post('https://beta.purgpt.xyz/openai/chat/completions', {
-            model: 'gpt-4',
-            messages: [
-                {
-                    role: 'user',
-                    content: question
-                }
-            ],
-            fallbacks: ['gpt-3.5-turbo', 'gpt-3.5-turbo-16k'],
-            max_tokens: 2000,
-            maxTokens: 2000
-        }, data).catch(() => null);
+        if (response.ok) return respond();
 
-        if (response?.status === 200) return respond();
+        response = await request({
+            url: 'https://beta.purgpt.xyz/hugging-face/chat/completions',
+            method: RequestMethod.Post,
+            body: {
+                model: 'llama-2-70b-chat',
+                messages: [
+                    {
+                        role: 'user',
+                        content: question
+                    }
+                ],
+                fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b'],
+                max_tokens: 2000,
+                maxTokens: 2000
+            },
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+            }
+        });
 
-        response = await axios.post('https://beta.purgpt.xyz/hugging-face/chat/completions', {
-            model: 'llama-2-70b-chat',
-            messages: [
-                {
-                    role: 'user',
-                    content: question
-                }
-            ],
-            fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b']
-        }, data).catch(() => null);
+        if (response.ok) return respond();
 
-        if (response?.status === 200) return respond();
+        response = await request({
+            url: 'https://beta.purgpt.xyz/purgpt/chat/completions',
+            method: RequestMethod.Post,
+            body: {
+                model: 'vicuna-7b-v1.5-16k',
+                messages: [
+                    {
+                        role: 'user',
+                        content: question
+                    }
+                ],
+                max_tokens: 2000,
+                maxTokens: 2000
+            },
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+            }
+        });
 
-        response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
-            model: 'vicuna-7b-v1.5-16k',
-            messages: [
-                {
-                    role: 'user',
-                    content: question
-                }
-            ],
-            max_tokens: 2000,
-            maxTokens: 2000
-        }, data).catch(() => null);
-
-        if (response?.status === 200) return respond();
+        if (response.ok) return respond();
         else return interaction.editReply(localize(locale, 'MODELS_DOWN'));
     }
 };

@@ -6,6 +6,7 @@ const { localize } = require('./modules/localization');
 const { ownerId, developerIds } = require('../config');
 const { QuickDB } = require('quick.db');
 const { randomNumber } = require('@tolga1452/toolbox.js');
+const { request, RequestMethod } = require("fetchu.js");
 
 const client = new Client({
     intents: [
@@ -146,7 +147,7 @@ client.on('interactionCreate', async interaction => {
             messages.pop();
 
             function respond() {
-                let respondMessage = response.data.choices[0].message.content.replace(/(User:(\n| ).*|)(\nUser Roles:(\n| ).*|)(\nReplied Message Author:(\n| ).*|)(\nReplied Message:(\n| ).*|)\nMessage:(\n| )/g, '')
+                let respondMessage = response.body.choices[0].message.content.replace(/(User:(\n| ).*|)(\nUser Roles:(\n| ).*|)(\nReplied Message Author:(\n| ).*|)(\nReplied Message:(\n| ).*|)\nMessage:(\n| )/g, '')
 
                 message.reply({
                     content: respondMessage,
@@ -163,12 +164,6 @@ client.on('interactionCreate', async interaction => {
                 console.log(`${message.author.username} (${message.author.id}) used the bot. Usage: ${user.usage}`);
             };
 
-            let data = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
-                }
-            };
             let response;
             let oldMessages = messages;
 
@@ -212,32 +207,73 @@ client.on('interactionCreate', async interaction => {
             // log last 5 messages
             console.log(messages.slice(-5));
 
-            response = await axios.post('https://beta.purgpt.xyz/openai/chat/completions', {
-                model: 'gpt-4',
-                messages,
-                fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
-                max_tokens: 2000,
-                maxTokens: 2000
-            }, data).catch(() => null);
+            response = await request({
+                url: 'https://beta.purgpt.xyz/openai/chat/completions',
+                method: RequestMethod.Post,
+                body: {
+                    model: 'gpt-4-32k',
+                    messages: [
+                        {
+                            role: 'user',
+                            content: question
+                        }
+                    ],
+                    fallbacks: ['gpt-4', 'gpt-3.5-turbo', 'gpt-3.5-turbo-16k'],
+                    max_tokens: 2000,
+                    maxTokens: 2000
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                }
+            });
+    
+            if (response.ok) return respond();
+    
+            response = await request({
+                url: 'https://beta.purgpt.xyz/hugging-face/chat/completions',
+                method: RequestMethod.Post,
+                body: {
+                    model: 'llama-2-70b-chat',
+                    messages: [
+                        {
+                            role: 'user',
+                            content: question
+                        }
+                    ],
+                    fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b'],
+                    max_tokens: 2000,
+                    maxTokens: 2000
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                }
+            });
+    
+            if (response.ok) return respond();
+    
+            response = await request({
+                url: 'https://beta.purgpt.xyz/purgpt/chat/completions',
+                method: RequestMethod.Post,
+                body: {
+                    model: 'vicuna-7b-v1.5-16k',
+                    messages: [
+                        {
+                            role: 'user',
+                            content: question
+                        }
+                    ],
+                    max_tokens: 2000,
+                    maxTokens: 2000
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                }
+            });
 
-            if (response?.status === 200) return respond();
-
-            response = await axios.post('https://beta.purgpt.xyz/hugging-face/chat/completions', {
-                model: 'llama-2-70b-chat',
-                messages,
-                fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b']
-            }, data).catch(() => null);
-
-            if (response?.status === 200) return respond();
-
-            response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
-                model: 'vicuna-7b-v1.5-16k',
-                messages,
-                max_tokens: 2000,
-                maxTokens: 2000
-            }, data).catch(() => null);
-
-            if (response?.status === 200) return respond();
+            if (response.ok) return respond();
             else if (message.mentions.users.has(client.user.id)) return message.reply({
                 content: localize(locale, 'MODELS_DOWN'),
                 allowedMentions: {

@@ -4,6 +4,7 @@ const EmbedMaker = require("../modules/embed");
 const { QuickDB } = require("quick.db");
 const { default: axios } = require("axios");
 const { emojis } = require("../../config");
+const { request, RequestMethod } = require("fetchu.js");
 
 const db = new QuickDB();
 
@@ -97,30 +98,22 @@ module.exports = {
                     content: `Prompt to setup channels:\n${prompt}`
                 }
             ];
-            let response = await axios.post('https://beta.purgpt.xyz/openai/chat/completions', {
-                model: 'gpt-4',
-                messages,
-                fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
-                temperature: 2
-            }, {
+            let response = await request({
+                url: 'https://beta.purgpt.xyz/openai/chat/completions',
+                method: RequestMethod.Post,
+                body: {
+                    model: 'gpt-4-32k',
+                    messages,
+                    fallbacks: ['gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
+                    temperature: 2
+                },
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
                 }
-            }).catch(() => null);
+            });
 
-            if (response?.status !== 200) {
-                response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
-                    model: 'vicuna-7b-v1.5-16k',
-                    messages
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
-                    }
-                }).catch(() => null);
-            };
-            if (response?.status !== 200) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
+            if (!response.ok) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
 
             let message = response.data.choices[0].message;
 
@@ -198,33 +191,23 @@ module.exports = {
                         content: message
                     });
 
-                    let response = await axios.post('https://beta.purgpt.xyz/openai/chat/completions', {
-                        model: 'gpt-4',
-                        messages,
-                        fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
-                        temperature: 2
-                    }, {
+                    let response = await request({
+                        url: 'https://beta.purgpt.xyz/openai/chat/completions',
+                        method: RequestMethod.Post,
+                        body: {
+                            model: 'gpt-4-32k',
+                            messages,
+                            fallbacks: ['gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
+                            temperature: 2
+                        },
                         headers: {
                             'Content-Type': 'application/json',
                             Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
                         }
-                    }).catch(error => console.error(error?.response ?? error));
+                    });
+                    if (!response.ok) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
 
-                    if (response?.status !== 200) {
-                        response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
-                            model: 'vicuna-7b-v1.5-16k',
-                            messages,
-                            temperature: 2
-                        }, {
-                            headers: {
-                                'Content-Type': 'application/json',
-                                Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
-                            }
-                        }).catch(() => null);
-                    };
-                    if (response?.status !== 200) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
-
-                    let responseMessage = response.data.choices[0].message;
+                    let responseMessage = response.body.choices[0].message;
 
                     try {
                         channels = JSON.parse(responseMessage.content);

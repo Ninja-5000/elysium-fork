@@ -3,6 +3,7 @@ const { SlashCommandBuilder, ChatInputCommandInteraction } = require("discord.js
 const { QuickDB } = require("quick.db");
 const { localize } = require("../modules/localization");
 const EmbedMaker = require("../modules/embed");
+const { request, RequestMethod } = require("fetchu.js");
 
 const db = new QuickDB();
 
@@ -112,44 +113,69 @@ module.exports = {
             await db.set(`users.${interaction.user.id}`, user);
         };
 
-        let data = {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
-            }
-        };
         let response;
 
         if (style === 'regular') {
-            response = await axios.post('https://beta.purgpt.xyz/stabilityai/images/generations', {
-                model: 'sdxl',
-                prompt,
-                n: count,
-                fallbacks: ['stable-diffusion-2.1', 'stable-diffusion-1.5', 'stable-diffusion-1.4', 'stable-diffusion']
-            }, data).catch(() => null);
+            response = await request({
+                url: 'https://beta.purgpt.xyz/stabilityai/images/generations',
+                method: RequestMethod.Post,
+                body: {
+                    model: 'sdxl',
+                    prompt,
+                    n: count
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                }
+            });
 
-            if (response?.status === 200) return respond();
+            if (response.ok) return respond();
 
-            response = await axios.post('https://beta.purgpt.xyz/prodia/images/generations', {
-                model: 'anything-diffusion-5',
-                prompt,
-                n: count,
-                fallbacks: ['anything-diffusion-4.5', 'anything-diffusion-3']
-            }, data).catch(() => null);
+            response = await request({
+                url: 'https://beta.purgpt.xyz/prodia/images/generations',
+                method: RequestMethod.Post,
+                body: {
+                    model: 'anything-diffusion-5',
+                    prompt,
+                    n: count,
+                    fallbacks: ['anything-diffusion-4.5', 'anything-diffusion-3']
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                }
+            });
 
-            if (response?.status === 200) return respond();
+            if (response.ok) return respond();
 
-            response = await axios.post('https://beta.purgpt.xyz/openai/images/generations', {
-                model: 'dall-e',
-                prompt,
-                n: count
-            }, data).catch(() => null);
+            response = await request({
+                url: 'https://beta.purgpt.xyz/openai/images/generations',
+                method: RequestMethod.Post,
+                body: {
+                    model: 'dall-e',
+                    prompt,
+                    n: count
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                }
+            });
         } else if (style === 'anime') {
-            response = await axios.post('https://beta.purgpt.xyz/prodia/images/generations', {
-                model: 'anime-diffusion',
-                prompt,
-                n: count
-            }, data).catch(() => null);
+            response = await request({
+                url: 'https://beta.purgpt.xyz/prodia/images/generations',
+                method: RequestMethod.Post,
+                body: {
+                    model: 'anime-diffusion',
+                    prompt,
+                    n: count
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                }
+            });
         };
 
         if (response?.status === 200) return respond();
