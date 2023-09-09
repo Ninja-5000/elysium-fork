@@ -113,9 +113,7 @@ module.exports = {
 
             let message = response.data.choices[0].message;
 
-            messages.push(message.content);
-
-            console.log(message.content)
+            messages.push(message);
             
             let channels;
 
