@@ -2,6 +2,7 @@ const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, C
 const { localize } = require("../modules/localization");
 const EmbedMaker = require("../modules/embed");
 const { QuickDB } = require("quick.db");
+const { default: axios } = require("axios");
 
 const db = new QuickDB();
 
