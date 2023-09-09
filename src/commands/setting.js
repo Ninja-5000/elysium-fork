@@ -60,9 +60,9 @@ module.exports = {
                     .setNameLocalizations({
                         tr: 'olasılık'
                     })
-                    .setDescription('The possibility you want to set. Default: 10%')
+                    .setDescription('The possibility you want to set. Default: 1%')
                     .setDescriptionLocalizations({
-                        tr: 'Ayarlamak istediğiniz olasılık. Varsayılan: %10'
+                        tr: 'Ayarlamak istediğiniz olasılık. Varsayılan: %1'
                     })
                     .setRequired(true)
                     .setMinValue(1)
@@ -139,7 +139,7 @@ module.exports = {
 
                 if (!guild.randomChat) guild.randomChat = {
                     status: false,
-                    possibility: 10
+                    possibility: 1
                 };
 
                 guild.randomChat.status = status;
@@ -152,7 +152,7 @@ module.exports = {
 
                 if (!guild.randomChat) guild.randomChat = {
                     status: false,
-                    possibility: 10
+                    possibility: 1
                 };
 
                 guild.randomChat.possibility = possibility;

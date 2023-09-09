@@ -122,18 +122,14 @@ client.on('interactionCreate', async interaction => {
     .on('messageCreate', async message => {
         try {
             if (message.author.bot) return;
-            if (message.guild && !message.mentions.users.has(client.user.id)) {
-                let guild = await db.get(`guilds.${message.guild.id}`) ?? {};
-
-                if (!message.mentions.users.has(client.user.id)) {
-                    if (!guild?.randomChat?.status) return;
-
-                    let possibility = randomNumber(0, 100);
-
-                    if (possibility < (100 - (guild?.randomChat?.possibility ?? 10))) return;
-                } else if (!guild?.aiChannel?.status || message.channel.id !== guild?.aiChannel?.channel) return;
-            };
             if (message.channel.type === ChannelType.GuildAnnouncement) return;
+            if (message.guild) {
+                let guild = await db.get(`guilds.${message.guild.id}`) ?? {};
+                let possibility = randomNumber(0, 100);
+
+                if (message.mentions.users.has(client.user.id) || (guild?.aiChannel?.status && guild?.aiChannel?.channel === message.channelId) || (guild?.randomChat?.status && possibility > (100 - (guild?.randomChat?.possibility ?? 1)))) { }
+                else return;
+            };
 
             let user = await db.get(`users.${message.author.id}`) ?? {
                 usage: 0,
