@@ -115,10 +115,11 @@ module.exports = {
 
             messages.push(message.content);
 
-            let channels;
+            // match first array
+            let channels = message.content.match(/\[.*?\]/)?.[0];
 
             try {
-                channels = JSON.parse(message);
+                channels = JSON.parse(channels);
             } catch (error) {
                 return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
             };
@@ -138,7 +139,7 @@ module.exports = {
                                 .setCustomId('setup')
                                 .setEmoji(emojis.update)
                                 .setLabel('Setup Channels')
-                                .setStyle(ButtonStyle.Primary),
+                                .setStyle(ButtonStyle.Secondary),
                                 new ButtonBuilder()
                                 .setCustomId('follow-up')
                                 .setEmoji(emojis.send)
