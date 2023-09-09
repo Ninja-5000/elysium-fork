@@ -230,7 +230,11 @@ module.exports = {
                         return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
                     };
 
-                    if (!Array.isArray(channels)) return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
+                    if (!Array.isArray(channels)) {
+                        messages.pop();
+
+                        return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
+                    };
 
                     await interaction.editReply({
                         embeds: [
