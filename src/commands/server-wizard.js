@@ -117,10 +117,10 @@ module.exports = {
 
             console.log(message.content)
             
-            let channels = message.content.match(/\[.*?\]/)?.[0];
+            let channels;
 
             try {
-                channels = JSON.parse(channels);
+                channels = JSON.parse(message.content);
             } catch (error) {
                 return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
             };
@@ -203,10 +203,10 @@ module.exports = {
 
                     messages.push(responseMessage);
 
-                    let channels = message.content.match(/\[.*?\]/)?.[0];
+                    let channels;
 
                     try {
-                        channels = JSON.parse(channels);
+                        channels = JSON.parse(responseMessage.content);
                     } catch (error) {
                         return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
                     };
