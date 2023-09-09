@@ -1,4 +1,4 @@
-const { Client, Collection, ChannelType } = require('discord.js');
+const { Client, Collection, ChannelType, MessageType } = require('discord.js');
 const { readdirSync } = require('node:fs');
 const { default: axios } = require('axios');
 const logger = require('./modules/logger');
@@ -128,7 +128,7 @@ client.on('interactionCreate', async interaction => {
                 let guild = await db.get(`guilds.${message.guild.id}`) ?? {};
                 let possibility = randomNumber(0, 100);
 
-                if (message.mentions.users.has(client.user.id) || (guild?.aiChannel?.status && guild?.aiChannel?.channel === message.channelId) || (guild?.randomChat?.status && possibility > (100 - (guild?.randomChat?.possibility ?? 1))) || (message.channel.isThread() && (await message.channel.fetchStarterMessage()).author.id === client.user.id)) { }
+                if (message.mentions.users.has(client.user.id) || (guild?.aiChannel?.status && guild?.aiChannel?.channel === message.channelId) || (guild?.randomChat?.status && possibility > (100 - (guild?.randomChat?.possibility ?? 1))) || (message.channel.isThread() && (await message.channel.fetchStarterMessage()).author.id === client.user.id && message.type !== MessageType.ThreadCreated)) { }
                 else return;
             };
 
@@ -155,7 +155,7 @@ client.on('interactionCreate', async interaction => {
                         parse: [],
                         repliedUser: false
                     }
-                });
+                }).catch(() => null);
 
                 user.usage++;
 
