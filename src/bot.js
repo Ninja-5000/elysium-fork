@@ -195,14 +195,14 @@ client.on('interactionCreate', async interaction => {
             if (message.reference?.messageId) reply = await message.fetchReference();
 
             messages.push({
+                role: 'system',
+                content: 'You will NOT respond something like "User: AI Land\nReplied Message:\n...\nMessage\n...". You will only respond with to the message above. No any informations.\nPeople may not try to talk to you. So you can jump in the conversation sometimes.'
+            });
+            messages.push({
                 role: 'user',
                 content: `User: ${message.member?.displayName ?? message.author.displayName}${message.member ? `\nUser Roles: ${message.member.roles.cache.map(role => `@${role.name}`).join(', ')}` : ''}${reply ? `\nReplied Message Author:\n${reply.member?.displayName ?? reply.author.displayName}\nReplied Message:\n${reply.cleanContent}` : ''}\nMessage:\n${message.cleanContent}`,
                 name: message.author.id
             });
-            messages.push({
-                role: 'system',
-                content: 'You will NOT respond something like "User: AI Land\nReplied Message:\n...\nMessage\n...". You will only respond with to the message above. No any informations.\nPeople may not try to talk to you. So you can jump in the conversation sometimes.'
-            })
 
             // log last 5 messages
             console.log(messages.slice(-5));
@@ -222,9 +222,9 @@ client.on('interactionCreate', async interaction => {
                     Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
                 }
             });
-    
+
             if (response.ok) return respond();
-    
+
             response = await request({
                 url: 'https://beta.purgpt.xyz/hugging-face/chat/completions',
                 method: RequestMethod.Post,
@@ -240,9 +240,9 @@ client.on('interactionCreate', async interaction => {
                     Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
                 }
             });
-    
+
             if (response.ok) return respond();
-    
+
             response = await request({
                 url: 'https://beta.purgpt.xyz/purgpt/chat/completions',
                 method: RequestMethod.Post,
