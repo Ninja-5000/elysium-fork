@@ -130,7 +130,7 @@ module.exports = {
             };
             if (!response.ok) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
 
-            let message = response.data.choices[0].message;
+            let message = response.body.choices[0].message;
 
             messages.push(message);
 
