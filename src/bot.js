@@ -154,10 +154,19 @@ client.on('interactionCreate', async interaction => {
                 // replace <@username> with <@userid> and <#channelname> with <#channelid>
                 if (userMatches) {
                     for (let match of userMatches) {
-                        console.log(match.replace(/<@!?(\d+)>/g, '$1'))
+                        let id = match.replace(/<@!?(\d+)>/g, '$1');
+
+                        respondMessage = respondMessage.replace(match, `<@${id}>`);
                     };
                 };
-                
+                if (channelMatches) {
+                    for (let match of channelMatches) {
+                        let id = match.replace(/<#(\d+)>/g, '$1');
+
+                        respondMessage = respondMessage.replace(match, `<#${id}>`);
+                    };
+                };
+
                 message.reply({
                     content: respondMessage,
                     allowedMentions: {
