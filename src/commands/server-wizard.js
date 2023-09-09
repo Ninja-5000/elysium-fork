@@ -49,17 +49,18 @@ module.exports = {
         let reply = await interaction.deferReply({
             fetchReply: true
         });
-
+        let locale = interaction.locale;
         let subcommand = interaction.options.getSubcommand();
         let user = await db.get(`users.${interaction.user.id}`) ?? {
             usage: 0,
             premium: false
         };
-        let locale = interaction.locale;
 
         if (user.usage >= 25 && !user.premium) return interaction.editReply(localize(locale, 'LIMIT_REACHED', 25));
         if (subcommand === 'setup-channels') {
-            let prompt = interaction.options.getString('prompt') ?? 'Generate me a server on a random topic.';
+            if (!interaction.appPermissions.has('ManageChannels')) return interaction.editReply(localize(locale, 'MISSING_PERMISSION', 'Manage Channels'));
+
+            let prompt = interaction.options.getString('prompt') ?? 'Generate me a server.';
             let messages = [
                 {
                     role: 'system',

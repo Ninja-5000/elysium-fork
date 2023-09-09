@@ -18,5 +18,6 @@ module.exports = {
     SENDING_FOLLOW_UP: 'Mesaj gönderiliyor...',
     FOLLOW_UP: 'Mesaj Ekle',
     SETUP_CHANNELS: 'Kanalları Ayarla',
-    SETTING_UP_CHANNELS: 'Kanallar ayarlanıyor...'
+    SETTING_UP_CHANNELS: 'Kanallar ayarlanıyor...',
+    MISSING_PERMISSION: 'Bunu yapmak için **{{0}}** iznine ihtiyacım var!'
 };
