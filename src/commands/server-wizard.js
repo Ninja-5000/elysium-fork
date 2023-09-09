@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, ChannelType, GuildFeature } = require("discord.js");
+const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, ChannelType, GuildFeature, ActionRowBuilder, ButtonBuilder, ButtonStyle, InteractionCollector, ComponentType, InteractionType, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 const { localize } = require("../modules/localization");
 const EmbedMaker = require("../modules/embed");
 const { QuickDB } = require("quick.db");
@@ -45,7 +45,9 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction 
      */
     async execute(interaction) {
-        await interaction.deferReply();
+        let reply = await interaction.deferReply({
+            fetchReply: true
+        });
 
         let subcommand = interaction.options.getSubcommand();
         let user = await db.get(`users.${interaction.user.id}`) ?? {
@@ -128,38 +130,125 @@ module.exports = {
                     new EmbedMaker(interaction.client)
                         .setTitle('Channels')
                         .setDescription(channels.map(channel => `- ${channel.type === 'category' ? emojis.categoryChannel : channel.type === 'text' ? emojis.textChannel : channel.type === 'voice' ? emojis.voiceChannel : channel.type === 'forum' ? emojis.forumChannel : channel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${channel.name}${channel.type === 'category' ? `\n${channel.channels.map(subchannel => `  - ${subchannel.type === 'text' ? emojis.textChannel : subchannel.type === 'voice' ? emojis.voiceChannel : subchannel.type === 'forum' ? emojis.forumChannel : subchannel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${subchannel.name}`).join('\n')}` : ''}`).join('\n'))
+                ],
+                components: [
+                    new ActionRowBuilder()
+                        .setComponents(
+                            new ButtonBuilder()
+                                .setCustomId('follow-up')
+                                .setEmoji(emojis.send)
+                                .setLabel('Follow Up')
+                                .setStyle(ButtonStyle.Primary),
+                            new ButtonBuilder()
+                                .setCustomId('setup')
+                                .setEmoji(emojis.send)
+                                .setLabel('Setup Channels')
+                                .setStyle(ButtonStyle.Primary)
+                        )
                 ]
             });
 
-            /*
-            for (let channel of channels) {
-                if (!channel.type || !channel.name || !['category', 'text', 'voice', 'forum', 'announcement', 'stage'].includes(channel.type)) return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
+            const collector = new InteractionCollector(interaction.client, {
+                message: reply.id,
+                idle: 300000,
+                filter: int => int.user.id === interaction.user.id
+            });
 
-                if (channel.type === 'category') {
-                    let category = await interaction.guild.channels.create({
-                        type: ChannelType.GuildCategory,
-                        name: channel.name
+            collector.on('collect', async int => {
+                if (int.customId === 'follow-up') int.showModal(
+                    new ModalBuilder()
+                        .setCustomId('follow-up-modal')
+                        .setTitle('Follow Up')
+                        .setComponents(
+                            new ActionRowBuilder()
+                                .setComponents(
+                                    new TextInputBuilder()
+                                        .setCustomId('message')
+                                        .setLabel('Message')
+                                        .setRequired(true)
+                                        .setStyle(TextInputStyle.Paragraph)
+                                )
+                        )
+                );
+                else if (int.customId === 'follow-up-modal') {
+                    await int.deferUpdate();
+
+                    let message = int.fields.getTextInputValue('message');
+
+                    messages.push({
+                        role: 'user',
+                        content: message
                     });
 
-                    for (let subchannel of channel.channels) {
-                        if (!subchannel.type || !subchannel.name || !['text', 'voice', 'forum', 'announcement', 'stage'].includes(subchannel.type)) return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
+                    let response = await axios.post('https://beta.purgpt.xyz/openai/chat/completions', {
+                        model: 'gpt-4',
+                        messages,
+                        fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
+                        temperature: 2
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                        }
+                    }).catch(() => null);
 
-                        await interaction.guild.channels.create({
-                            name: subchannel.name,
-                            type: subchannel.type === 'text' ? ChannelType.GuildText : subchannel.type === 'voice' ? ChannelType.GuildVoice : subchannel.type === 'forum' ? ChannelType.GuildForum : subchannel.type === 'announcement' ? (interaction.guild.features.includes(GuildFeature.Community) ? ChannelType.GuildAnnouncement : ChannelType.GuildText) : ChannelType.GuildStageVoice,
-                            parent: category.id
+                    if (response?.status !== 200) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
+
+                    let responseMessage = response.data.choices[0].message.content;
+
+                    messages.push(responseMessage);
+
+                    let channels;
+
+                    try {
+                        channels = JSON.parse(responseMessage);
+                    } catch (error) {
+                        return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
+                    };
+
+                    if (!Array.isArray(channels)) return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
+
+                    await interaction.editReply({
+                        embeds: [
+                            new EmbedMaker(interaction.client)
+                                .setTitle('Channels')
+                                .setDescription(channels.map(channel => `- ${channel.type === 'category' ? emojis.categoryChannel : channel.type === 'text' ? emojis.textChannel : channel.type === 'voice' ? emojis.voiceChannel : channel.type === 'forum' ? emojis.forumChannel : channel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${channel.name}${channel.type === 'category' ? `\n${channel.channels.map(subchannel => `  - ${subchannel.type === 'text' ? emojis.textChannel : subchannel.type === 'voice' ? emojis.voiceChannel : subchannel.type === 'forum' ? emojis.forumChannel : subchannel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${subchannel.name}`).join('\n')}` : ''}`).join('\n'))
+                        ]
+                    });
+                } else if (int.customId === 'setup') {
+                    await int.deferUpdate();
+
+                    for (let channel of channels) {
+                        if (!channel.type || !channel.name || !['category', 'text', 'voice', 'forum', 'announcement', 'stage'].includes(channel.type)) return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
+
+                        if (channel.type === 'category') {
+                            let category = await interaction.guild.channels.create({
+                                type: ChannelType.GuildCategory,
+                                name: channel.name
+                            });
+
+                            for (let subchannel of channel.channels) {
+                                if (!subchannel.type || !subchannel.name || !['text', 'voice', 'forum', 'announcement', 'stage'].includes(subchannel.type)) return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
+
+                                await interaction.guild.channels.create({
+                                    name: subchannel.name,
+                                    type: subchannel.type === 'text' ? ChannelType.GuildText : subchannel.type === 'voice' ? ChannelType.GuildVoice : subchannel.type === 'forum' ? ChannelType.GuildForum : subchannel.type === 'announcement' ? (interaction.guild.features.includes(GuildFeature.Community) ? ChannelType.GuildAnnouncement : ChannelType.GuildText) : ChannelType.GuildStageVoice,
+                                    parent: category.id
+                                });
+
+                                await new Promise(resolve => setTimeout(resolve, 1000));
+                            };
+                        } else await interaction.guild.channels.create({
+                            name: channel.name,
+                            type: channel.type === 'text' ? ChannelType.GuildText : channel.type === 'voice' ? ChannelType.GuildVoice : channel.type === 'forum' ? ChannelType.GuildForum : channel.type === 'announcement' ? (interaction.guild.features.includes(GuildFeature.Community) ? ChannelType.GuildAnnouncement : ChannelType.GuildText) : ChannelType.GuildStageVoice,
                         });
 
                         await new Promise(resolve => setTimeout(resolve, 1000));
                     };
-                } else await interaction.guild.channels.create({
-                    name: channel.name,
-                    type: channel.type === 'text' ? ChannelType.GuildText : channel.type === 'voice' ? ChannelType.GuildVoice : channel.type === 'forum' ? ChannelType.GuildForum : channel.type === 'announcement' ? (interaction.guild.features.includes(GuildFeature.Community) ? ChannelType.GuildAnnouncement : ChannelType.GuildText) : ChannelType.GuildStageVoice,
-                });
 
-                await new Promise(resolve => setTimeout(resolve, 1000));
-            };
-            */
+                    await interaction.editReply(localize(locale, 'CHANNELS_SETUP'));
+                };
+            });
         };
     }
 };

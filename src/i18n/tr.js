@@ -13,5 +13,6 @@ module.exports = {
     ERROR: 'Hata',
     LIMIT_REACHED: 'Günlük {{0}} istek limitine ulaştınız. Bu limiti kaldırmak için [premium](<https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=309596&preview=false>) alabilirsiniz.',
     MODELS_DOWN: 'Tüm modeller çevrimdışı. Lütfen daha sonra tekrar deneyin.',
-    INVALID_RESPONSE: 'Yapay zeka geçersiz bir yanıt döndürdü. Lütfen daha sonra tekrar deneyin.'
+    INVALID_RESPONSE: 'Yapay zeka geçersiz bir yanıt döndürdü. Lütfen daha sonra tekrar deneyin.',
+    CHANNELS_SETUP: 'Kanallar başarıyla ayarlandı!'
 };
