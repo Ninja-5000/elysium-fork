@@ -139,6 +139,8 @@ module.exports = {
             try {
                 channels = JSON.parse(message.content);
             } catch (error) {
+                console.log(prompt, message.content);
+
                 return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
             };
 
