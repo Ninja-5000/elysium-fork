@@ -1,8 +1,9 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, ChannelType } = require("discord.js");
+const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, ChannelType, GuildFeature } = require("discord.js");
 const { localize } = require("../modules/localization");
 const EmbedMaker = require("../modules/embed");
 const { QuickDB } = require("quick.db");
 const { default: axios } = require("axios");
+const { emojis } = require("../../config");
 
 const db = new QuickDB();
 
@@ -54,7 +55,6 @@ module.exports = {
         let locale = interaction.locale;
 
         if (user.usage >= 25 && !user.premium) return interaction.editReply(localize(locale, 'LIMIT_REACHED', 25));
-
         if (subcommand === 'setup-channels') {
             let prompt = interaction.options.getString('prompt');
             let messages = [
@@ -127,7 +127,7 @@ module.exports = {
                 embeds: [
                     new EmbedMaker(interaction.client)
                         .setTitle('Channels')
-                        .setDescription(channels.map(channel => `- **${channel.type === 'category' ? 'Category' : channel.type === 'text' ? 'Text' : channel.type === 'voice' ? 'Voice' : channel.type === 'forum' ? 'Forum' : channel.type === 'announcement' ? 'Announcement' : 'Stage'}:** ${channel.name}${channel.type === 'category' ? `\n${channel.channels.map(subchannel => `  - **${subchannel.type === 'text' ? 'Text' : subchannel.type === 'voice' ? 'Voice' : subchannel.type === 'forum' ? 'Forum' : subchannel.type === 'announcement' ? 'Announcement' : 'Stage'}:** ${subchannel.name}`).join('\n')}` : ''}`).join('\n'))
+                        .setDescription(channels.map(channel => `- ${channel.type === 'category' ? emojis.categoryChannel : channel.type === 'text' ? emojis.textChannel : channel.type === 'voice' ? emojis.voiceChannel : channel.type === 'forum' ? emojis.forumChannel : channel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${channel.name}${channel.type === 'category' ? `\n${channel.channels.map(subchannel => `  - ${subchannel.type === 'text' ? emojis.textChannel : subchannel.type === 'voice' ? emojis.voiceChannel : subchannel.type === 'forum' ? emojis.forumChannel : subchannel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${subchannel.name}`).join('\n')}` : ''}`).join('\n'))
                 ]
             });
 
@@ -146,7 +146,7 @@ module.exports = {
 
                         await interaction.guild.channels.create({
                             name: subchannel.name,
-                            type: subchannel.type === 'text' ? ChannelType.GuildText : subchannel.type === 'voice' ? ChannelType.GuildVoice : subchannel.type === 'forum' ? ChannelType.GuildForum : subchannel.type === 'announcement' ? ChannelType.GuildAnnouncement : ChannelType.GuildStageVoice,
+                            type: subchannel.type === 'text' ? ChannelType.GuildText : subchannel.type === 'voice' ? ChannelType.GuildVoice : subchannel.type === 'forum' ? ChannelType.GuildForum : subchannel.type === 'announcement' ? (interaction.guild.features.includes(GuildFeature.Community) ? ChannelType.GuildAnnouncement : ChannelType.GuildText) : ChannelType.GuildStageVoice,
                             parent: category.id
                         });
 
@@ -154,7 +154,7 @@ module.exports = {
                     };
                 } else await interaction.guild.channels.create({
                     name: channel.name,
-                    type: channel.type === 'text' ? ChannelType.GuildText : channel.type === 'voice' ? ChannelType.GuildVoice : channel.type === 'forum' ? ChannelType.GuildForum : channel.type === 'announcement' ? ChannelType.GuildAnnouncement : ChannelType.GuildStageVoice,
+                    type: channel.type === 'text' ? ChannelType.GuildText : channel.type === 'voice' ? ChannelType.GuildVoice : channel.type === 'forum' ? ChannelType.GuildForum : channel.type === 'announcement' ? (interaction.guild.features.includes(GuildFeature.Community) ? ChannelType.GuildAnnouncement : ChannelType.GuildText) : ChannelType.GuildStageVoice,
                 });
 
                 await new Promise(resolve => setTimeout(resolve, 1000));

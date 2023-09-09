@@ -8,7 +8,7 @@ module.exports = class EmbedMaker extends EmbedBuilder {
     constructor(client) {
         super();
 
-        this.setColor('5865F2');
+        this.setColor('9b59b6');
         this.setFooter({
             text: `Made with ❤️ by @${client.users.cache.get(ownerId).tag}`,
             iconURL: useServerIconForFooter ? client.guilds.cache.get(serverId).iconURL({ forceStatic: true }) : client.user.displayAvatarURL({ forceStatic: true })
