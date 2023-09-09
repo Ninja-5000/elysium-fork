@@ -128,7 +128,7 @@ client.on('interactionCreate', async interaction => {
                 let guild = await db.get(`guilds.${message.guild.id}`) ?? {};
                 let possibility = randomNumber(0, 100);
 
-                if (message.mentions.users.has(client.user.id) || (guild?.aiChannel?.status && guild?.aiChannel?.channel === message.channelId) || (guild?.randomChat?.status && possibility > (100 - (guild?.randomChat?.possibility ?? 1)))) { }
+                if (message.mentions.users.has(client.user.id) || (guild?.aiChannel?.status && guild?.aiChannel?.channel === message.channelId) || (guild?.randomChat?.status && possibility > (100 - (guild?.randomChat?.possibility ?? 1))) || (message.channel.isThread() && (await message.channel.fetchStarterMessage()).author.id === client.user.id)) { }
                 else return;
             };
 
@@ -187,17 +187,13 @@ client.on('interactionCreate', async interaction => {
 
             messages.push({
                 role: 'system',
-                content: `You are Elysium. You are chatting in a Discord server. Here are some information about your environment:\nServer: ${message.guild?.name ?? 'DMs'}${message.guild ? `\nServer Owner: ${owner.displayName}\nServer Description: ${message.guild.description ?? 'None'}` : ''}\nChannel: ${message.channel.name}\nChannel Description: ${message.channel.topic ?? 'None'}`,
+                content: `You are Elysium. You are chatting in a Discord server. Here are some information about your environment:\nServer: ${message.guild?.name ?? 'DMs'}${message.guild ? `\nServer Owner: ${owner.displayName}\nServer Description: ${message.guild.description ?? 'None'}` : ''}\nChannel: ${message.channel.name}\nChannel Description: ${message.channel.topic ?? 'None'}\n\nYou will NOT respond something like "User: AI Land\nReplied Message:\n...\nMessage\n...". You will only respond with to the message above. No any informations.\nPeople may not try to talk to you. So you can jump in the conversation sometimes.`,
             });
 
             let reply;
 
             if (message.reference?.messageId) reply = await message.fetchReference();
 
-            messages.push({
-                role: 'system',
-                content: 'You will NOT respond something like "User: AI Land\nReplied Message:\n...\nMessage\n...". You will only respond with to the message above. No any informations.\nPeople may not try to talk to you. So you can jump in the conversation sometimes.'
-            });
             messages.push({
                 role: 'user',
                 content: `User: ${message.member?.displayName ?? message.author.displayName}${message.member ? `\nUser Roles: ${message.member.roles.cache.map(role => `@${role.name}`).join(', ')}` : ''}${reply ? `\nReplied Message Author:\n${reply.member?.displayName ?? reply.author.displayName}\nReplied Message:\n${reply.cleanContent}` : ''}\nMessage:\n${message.cleanContent}`,
