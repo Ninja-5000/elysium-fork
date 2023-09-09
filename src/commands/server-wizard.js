@@ -136,12 +136,12 @@ module.exports = {
                         .setComponents(
                             new ButtonBuilder()
                                 .setCustomId('setup')
-                                .setEmoji(emojis.send)
+                                .setEmoji(emojis.update)
                                 .setLabel('Setup Channels')
                                 .setStyle(ButtonStyle.Primary),
                                 new ButtonBuilder()
                                 .setCustomId('follow-up')
-                                .setEmoji(emojis.update)
+                                .setEmoji(emojis.send)
                                 .setLabel('Add Follow Up')
                                 .setStyle(ButtonStyle.Secondary)
                         )
@@ -172,6 +172,9 @@ module.exports = {
                 );
                 else if (int.customId === 'follow-up-modal') {
                     await int.deferUpdate();
+                    await interaction.editReply({
+                        content: ''
+                    })
 
                     let message = int.fields.getTextInputValue('message');
 
@@ -190,7 +193,7 @@ module.exports = {
                             'Content-Type': 'application/json',
                             Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
                         }
-                    }).catch(() => null);
+                    }).catch(error => console.error(error?.response ?? error));
 
                     if (response?.status !== 200) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
 
