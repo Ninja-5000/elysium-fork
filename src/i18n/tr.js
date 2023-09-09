@@ -17,5 +17,6 @@ module.exports = {
     CHANNELS_SETUP: 'Kanallar başarıyla ayarlandı!',
     SENDING_FOLLOW_UP: 'Mesaj gönderiliyor...',
     FOLLOW_UP: 'Mesaj Ekle',
-    SETUP_CHANNELS: 'Kanalları Ayarla'
+    SETUP_CHANNELS: 'Kanalları Ayarla',
+    SETTING_UP_CHANNELS: 'Kanallar ayarlanıyor...'
 };

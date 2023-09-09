@@ -277,7 +277,7 @@ module.exports = {
                         ]
                     });
                 } else if (int.customId === 'setup') {
-                    await int.deferUpdate();
+                    await int.deferUpdate().catch(() => int.reply(localize(locale, 'SETTING_UP_CHANNELS')).catch(() => int.editReply(localize(locale, 'SETTING_UP_CHANNELS'))));
 
                     for (let channel of channels) {
                         if (!channel.type || !channel.name || !['category', 'text', 'voice', 'forum', 'announcement', 'stage'].includes(channel.type)) return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));

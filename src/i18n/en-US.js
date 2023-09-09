@@ -18,4 +18,5 @@ module.exports = {
     SENDING_FOLLOW_UP: 'Sending follow up message...',
     FOLLOW_UP: 'Add Follow Up',
     SETUP_CHANNELS: 'Setup Channels',
+    SETTING_UP_CHANNELS: 'Setting up channels...'
 };
