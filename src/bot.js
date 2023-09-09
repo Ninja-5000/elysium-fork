@@ -146,7 +146,7 @@ client.on('interactionCreate', async interaction => {
             messages.pop();
 
             function respond() {
-                let respondMessage = response.data.choices[0].message.content.replace(/User:(\n| ).*(\nReplied Message Author:(\n| ).*|)(\nReplied Message:(\n| ).*|)\nMessage:(\n| )/g, '')
+                let respondMessage = response.data.choices[0].message.content.replace(/(User:(\n| ).*|)(\nUser Roles:(\n| ).*|)(\nReplied Message Author:(\n| ).*|)(\nReplied Message:(\n| ).*|)\nMessage:(\n| )/g, '')
 
                 message.reply({
                     content: respondMessage,
@@ -181,7 +181,7 @@ client.on('interactionCreate', async interaction => {
 
                 messages.push({
                     role: msg.author.id === client.user.id ? 'assistant' : 'user',
-                    content: msg.author.id === client.user.id ? msg.cleanContent : `User: ${msg.member?.displayName ?? msg.author.displayName}${reply ? `\nReplied Message Author:\n${reply.member?.displayName ?? reply.author.displayName}\nReplied Message:\n${reply.cleanContent}` : ''}\nMessage:\n${msg.cleanContent}`,
+                    content: msg.author.id === client.user.id ? msg.cleanContent : `User: ${msg.member?.displayName ?? msg.author.displayName}${msg.member ? `\nUser Roles: ${msg.member.roles.cache.map(role => `@${role.name}`).join(', ')}` : ''}${reply ? `\nReplied Message Author:\n${reply.member?.displayName ?? reply.author.displayName}\nReplied Message:\n${reply.cleanContent}` : ''}\nMessage:\n${msg.cleanContent}`,
                     name: msg.author.id
                 });
             };
@@ -197,7 +197,7 @@ client.on('interactionCreate', async interaction => {
 
             messages.push({
                 role: 'user',
-                content: `User: ${message.member?.displayName ?? message.author.displayName}${reply ? `\nReplied Message Author:\n${reply.member?.displayName ?? reply.author.displayName}\nReplied Message:\n${reply.cleanContent}` : ''}\nMessage:\n${message.cleanContent}`,
+                content: `User: ${message.member?.displayName ?? message.author.displayName}${msg.member ? `\nUser Roles: ${msg.member.roles.cache.map(role => `@${role.name}`).join(', ')}` : ''}${reply ? `\nReplied Message Author:\n${reply.member?.displayName ?? reply.author.displayName}\nReplied Message:\n${reply.cleanContent}` : ''}\nMessage:\n${message.cleanContent}`,
                 name: message.author.id
             });
             messages.push({
