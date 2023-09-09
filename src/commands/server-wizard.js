@@ -190,6 +190,10 @@ module.exports = {
                     let message = int.fields.getTextInputValue('message');
 
                     messages.push({
+                        role: 'system',
+                        content: 'Do not forget, YOU WILL ONLY RESPOND WITH ARRAY OF CHANNELS. NOT WITH ANYTHING ELSE. And you will use your creativity to setup channels for a server.'
+                    });
+                    messages.push({
                         role: 'user',
                         content: message
                     });
@@ -237,6 +241,8 @@ module.exports = {
                                 content
                             });
                         } catch (error) {
+                            console.log(responseMessage.content)
+
                             return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
                         };
                     };
