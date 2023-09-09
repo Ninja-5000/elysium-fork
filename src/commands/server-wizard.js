@@ -111,9 +111,9 @@ module.exports = {
 
             if (response?.status !== 200) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
 
-            let message = response.data.choices[0].message.content;
+            let message = response.data.choices[0].message;
 
-            messages.push(message);
+            messages.push(message.content);
 
             let channels;
 
@@ -197,14 +197,14 @@ module.exports = {
 
                     if (response?.status !== 200) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
 
-                    let responseMessage = response.data.choices[0].message.content;
+                    let responseMessage = response.data.choices[0].message;
 
                     messages.push(responseMessage);
 
                     let channels;
 
                     try {
-                        channels = JSON.parse(responseMessage);
+                        channels = JSON.parse(responseMessage.content);
                     } catch (error) {
                         return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
                     };
