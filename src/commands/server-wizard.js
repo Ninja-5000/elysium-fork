@@ -114,8 +114,7 @@ module.exports = {
             let message = response.data.choices[0].message;
 
             messages.push(message.content);
-
-            // match first array
+            
             let channels = message.content.match(/\[.*?\]/)?.[0];
 
             try {
@@ -202,10 +201,10 @@ module.exports = {
 
                     messages.push(responseMessage);
 
-                    let channels;
+                    let channels = message.content.match(/\[.*?\]/)?.[0];
 
                     try {
-                        channels = JSON.parse(responseMessage.content);
+                        channels = JSON.parse(channels);
                     } catch (error) {
                         return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
                     };
