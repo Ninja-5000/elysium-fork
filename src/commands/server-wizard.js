@@ -135,15 +135,15 @@ module.exports = {
                     new ActionRowBuilder()
                         .setComponents(
                             new ButtonBuilder()
-                                .setCustomId('follow-up')
-                                .setEmoji(emojis.send)
-                                .setLabel('Follow Up')
-                                .setStyle(ButtonStyle.Primary),
-                            new ButtonBuilder()
                                 .setCustomId('setup')
                                 .setEmoji(emojis.send)
                                 .setLabel('Setup Channels')
-                                .setStyle(ButtonStyle.Primary)
+                                .setStyle(ButtonStyle.Primary),
+                                new ButtonBuilder()
+                                .setCustomId('follow-up')
+                                .setEmoji(emojis.update)
+                                .setLabel('Add Follow Up')
+                                .setStyle(ButtonStyle.Secondary)
                         )
                 ]
             });
@@ -246,7 +246,11 @@ module.exports = {
                         await new Promise(resolve => setTimeout(resolve, 1000));
                     };
 
-                    await interaction.editReply(localize(locale, 'CHANNELS_SETUP'));
+                    await interaction.editReply({
+                        content: localize(locale, 'CHANNELS_SETUP'),
+                        components: [],
+                        embeds: []
+                    });
                 };
             });
         };

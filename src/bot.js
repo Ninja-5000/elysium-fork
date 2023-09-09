@@ -93,16 +93,6 @@ client.on('interactionCreate', async interaction => {
         logger('debug', 'COMMAND', 'Received message component', `${interaction.customId} (${interaction.componentType})`, 'from', interaction.guild ? `${interaction.guild.name} (${interaction.guild.id})` : 'DMs', 'by', `${interaction.user.tag} (${interaction.user.id})`);
 
         try {
-            switch (interaction.customId) {
-                default: {
-                    logger('warning', 'COMMAND', 'Message component', interaction.customId, 'not found');
-
-                    return interaction.reply({
-                        content: localize(interaction.locale, 'NOT_FOUND', 'Message component'),
-                        ephemeral: true
-                    });
-                }
-            };
         } catch (error) {
             logger('error', 'COMMAND', 'Error while executing message component:', `${error.message}\n`, error.stack);
 
@@ -117,16 +107,6 @@ client.on('interactionCreate', async interaction => {
         logger('debug', 'COMMAND', 'Received modal submit', interaction.customId, 'from', interaction.guild ? `${interaction.guild.name} (${interaction.guild.id})` : 'DMs', 'by', `${interaction.user.tag} (${interaction.user.id})`);
 
         try {
-            switch (interaction.customId) {
-                default: {
-                    logger('warning', 'COMMAND', 'Modal', interaction.customId, 'not found');
-
-                    return interaction.reply({
-                        content: localize(interaction.locale, 'NOT_FOUND', 'Modal'),
-                        ephemeral: true
-                    });
-                }
-            };
         } catch (error) {
             logger('error', 'COMMAND', 'Error while executing modal:', `${error.message}\n`, error.stack);
 
