@@ -167,9 +167,11 @@ client.on('interactionCreate', async interaction => {
                     }
                 }).catch(() => null);
 
-                user.usage++;
+                if (message.mentions.users.has(client.user.id)) {
+                    user.usage++;
 
-                db.set(`users.${message.author.id}`, user);
+                    db.set(`users.${message.author.id}`, user);
+                };
 
                 console.log(`${message.author.username} (${message.author.id}) used the bot. Usage: ${user.usage}`);
             };
