@@ -148,24 +148,6 @@ client.on('interactionCreate', async interaction => {
 
             function respond() {
                 let respondMessage = response.body.choices[0].message.content.replace(/(User:(\n| ).*|)(\nUser Roles:(\n| ).*|)(\nReplied Message Author:(\n| ).*|)(\nReplied Message:(\n| ).*|)\nMessage:(\n| )/g, '')
-                let userMatches = respondMessage.match(/<@!?(\d+)>/g);
-                let channelMatches = respondMessage.match(/<#(\d+)>/g);
-
-                // replace <@username> with <@userid> and <#channelname> with <#channelid>
-                if (userMatches) {
-                    for (let match of userMatches) {
-                        let id = match.replace(/<@!?(\d+)>/g, '$1');
-
-                        respondMessage = respondMessage.replace(match, `<@${id}>`);
-                    };
-                };
-                if (channelMatches) {
-                    for (let match of channelMatches) {
-                        let id = match.replace(/<#(\d+)>/g, '$1');
-
-                        respondMessage = respondMessage.replace(match, `<#${id}>`);
-                    };
-                };
 
                 message.reply({
                     content: respondMessage,
@@ -205,11 +187,7 @@ client.on('interactionCreate', async interaction => {
 
             messages.push({
                 role: 'system',
-                content: `You are Elysium. You are chatting in a Discord server. Here are some information about your environment:\nServer: ${message.guild?.name ?? 'DMs'}${message.guild ? `\nServer Owner: ${owner.displayName}\nServer Description: ${message.guild.description ?? 'None'}` : ''}\nChannel: ${message.channel.name}\nChannel Description: ${message.channel.topic ?? 'None'}\n\nYou will NOT respond something like "User: AI Land\nReplied Message:\n...\nMessage\n...". You will only respond with to the message above. No any informations.\nPeople may not try to talk to you. So you can jump in the conversation sometimes.`,
-            });
-            messages.push({
-                role: 'system',
-                content: `You can mention users with <@username> (example: <@✨Tolgchu✨>)\nYou can mention channels with <#channelname> (example: #general)`,
+                content: `You are Elysium. You are chatting in a Discord server. Here are some information about your environment:\nServer: ${message.guild?.name ?? 'DMs'}${message.guild ? `\nServer Owner: ${owner.displayName}\nServer Description: ${message.guild.description ?? 'None'}` : ''}\nChannel: ${message.channel.name} (mention: <#${message.channelId}>)\nChannel Description: ${message.channel.topic ?? 'None'}\n\nYou will NOT respond something like "User: AI Land\nReplied Message:\n...\nMessage\n...". You will only respond with to the message above. No any informations.\nPeople may not try to talk to you. So you can jump in the conversation sometimes.`,
             });
 
             let reply;
