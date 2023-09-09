@@ -201,8 +201,6 @@ module.exports = {
 
                     messages.push(responseMessage);
 
-                    let channels;
-
                     try {
                         channels = JSON.parse(responseMessage.content);
                     } catch (error) {
