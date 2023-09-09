@@ -201,7 +201,7 @@ client.on('interactionCreate', async interaction => {
 
             messages.push({
                 role: 'user',
-                content: `User: ${message.member?.displayName ?? message.author.displayName}${msg.member ? `\nUser Roles: ${msg.member.roles.cache.map(role => `@${role.name}`).join(', ')}` : ''}${reply ? `\nReplied Message Author:\n${reply.member?.displayName ?? reply.author.displayName}\nReplied Message:\n${reply.cleanContent}` : ''}\nMessage:\n${message.cleanContent}`,
+                content: `User: ${message.member?.displayName ?? message.author.displayName}${message.member ? `\nUser Roles: ${message.member.roles.cache.map(role => `@${role.name}`).join(', ')}` : ''}${reply ? `\nReplied Message Author:\n${reply.member?.displayName ?? reply.author.displayName}\nReplied Message:\n${reply.cleanContent}` : ''}\nMessage:\n${message.cleanContent}`,
                 name: message.author.id
             });
             messages.push({
