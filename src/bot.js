@@ -170,7 +170,7 @@ client.on('interactionCreate', async interaction => {
             messages.pop();
 
             function respond() {
-                let respondMessage = response.data.choices[0].message.content.replace(/User: .*\nReplied Message:\n.*\nMessage:/g, '').replace(/User: .*\nMessage:\n/g, '').replace(/Message:\n/g, '');
+                let respondMessage = response.data.choices[0].message.content.replace(/User: .*(\nReplied Message Author:\n.*|)(\nReplied Message:(\n| ).*|)\nMessage:(\n| )/g, '')
 
                 message.reply({
                     content: respondMessage,
