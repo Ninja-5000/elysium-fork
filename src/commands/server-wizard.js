@@ -109,12 +109,18 @@ module.exports = {
                 }
             }).catch(() => null);
 
+            if (response?.status !== 200) {
+                response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
+                    model: 'vicuna-7b-v1.5-16k',
+                    messages
+                }, data).catch(() => null);
+            };
             if (response?.status !== 200) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
 
             let message = response.data.choices[0].message;
 
             messages.push(message);
-            
+
             let channels;
 
             try {
@@ -139,7 +145,7 @@ module.exports = {
                                 .setEmoji(emojis.update)
                                 .setLabel('Setup Channels')
                                 .setStyle(ButtonStyle.Secondary),
-                                new ButtonBuilder()
+                            new ButtonBuilder()
                                 .setCustomId('follow-up')
                                 .setEmoji(emojis.send)
                                 .setLabel('Add Follow Up')
@@ -195,6 +201,13 @@ module.exports = {
                         }
                     }).catch(error => console.error(error?.response ?? error));
 
+                    if (response?.status !== 200) {
+                        response = await axios.post('https://beta.purgpt.xyz/purgpt/chat/completions', {
+                            model: 'vicuna-7b-v1.5-16k',
+                            messages,
+                            temperature: 2
+                        }, data).catch(() => null);
+                    };
                     if (response?.status !== 200) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
 
                     let responseMessage = response.data.choices[0].message;
