@@ -152,7 +152,7 @@ client.on('interactionCreate', async interaction => {
                     content: respondMessage,
                     allowedMentions: {
                         parse: [],
-                        repliedUser: true
+                        repliedUser: false
                     }
                 });
 
