@@ -19,7 +19,7 @@ module.exports = {
             tr: 'Yapay zekaya bir şey sorar'
         })
         .addStringOption(option => option
-            .setName('question')
+            .setName('prompt')
             .setDescription('The question you want to ask')
             .setDescriptionLocalizations({
                 tr: 'Sormak istediğiniz soru'
@@ -40,7 +40,7 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
 
-        let question = interaction.options.getString('question');
+        let question = interaction.options.getString('prompt');
         let debug = interaction.options.getBoolean('debug') ?? false;
         let user = await db.get(`users.${interaction.user.id}`) ?? {
             usage: 0,

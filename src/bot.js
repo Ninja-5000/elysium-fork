@@ -212,12 +212,7 @@ client.on('interactionCreate', async interaction => {
                 method: RequestMethod.Post,
                 body: {
                     model: 'gpt-4-32k',
-                    messages: [
-                        {
-                            role: 'user',
-                            content: question
-                        }
-                    ],
+                    messages,
                     fallbacks: ['gpt-4', 'gpt-3.5-turbo', 'gpt-3.5-turbo-16k'],
                     max_tokens: 2000,
                     maxTokens: 2000
@@ -235,12 +230,7 @@ client.on('interactionCreate', async interaction => {
                 method: RequestMethod.Post,
                 body: {
                     model: 'llama-2-70b-chat',
-                    messages: [
-                        {
-                            role: 'user',
-                            content: question
-                        }
-                    ],
+                    messages,
                     fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b'],
                     max_tokens: 2000,
                     maxTokens: 2000
@@ -258,12 +248,7 @@ client.on('interactionCreate', async interaction => {
                 method: RequestMethod.Post,
                 body: {
                     model: 'vicuna-7b-v1.5-16k',
-                    messages: [
-                        {
-                            role: 'user',
-                            content: question
-                        }
-                    ],
+                    messages,
                     max_tokens: 2000,
                     maxTokens: 2000
                 },
