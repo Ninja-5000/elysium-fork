@@ -100,7 +100,12 @@ module.exports = {
                 messages,
                 fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
                 temperature: 2
-            }, data).catch(() => null);
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                }
+            }).catch(() => null);
 
             if (response?.status !== 200) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
 
