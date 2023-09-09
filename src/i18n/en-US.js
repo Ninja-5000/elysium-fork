@@ -14,5 +14,8 @@ module.exports = {
     LIMIT_REACHED: 'You have reached the limit of {{0}} requests per day. You can get [premium](<https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=309596&preview=false>) to remove this limit.',
     MODELS_DOWN: 'All models are down. Please try again later.',
     INVALID_RESPONSE: 'AI returned an invalid response. Please try again later.',
-    CHANNELS_SETUP: 'Channels setup successfully!'
+    CHANNELS_SETUP: 'Channels setup successfully!',
+    SENDING_FOLLOW_UP: 'Sending follow up message...',
+    FOLLOW_UP: 'Add Follow Up',
+    SETUP_CHANNELS: 'Setup Channels',
 };

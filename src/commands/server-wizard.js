@@ -148,12 +148,12 @@ module.exports = {
                             new ButtonBuilder()
                                 .setCustomId('setup')
                                 .setEmoji(emojis.update)
-                                .setLabel('Setup Channels')
+                                .setLabel(localize(locale, 'SETUP_CHANNELS'))
                                 .setStyle(ButtonStyle.Secondary),
                             new ButtonBuilder()
                                 .setCustomId('follow-up')
                                 .setEmoji(emojis.send)
-                                .setLabel('Add Follow Up')
+                                .setLabel(localize(locale, 'FOLLOW_UP'))
                                 .setStyle(ButtonStyle.Secondary)
                         )
                 ]
@@ -182,7 +182,7 @@ module.exports = {
                         )
                 );
                 else if (int.customId === 'follow-up-modal') {
-                    await int.deferUpdate();
+                    await int.deferUpdate().catch(() => int.reply(localize(locale, 'SENDING_FOLLOW_UP')).catch(() => int.editReply(localize(locale, 'SENDING_FOLLOW_UP'))));
                     await interaction.editReply({
                         content: ''
                     })
