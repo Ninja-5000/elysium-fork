@@ -238,7 +238,13 @@ client.on('interactionCreate', async interaction => {
             }, data).catch(() => null);
 
             if (response?.status === 200) return respond();
-            else return message.reply(localize(locale, 'MODELS_DOWN'));
+            else if (message.mentions.users.has(client.user.id)) return message.reply({
+                content: localize(locale, 'MODELS_DOWN'),
+                allowedMentions: {
+                    parse: [],
+                    repliedUser: false
+                }
+            });
         } catch (error) {
             console.log('Error', error);
         };
