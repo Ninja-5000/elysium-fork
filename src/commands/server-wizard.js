@@ -39,7 +39,7 @@ module.exports = {
                 .setDescriptionLocalizations({
                     tr: 'Kanalları ayarlamak için açıklama'
                 })
-                .setRequired(true)
+                .setRequired(false)
             )
         ),
     /**
@@ -59,7 +59,7 @@ module.exports = {
 
         if (user.usage >= 25 && !user.premium) return interaction.editReply(localize(locale, 'LIMIT_REACHED', 25));
         if (subcommand === 'setup-channels') {
-            let prompt = interaction.options.getString('prompt');
+            let prompt = interaction.options.getString('prompt') ?? 'Generate me a server on a random topic.';
             let messages = [
                 {
                     role: 'system',
