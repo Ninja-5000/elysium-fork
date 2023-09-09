@@ -186,9 +186,13 @@ client.on('interactionCreate', async interaction => {
                 });
             };
 
+            let owner;
+
+            if (message.guild) owner = await message.guild.fetchOwner();
+
             messages.push({
                 role: 'system',
-                content: `You are Elysium. You are chatting in a Discord server. Here are some information about your environment:\nServer: ${message.guild?.name ?? 'DMs'}${message.guild ? `\nServer Description: ${message.guild.description ?? 'None'}` : ''}\nChannel: ${message.channel.name}\nChannel Description: ${message.channel.topic ?? 'None'}`,
+                content: `You are Elysium. You are chatting in a Discord server. Here are some information about your environment:\nServer: ${message.guild?.name ?? 'DMs'}${message.guild ? `\nServer Owner: ${owner.displayName}\nServer Description: ${message.guild.description ?? 'None'}` : ''}\nChannel: ${message.channel.name}\nChannel Description: ${message.channel.topic ?? 'None'}`,
             });
 
             let reply;
