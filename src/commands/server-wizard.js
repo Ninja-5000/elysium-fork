@@ -1,6 +1,9 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, ChannelType } = require("discord.js");
 const { localize } = require("../modules/localization");
 const EmbedMaker = require("../modules/embed");
+const { QuickDB } = require("quick.db");
+
+const db = new QuickDB();
 
 module.exports = {
     category: 'Owner',
