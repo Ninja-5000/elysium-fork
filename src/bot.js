@@ -212,7 +212,7 @@ client.on('interactionCreate', async interaction => {
 
             messages.push({
                 role: 'system',
-                content: `You are AI Land. You are chatting in a Discord server. Here are some information about your environment:\nServer: ${message.guild?.name ?? 'DMs'}${message.guild ? `\nServer Description: ${message.guild.description ?? 'None'}` : ''}\nChannel: ${message.channel.name}\nChannel Description: ${message.channel.topic ?? 'None'}`,
+                content: `You are Elysium. You are chatting in a Discord server. Here are some information about your environment:\nServer: ${message.guild?.name ?? 'DMs'}${message.guild ? `\nServer Description: ${message.guild.description ?? 'None'}` : ''}\nChannel: ${message.channel.name}\nChannel Description: ${message.channel.topic ?? 'None'}`,
             });
 
             let reply;
@@ -226,7 +226,7 @@ client.on('interactionCreate', async interaction => {
             });
             messages.push({
                 role: 'system',
-                content: 'You will NOT respond something like "User: AI Land\nReplied Message:\n...\nMessage\n...". You will only respond with to the message above. No any informations.'
+                content: 'You will NOT respond something like "User: AI Land\nReplied Message:\n...\nMessage\n...". You will only respond with to the message above. No any informations.\nPeople may not try to talk to you. So you can jump in the conversation sometimes.'
             })
 
             // log last 5 messages
