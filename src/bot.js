@@ -138,7 +138,17 @@ client.on('interactionCreate', async interaction => {
             };
             let locale = message.locale;
 
-            if (user.usage >= 25 && !user.premium) return;
+            if (user.usage >= 25 && !user.premium) {
+                if (message.mentions.users.has(client.user.id)) return message.reply({
+                    content: localize(locale, 'LIMIT_REACHED', 25),
+                    allowedMentions: {
+                        parse: [],
+                        repliedUser: false
+                    }
+                });
+
+                return;
+            };
 
             await message.channel.sendTyping();
 

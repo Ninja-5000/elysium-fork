@@ -11,7 +11,7 @@ module.exports = {
     DEVELOPER_ONLY: 'This action can only be performed by the developers of the bot!',
     OUTPUT: 'Output',
     ERROR: 'Error',
-    LIMIT_REACHED: 'You have reached the limit of {{0}} requests per day. You can get [premium](<https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=309596&preview=false>) to remove this limit.',
+    LIMIT_REACHED: 'You have reached the limit of {{0}} requests per day. You can get [premium](<https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=316102&preview=false>) to remove this limit.',
     MODELS_DOWN: 'All models we use are currently down. Please try again later and DO NOT ping the developers about this.',
     INVALID_RESPONSE: 'AI returned an invalid response. Please try again later.',
     CHANNELS_SETUP: 'Channels setup successfully!',
