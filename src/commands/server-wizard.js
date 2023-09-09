@@ -84,7 +84,7 @@ module.exports = {
                 },
                 {
                     role: 'system',
-                    content: 'Great! Now you are ready to setup channels for a server. Do not forget, YOU WILL ONLY RESPOND WITH ARRAY OF CHANNELS. NOT WITH ANYTHING ELSE.'
+                    content: 'Great! Now you are ready to setup channels for a server. Do not forget, YOU WILL ONLY RESPOND WITH ARRAY OF CHANNELS. NOT WITH ANYTHING ELSE. And you will use your creativity to setup channels for a server.'
                 },
                 {
                     role: 'user',
@@ -94,7 +94,8 @@ module.exports = {
             let response = await axios.post('https://beta.purgpt.xyz/openai/chat/completions', {
                 model: 'gpt-4',
                 messages,
-                fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo']
+                fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
+                temperature: 2
             }, data).catch(() => null);
 
             if (response?.status !== 200) return interaction.editReply(localize(locale, 'MODELS_DOWN'));
