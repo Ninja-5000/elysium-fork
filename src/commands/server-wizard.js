@@ -138,7 +138,9 @@ module.exports = {
             let channels;
 
             try {
-                channels = JSON.parse(message.content);
+                let matched = message.content.match(/\[.*?\]/)?.[0];
+
+                channels = JSON.parse(matched);
             } catch (error) {
                 console.log(prompt, message.content);
 
