@@ -227,7 +227,18 @@ module.exports = {
 
                         messages.push(responseMessage);
                     } catch (error) {
-                        return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
+                        try {
+                            let content = responseMessage.content.match(/\[.*?\]/)?.[0];
+
+                            channels = JSON.parse(content);
+
+                            messages.push({
+                                role: 'assistant',
+                                content
+                            });
+                        } catch (error) {
+                            return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
+                        };
                     };
 
                     if (!Array.isArray(channels)) {
