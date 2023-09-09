@@ -114,6 +114,8 @@ module.exports = {
             let message = response.data.choices[0].message;
 
             messages.push(message.content);
+
+            console.log(message.content)
             
             let channels = message.content.match(/\[.*?\]/)?.[0];
 
