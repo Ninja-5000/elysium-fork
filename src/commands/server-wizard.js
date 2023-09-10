@@ -439,7 +439,7 @@ module.exports = {
                 },
                 {
                     role: 'user',
-                    content: `Prompt to setup channels:\n${prompt}\n\nAvailable Custom Role Icons:\n${interaction.guild.emojis.cache.map(emoji => `- ${emoji.name}: ${emoji.id}`).join('\n')}`
+                    content: `Prompt to setup channels:\n${prompt}\n\nAvailable Custom Role Icons:\n${interaction.guild.emojis.cache.size === 0 ? 'None. You can just use unicode emojis for that.' :  interaction.guild.emojis.cache.map(emoji => `- ${emoji.name}: ${emoji.id}`).join('\n')}`
                 }
             ];
             let response = await request({
