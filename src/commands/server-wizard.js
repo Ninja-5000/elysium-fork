@@ -415,12 +415,12 @@ module.exports = {
                 },
                 {
                     role: 'user',
-                    content: `Prompt to setup roles:\nCreate a gaming server with at least 5 roles\n\nAvailable Custom Role Icons:\n- admin: 3285793523\n- moderator: 4758238956`,
+                    content: `Prompt to setup roles:\nCreate a gaming server with at least 5 roles\n\nAvailable Custom Role Icons:\n- SnowAngel: 1049608236979986483\n- HappyGraggle: 1049608548654514226\n`,
                     name: 'example_user'
                 },
                 {
                     role: 'assistant',
-                    content: '[{ \"name\" : \"Admin\", \"color\": \"ff0000\", \"icon\": \"3285793523\", \"hoist\": true, \"mentionable\": true, \"permissions\": 2147483647 }, \n{ \"name\" : \"Moderator\", \"color\": \"00ff00\", \"icon\": \"4758238956\", \"hoist\": true, \"mentionable\": true, \"permissions\": 8192 }, \n{ \"name\" : \"Member\", \"color\": \"0000ff\", \"icon\": \"🎮\", \"hoist\": false, \"mentionable\": false, \"permissions\": 104324673 }, \n{ \"name\" : \"Newbie\", \"color\": \"ffff00\", \"icon\": \"👾\", \"hoist\": false, \"mentionable\": false, \"permissions\": 104324673 }, \n{ \"name\" : \"Guest\", \"color\": \"808080\", \"icon\": \"🎲\", \"hoist\": false, \"mentionable\": false, \"permissions\": 104324673 }]',
+                    content: '[{ \"name\" : \"Admin\", \"color\": \"ff0000\", \"icon\": \"1049608236979986483\", \"hoist\": true, \"mentionable\": true, \"permissions\": 2147483647 }, \n{ \"name\" : \"Moderator\", \"color\": \"00ff00\", \"icon\": \"1049608548654514226\n\", \"hoist\": true, \"mentionable\": true, \"permissions\": 8192 }, \n{ \"name\" : \"Member\", \"color\": \"0000ff\", \"icon\": \"🎮\", \"hoist\": false, \"mentionable\": false, \"permissions\": 104324673 }, \n{ \"name\" : \"Newbie\", \"color\": \"ffff00\", \"icon\": \"👾\", \"hoist\": false, \"mentionable\": false, \"permissions\": 104324673 }, \n{ \"name\" : \"Guest\", \"color\": \"808080\", \"icon\": \"🎲\", \"hoist\": false, \"mentionable\": false, \"permissions\": 104324673 }]',
                     name: 'example_assistant'
                 },
                 {
@@ -435,7 +435,7 @@ module.exports = {
                 },
                 {
                     role: 'system',
-                    content: 'Great! Now you are ready to setup channels for a server. Do not forget, YOU WILL ONLY RESPOND WITH ARRAY OF CHANNELS. NOT WITH ANYTHING ELSE. YOU HAVE TO USE ID FOR CUSTOM ICONS, NOT NAMES. And you will use your creativity to setup roles for a server, especially for role names and colors. You do not have to create a role for each available icon.'
+                    content: 'Great! Now you are ready to setup channels for a server. Do not forget, YOU WILL ONLY RESPOND WITH ARRAY OF CHANNELS. NOT WITH ANYTHING ELSE. YOU HAVE TO USE ID FOR CUSTOM ROLE ICONS, NOT NAMES. And you will use your creativity to setup roles for a server, especially for role names and colors. You do not have to create a role for each available icon.'
                 },
                 {
                     role: 'user',
@@ -487,6 +487,7 @@ module.exports = {
                 console.log(matched);
 
                 roles = JSON.parse(matched);
+                roles = roles.slice(0, 25); 
             } catch (error) {
                 console.log(prompt, message.content);
 
@@ -623,14 +624,16 @@ module.exports = {
                     let responseMessage = response.body.choices[0].message;
 
                     try {
-                        channels = JSON.parse(responseMessage.content);
+                        roles = JSON.parse(responseMessage.content);
+                        roles = roles.slice(0, 25); 
 
                         messages.push(responseMessage);
                     } catch (error) {
                         try {
                             let matched = responseMessage.content.match(/\[[^\[\]]*?(?:\[[^\[\]]*?\][^\[\]]*?)*\]/g)[0];
 
-                            channels = JSON.parse(matched);
+                            roles = JSON.parse(matched);
+                            roles = roles.slice(0, 25);
 
                             messages.push({
                                 role: 'assistant',
