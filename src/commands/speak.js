@@ -83,12 +83,14 @@ module.exports = {
             method: RequestMethod.Post,
             body: {
                 model: 'google-speech',
-                prompt: prompt
+                input: prompt
             },
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
             }
+        }, {
+            isNotOk: response => console.log(response.body)
         });
 
         if (response.ok) return respond();
