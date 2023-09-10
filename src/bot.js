@@ -244,11 +244,13 @@ client.on('interactionCreate', async interaction => {
                     Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
                 }
             }, {
-                isNotOk: response => console.log(response.body)
+                isNotOk: response => console.log(JSON.stringify(response.body, null, 4))
             });
 
             if (response.ok) {
                 let end = false;
+
+                console.log('Used model', response.body.model);
 
                 while (!end) {
                     let isFunction = response.body.choices[0].finish_reason === 'function_call';
