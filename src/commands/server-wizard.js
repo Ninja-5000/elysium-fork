@@ -435,7 +435,7 @@ module.exports = {
                 },
                 {
                     role: 'system',
-                    content: 'Great! Now you are ready to setup channels for a server. Do not forget, YOU WILL ONLY RESPOND WITH ARRAY OF CHANNELS. NOT WITH ANYTHING ELSE. And you will use your creativity to setup roles for a server, especially for role names and colors. You do not have to create a role for each available icon.'
+                    content: 'Great! Now you are ready to setup channels for a server. Do not forget, YOU WILL ONLY RESPOND WITH ARRAY OF CHANNELS. NOT WITH ANYTHING ELSE. And you will use your creativity to setup roles for a server, especially for role names and colors. You do not have to create a role for each available icon. But you have to use role icon ids when you use a custom role icon, not their names.'
                 },
                 {
                     role: 'user',
@@ -510,7 +510,7 @@ module.exports = {
                                 };
                             };
 
-                            return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - Color: ${role.color}\n  - Hoist: ${role.hoist ? 'Enabled' : 'Disabled'}\n  - Mentionable: ${role.mentionable ? 'Enabled' : 'Disabled'}\n  - Permissions: ${permissions ?? 'Default'}`;
+                            return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - **Color:** ${role.color}\n  - **Hoist:** ${role.hoist ? 'Enabled' : 'Disabled'}\n  - **Mentionable:** ${role.mentionable ? 'Enabled' : 'Disabled'}\n  - **Permissions:** ${permissions ?? 'Default'}`;
                         }).join('\n')),
                     ...(debug ? [
                         new EmbedMaker(interaction.client)
