@@ -117,9 +117,7 @@ module.exports = {
                 body: {
                     model: 'gpt-4',
                     messages,
-                    fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
-                    temperature: 2,
-                    primaryProvider: 'DakuGPT'
+                    temperature: 2
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -249,9 +247,7 @@ module.exports = {
                         body: {
                             model: 'gpt-4',
                             messages,
-                            fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
-                            temperature: 2,
-                            primaryProvider: 'DakuGPT'
+                            temperature: 2
                         },
                         headers: {
                             'Content-Type': 'application/json',
@@ -313,7 +309,24 @@ module.exports = {
                         embeds: [
                             new EmbedMaker(interaction.client)
                                 .setTitle('Channels')
-                                .setDescription(channels.map(channel => `- ${channel.type === 'category' ? emojis.categoryChannel : channel.type === 'text' ? emojis.textChannel : channel.type === 'voice' ? emojis.voiceChannel : channel.type === 'forum' ? emojis.forumChannel : channel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${channel.name}${channel.type === 'category' ? `\n${channel.channels.map(subchannel => `  - ${subchannel.type === 'text' ? emojis.textChannel : subchannel.type === 'voice' ? emojis.voiceChannel : subchannel.type === 'forum' ? emojis.forumChannel : subchannel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${subchannel.name}`).join('\n')}` : ''}`).join('\n'))
+                                .setDescription(channels.map(channel => `- ${channel.type === 'category' ? emojis.categoryChannel : channel.type === 'text' ? emojis.textChannel : channel.type === 'voice' ? emojis.voiceChannel : channel.type === 'forum' ? emojis.forumChannel : channel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${channel.name}${channel.type === 'category' ? `\n${channel.channels.map(subchannel => `  - ${subchannel.type === 'text' ? emojis.textChannel : subchannel.type === 'voice' ? emojis.voiceChannel : subchannel.type === 'forum' ? emojis.forumChannel : subchannel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${subchannel.name}`).join('\n')}` : ''}`).join('\n')),
+                            ...(debug ? [
+                                new EmbedMaker(interaction.client)
+                                    .setTitle('Debug')
+                                    .setFields(
+                                        {
+                                            name: 'Model',
+                                            value: response.body.model ?? 'Unknown',
+                                            inline: true
+                                        },
+                                        {
+                                            name: 'Provider',
+                                            value: response.body.provider ?? 'Unknown',
+                                            inline: true
+                                        }
+                                    )
+                            ]
+                                : [])
                         ]
                     });
                 } else if (int.customId === 'setup') {
