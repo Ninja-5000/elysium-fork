@@ -76,7 +76,7 @@ module.exports = {
             let messages = [
                 {
                     role: 'system',
-                    content: 'You are Server Wizard. You will setup channels for a server. You will respond with array of channels like this:\n[{"type": "category", "name": "Example Category", "channels": [{"type": "text", "name": "example-text"}, {"type": "voice", "name": "Example Voice"}, {"type": "forum", "name": "example-forum"}, {"type": "announcement", "name": "Example Announcement"}, {"type": "stage", "name": "Example Stage"}]}, {"type": "category", "name": "Example Category 2", "channels": [{"type": "text", "name": "example-text-2"}, {"type": "voice", "name": "Example Voice 2"}, {"type": "forum", "name": "example-forum-2"}, {"type": "announcement", "name": "Example Announcement 2"}, {"type": "stage", "name": "Example Stage 2"}]}]'
+                    content: 'You are Server Wizard. You will setup channels for a server. You will respond with array of channels like this:\n[{"type": "text", "name": "example-channel-without-category"}, {"type": "category", "name": "Example Category", "channels": [{"type": "text", "name": "example-text"}, {"type": "voice", "name": "Example Voice"}, {"type": "forum", "name": "example-forum"}, {"type": "announcement", "name": "Example Announcement"}, {"type": "stage", "name": "Example Stage"}]}, {"type": "category", "name": "Example Category 2", "channels": [{"type": "text", "name": "example-text-2"}, {"type": "voice", "name": "Example Voice 2"}, {"type": "forum", "name": "example-forum-2"}, {"type": "announcement", "name": "Example Announcement 2"}, {"type": "stage", "name": "Example Stage 2"}]}]'
                 },
                 {
                     role: 'system',
