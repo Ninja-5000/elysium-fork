@@ -203,7 +203,7 @@ client.on('interactionCreate', async interaction => {
             });
             messages.push({
                 role: 'system',
-                content: 'You can mention users with <@id> format.\nYou can mention channels with <#id> format.'
+                content: 'You will mention users with <@id> format.\nYou will mention channels with <#id> format.'
             });
 
             let reply;
