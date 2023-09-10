@@ -257,6 +257,8 @@ module.exports = {
                             'Content-Type': 'application/json',
                             Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
                         }
+                    }, {
+                        isNotOk: (response) => console.log(response.body)
                     });
 
                     if (!response.ok) {
