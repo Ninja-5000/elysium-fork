@@ -333,6 +333,7 @@ module.exports = {
 
                     if (!Array.isArray(channels)) {
                         messages.pop();
+                        messages.pop();
 
                         return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
                     };
@@ -439,7 +440,7 @@ module.exports = {
                 },
                 {
                     role: 'user',
-                    content: `Prompt to setup channels:\n${prompt}\n\nAvailable Custom Role Icons:\n${interaction.guild.emojis.cache.size === 0 ? 'None. You can just use unicode emojis for that.' :  interaction.guild.emojis.cache.map(emoji => `- ${emoji.name}: ${emoji.id}`).join('\n')}`
+                    content: `Prompt to setup channels:\n${prompt}\n\nAvailable Custom Role Icons:\n${interaction.guild.emojis.cache.size === 0 ? 'None. You can just use unicode emojis for that.' : interaction.guild.emojis.cache.map(emoji => `- ${emoji.name}: ${emoji.id}`).join('\n')}`
                 }
             ];
             let response = await request({
@@ -585,7 +586,7 @@ module.exports = {
 
                     messages.push({
                         role: 'system',
-                        content: 'Do not forget, YOU WILL ONLY RESPOND WITH ARRAY OF CHANNELS. NOT WITH ANYTHING ELSE. And you will use your creativity to setup channels for a server.'
+                        content: 'Do not forget, YOU WILL ONLY RESPOND WITH ARRAY OF ROLES. NOT WITH ANYTHING ELSE. And you will use your creativity to setup roles for a server.'
                     });
                     messages.push({
                         role: 'user',
@@ -653,7 +654,8 @@ module.exports = {
                         };
                     };
 
-                    if (!Array.isArray(channels)) {
+                    if (!Array.isArray(roles)) {
+                        messages.pop();
                         messages.pop();
 
                         return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
@@ -712,13 +714,15 @@ module.exports = {
                             };
                         };
 
+                        let isUnicode = /[\u{1F000}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E6}-\u{1F1FF}]/u.test(role.icon);
+
                         await interaction.guild.roles.create({
                             name: role.name,
                             color: role.color,
                             hoist: role.hoist ?? false,
                             mentionable: role.mentionable ?? false,
                             permissions: permissions,
-                            icon: [GuildPremiumTier.Tier2, GuildPremiumTier.Tier3].includes(interaction.guild.premiumTier) ? role.icon : null
+                            icon: [GuildPremiumTier.Tier2, GuildPremiumTier.Tier3].includes(interaction.guild.premiumTier) ? isUnicode ? role.icon : interaction.guild.emojis.cache.has(role.icon) ? role.icon : '✨' : null
                         });
                         await new Promise(resolve => setTimeout(resolve, 1000));
                     };
