@@ -511,7 +511,7 @@ module.exports = {
                                 };
                             };
 
-                            return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - Color: ${role.color}\n  - Hoist: ${role.hoist}\n  - Mentionable: ${role.mentionable}\n  - Permissions: ${.toArray()}`;
+                            return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - Color: ${role.color}\n  - Hoist: ${role.hoist}\n  - Mentionable: ${role.mentionable}\n  - Permissions: ${permissions.toArray()}`;
                         }).join('\n')),
                     ...(debug ? [
                         new EmbedMaker(interaction.client)
