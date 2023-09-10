@@ -435,7 +435,7 @@ module.exports = {
                 },
                 {
                     role: 'system',
-                    content: 'Great! Now you are ready to setup channels for a server. Do not forget, YOU WILL ONLY RESPOND WITH ARRAY OF CHANNELS. NOT WITH ANYTHING ELSE. And you will use your creativity to setup roles for a server, especially for role names and colors.'
+                    content: 'Great! Now you are ready to setup channels for a server. Do not forget, YOU WILL ONLY RESPOND WITH ARRAY OF CHANNELS. NOT WITH ANYTHING ELSE. And you will use your creativity to setup roles for a server, especially for role names and colors. You do not have to create a role for each available icon.'
                 },
                 {
                     role: 'user',
