@@ -41,6 +41,17 @@ module.exports = {
                 })
                 .setRequired(false)
             )
+            .addBooleanOption(option => option
+                .setName('debug')
+                .setNameLocalizations({
+                    tr: 'hata-ayıklama'
+                })
+                .setDescription('Debug mode')
+                .setDescriptionLocalizations({
+                    tr: 'Hata ayıklama modu'
+                })
+                .setRequired(false)
+            )
         ),
     /**
      * @param {ChatInputCommandInteraction} interaction 
@@ -61,6 +72,7 @@ module.exports = {
             if (!interaction.appPermissions.has('ManageChannels')) return interaction.editReply(localize(locale, 'MISSING_PERMISSION', 'Manage Channels'));
 
             let prompt = interaction.options.getString('prompt') ?? 'Generate me a server.';
+            let debug = interaction.options.getBoolean('debug') ?? false;
             let messages = [
                 {
                     role: 'system',
@@ -103,9 +115,9 @@ module.exports = {
                 url: 'https://beta.purgpt.xyz/openai/chat/completions',
                 method: RequestMethod.Post,
                 body: {
-                    model: 'gpt-4-32k',
+                    model: 'gpt-4',
                     messages,
-                    fallbacks: ['gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
+                    fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
                     temperature: 2,
                     primaryProvider: 'DakuGPT'
                 },
@@ -151,12 +163,29 @@ module.exports = {
             };
 
             if (!Array.isArray(channels)) return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
-            
+
             await interaction.editReply({
                 embeds: [
                     new EmbedMaker(interaction.client)
                         .setTitle('Channels')
-                        .setDescription(channels.map(channel => `- ${channel.type === 'category' ? emojis.categoryChannel : channel.type === 'text' ? emojis.textChannel : channel.type === 'voice' ? emojis.voiceChannel : channel.type === 'forum' ? emojis.forumChannel : channel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${channel.name}${channel.type === 'category' ? `\n${channel.channels.map(subchannel => `  - ${subchannel.type === 'text' ? emojis.textChannel : subchannel.type === 'voice' ? emojis.voiceChannel : subchannel.type === 'forum' ? emojis.forumChannel : subchannel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${subchannel.name}`).join('\n')}` : ''}`).join('\n'))
+                        .setDescription(channels.map(channel => `- ${channel.type === 'category' ? emojis.categoryChannel : channel.type === 'text' ? emojis.textChannel : channel.type === 'voice' ? emojis.voiceChannel : channel.type === 'forum' ? emojis.forumChannel : channel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${channel.name}${channel.type === 'category' ? `\n${channel.channels.map(subchannel => `  - ${subchannel.type === 'text' ? emojis.textChannel : subchannel.type === 'voice' ? emojis.voiceChannel : subchannel.type === 'forum' ? emojis.forumChannel : subchannel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${subchannel.name}`).join('\n')}` : ''}`).join('\n')),
+                    ...(debug ? [
+                        new EmbedMaker(interaction.client)
+                            .setTitle('Debug')
+                            .setFields(
+                                {
+                                    name: 'Model',
+                                    value: response.body.model ?? 'Unknown',
+                                    inline: true
+                                },
+                                {
+                                    name: 'Provider',
+                                    value: response.body.provider ?? 'Unknown',
+                                    inline: true
+                                }
+                            )
+                    ]
+                        : [])
                 ],
                 components: [
                     new ActionRowBuilder()
@@ -218,9 +247,9 @@ module.exports = {
                         url: 'https://beta.purgpt.xyz/openai/chat/completions',
                         method: RequestMethod.Post,
                         body: {
-                            model: 'gpt-4-32k',
+                            model: 'gpt-4',
                             messages,
-                            fallbacks: ['gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
+                            fallbacks: ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
                             temperature: 2,
                             primaryProvider: 'DakuGPT'
                         },
@@ -258,7 +287,7 @@ module.exports = {
                     } catch (error) {
                         try {
                             let matched = responseMessage.content.match(/\[[^\[\]]*?(?:\[[^\[\]]*?\][^\[\]]*?)*\]/g)[0];
-                            
+
                             channels = JSON.parse(matched);
 
                             messages.push({
