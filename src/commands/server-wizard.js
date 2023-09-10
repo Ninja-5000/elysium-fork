@@ -506,12 +506,12 @@ module.exports = {
 
                             if (permissions !== 'default') {
                                 try {
-                                    permissions = new PermissionsBitField(role.permissions);
+                                    permissions = new PermissionsBitField(role.permissions).toArray();
                                 } catch (error) {
                                 };
                             };
 
-                            return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - Color: ${role.color}\n  - Hoist: ${role.hoist}\n  - Mentionable: ${role.mentionable}\n  - Permissions: ${permissions.toArray()}`;
+                            return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - Color: ${role.color}\n  - Hoist: ${role.hoist}\n  - Mentionable: ${role.mentionable}\n  - Permissions: ${permissions}`;
                         }).join('\n')),
                     ...(debug ? [
                         new EmbedMaker(interaction.client)
