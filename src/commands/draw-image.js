@@ -91,17 +91,16 @@ module.exports = {
                 files: response.body.data.map(image => image.url),
                 embeds: debug ? [
                     new EmbedMaker(interaction.client)
-                        .setColor('9b59b6')
                         .setTitle('Debug')
                         .setFields(
                             {
                                 name: 'Model',
-                                value: response.data.model ?? 'Unknown',
+                                value: response.body.model ?? 'Unknown',
                                 inline: true
                             },
                             {
                                 name: 'Provider',
-                                value: response.data.provider ?? 'Unknown',
+                                value: response.body.provider ?? 'Unknown',
                                 inline: true
                             }
                         )
