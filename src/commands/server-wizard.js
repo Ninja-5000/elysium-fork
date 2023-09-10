@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, ChannelType, GuildFeature, ActionRowBuilder, ButtonBuilder, ButtonStyle, InteractionCollector, ComponentType, InteractionType, ModalBuilder, TextInputBuilder, TextInputStyle, PermissionsBitField } = require("discord.js");
+const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, ChannelType, GuildFeature, ActionRowBuilder, ButtonBuilder, ButtonStyle, InteractionCollector, ComponentType, InteractionType, ModalBuilder, TextInputBuilder, TextInputStyle, PermissionsBitField, GuildPremiumTier } = require("discord.js");
 const { localize } = require("../modules/localization");
 const EmbedMaker = require("../modules/embed");
 const { QuickDB } = require("quick.db");
@@ -487,7 +487,7 @@ module.exports = {
                 console.log(matched);
 
                 roles = JSON.parse(matched);
-                roles = roles.slice(0, 25); 
+                roles = roles.slice(0, 25);
             } catch (error) {
                 console.log(prompt, message.content);
 
@@ -629,7 +629,7 @@ module.exports = {
 
                     try {
                         roles = JSON.parse(responseMessage.content);
-                        roles = roles.slice(0, 25); 
+                        roles = roles.slice(0, 25);
 
                         messages.push(responseMessage);
                     } catch (error) {
@@ -659,8 +659,24 @@ module.exports = {
                     await interaction.editReply({
                         embeds: [
                             new EmbedMaker(interaction.client)
-                                .setTitle('Channels')
-                                .setDescription(channels.map(channel => `- ${channel.type === 'category' ? emojis.categoryChannel : channel.type === 'text' ? emojis.textChannel : channel.type === 'voice' ? emojis.voiceChannel : channel.type === 'forum' ? emojis.forumChannel : channel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${channel.name}${channel.type === 'category' ? `\n${channel.channels.map(subchannel => `  - ${subchannel.type === 'text' ? emojis.textChannel : subchannel.type === 'voice' ? emojis.voiceChannel : subchannel.type === 'forum' ? emojis.forumChannel : subchannel.type === 'announcement' ? emojis.announcementChannel : emojis.stageChannel} ${subchannel.name}`).join('\n')}` : ''}`).join('\n')),
+                                .setTitle('Roles')
+                                .setDescription(roles.map(role => {
+                                    let isUnicode = /[\u{1F000}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E6}-\u{1F1FF}]/u.test(role.icon);
+                                    let permissions = 'Default';
+
+                                    if (role.permissions !== 'default') {
+                                        try {
+                                            permissions = new PermissionsBitField(role.permissions).toArray();
+                                        } catch (error) {
+                                        };
+                                    };
+
+                                    if (!isUnicode && !interaction.guild.emojis.cache.has(role.icon)) role.icon = '✨';
+
+                                    isUnicode = /[\u{1F000}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E6}-\u{1F1FF}]/u.test(role.icon);
+
+                                    return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - **Color:** [#${role.color}](https://www.thecolorapi.com/id?hex=${role.color.toUpperCase()}&format=svg)\n  - **Hoist:** ${role.hoist ? 'Enabled' : 'Disabled'}\n  - **Mentionable:** ${role.mentionable ? 'Enabled' : 'Disabled'}\n  - **Permissions:** ${permissions ?? 'Default'}`;
+                                }).join('\n')),
                             ...(debug ? [
                                 new EmbedMaker(interaction.client)
                                     .setTitle('Debug')
@@ -683,36 +699,29 @@ module.exports = {
                 } else if (int.customId === 'setup') {
                     await int.deferUpdate().catch(() => int.reply(localize(locale, 'SETTING_UP_CHANNELS')).catch(() => int.editReply(localize(locale, 'SETTING_UP_CHANNELS'))));
 
-                    for (let channel of channels) {
-                        if (!channel.type || !channel.name || !['category', 'text', 'voice', 'forum', 'announcement', 'stage'].includes(channel.type)) return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
+                    for (let role of roles) {
+                        let permissions;
 
-                        if (channel.type === 'category') {
-                            let category = await interaction.guild.channels.create({
-                                type: ChannelType.GuildCategory,
-                                name: channel.name
-                            });
-
-                            for (let subchannel of channel.channels) {
-                                if (!subchannel.type || !subchannel.name || !['text', 'voice', 'forum', 'announcement', 'stage'].includes(subchannel.type)) return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
-
-                                await interaction.guild.channels.create({
-                                    name: subchannel.name,
-                                    type: subchannel.type === 'text' ? ChannelType.GuildText : subchannel.type === 'voice' ? ChannelType.GuildVoice : subchannel.type === 'forum' ? ChannelType.GuildForum : subchannel.type === 'announcement' ? (interaction.guild.features.includes(GuildFeature.Community) ? ChannelType.GuildAnnouncement : ChannelType.GuildText) : ChannelType.GuildStageVoice,
-                                    parent: category.id
-                                });
-
-                                await new Promise(resolve => setTimeout(resolve, 1000));
+                        if (role.permissions !== 'default') {
+                            try {
+                                permissions = new PermissionsBitField(role.permissions).toArray();
+                            } catch (error) {
                             };
-                        } else await interaction.guild.channels.create({
-                            name: channel.name,
-                            type: channel.type === 'text' ? ChannelType.GuildText : channel.type === 'voice' ? ChannelType.GuildVoice : channel.type === 'forum' ? ChannelType.GuildForum : channel.type === 'announcement' ? (interaction.guild.features.includes(GuildFeature.Community) ? ChannelType.GuildAnnouncement : ChannelType.GuildText) : ChannelType.GuildStageVoice,
-                        });
+                        };
 
+                        await interaction.guild.roles.create({
+                            name: role.name,
+                            color: role.color,
+                            hoist: role.hoist ?? false,
+                            mentionable: role.mentionable ?? false,
+                            permissions: permissions,
+                            icon: [GuildPremiumTier.Tier2, GuildPremiumTier.Tier3].includes(interaction.guild.premiumTier) ? role.icon : null
+                        });
                         await new Promise(resolve => setTimeout(resolve, 1000));
                     };
 
                     await interaction.editReply({
-                        content: localize(locale, 'CHANNELS_SETUP'),
+                        content: localize(locale, 'ROLES_SETUP'),
                         components: [],
                         embeds: []
                     });

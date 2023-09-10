@@ -21,4 +21,5 @@ module.exports = {
     SETTING_UP_CHANNELS: 'Setting up channels...',
     MISSING_PERMISSION: 'I need the **{{0}}** permission to do this!',
     SETUP_ROLES: 'Setup Roles',
+    ROLES_SETUP: 'Roles setup successfully!',
 };

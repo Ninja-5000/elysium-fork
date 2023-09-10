@@ -21,4 +21,5 @@ module.exports = {
     SETTING_UP_CHANNELS: 'Kanallar ayarlanıyor...',
     MISSING_PERMISSION: 'Bunu yapmak için **{{0}}** iznine ihtiyacım var!',
     SETUP_ROLES: 'Rolleri Ayarla',
+    ROLES_SETUP: 'Roller başarıyla ayarlandı!',
 };
