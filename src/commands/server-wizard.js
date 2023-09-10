@@ -377,9 +377,11 @@ module.exports = {
                             for (let subchannel of channel.channels) {
                                 if (!subchannel.type || !subchannel.name || !['text', 'voice', 'forum', 'announcement', 'stage'].includes(subchannel.type)) return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
 
+                                let communityServer = interaction.guild.features.includes(GuildFeature.Community);
+
                                 await interaction.guild.channels.create({
                                     name: subchannel.name,
-                                    type: subchannel.type === 'text' ? ChannelType.GuildText : subchannel.type === 'voice' ? ChannelType.GuildVoice : subchannel.type === 'forum' ? ChannelType.GuildForum : subchannel.type === 'announcement' ? (interaction.guild.features.includes(GuildFeature.Community) ? ChannelType.GuildAnnouncement : ChannelType.GuildText) : ChannelType.GuildStageVoice,
+                                    type: subchannel.type === 'text' ? ChannelType.GuildText : subchannel.type === 'voice' ? ChannelType.GuildVoice : subchannel.type === 'forum' ? communityServer ? ChannelType.GuildForum : ChannelType.GuildText : subchannel.type === 'announcement' ? communityServer ? ChannelType.GuildAnnouncement : ChannelType.GuildText : communityServer ? ChannelType.GuildStageVoice : ChannelType.GuildVoice,
                                     parent: category.id
                                 });
 
