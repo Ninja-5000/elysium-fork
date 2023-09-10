@@ -221,7 +221,8 @@ module.exports = {
                             model: 'gpt-4-32k',
                             messages,
                             fallbacks: ['gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
-                            temperature: 2
+                            temperature: 2,
+                            primaryProvider: 'DakuGPT'
                         },
                         headers: {
                             'Content-Type': 'application/json',
