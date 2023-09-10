@@ -448,7 +448,7 @@ module.exports = {
                 body: {
                     model: 'gpt-4-32k',
                     messages,
-                    fallback: ['gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo']
+                    fallbacks: ['gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo']
                 },
                 headers: {
                     'Content-Type': 'application/json',
