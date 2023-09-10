@@ -9,7 +9,7 @@ const { request, RequestMethod } = require("fetchu.js");
 const db = new QuickDB();
 
 module.exports = {
-    category: 'Owner',
+    category: 'Moderator',
     data: new SlashCommandBuilder()
         .setName('server-wizard')
         .setNameLocalizations({
