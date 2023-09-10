@@ -513,6 +513,8 @@ module.exports = {
 
                             if (!isUnicode && !interaction.guild.emojis.cache.has(role.icon)) role.icon = '✨';
 
+                            isUnicode = /[\u{1F000}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E6}-\u{1F1FF}]/u.test(role.icon);
+
                             return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - **Color:** [#${role.color}](https://www.thecolorapi.com/id?hex=${role.color.toUpperCase()}&format=svg)\n  - **Hoist:** ${role.hoist ? 'Enabled' : 'Disabled'}\n  - **Mentionable:** ${role.mentionable ? 'Enabled' : 'Disabled'}\n  - **Permissions:** ${permissions ?? 'Default'}`;
                         }).join('\n')),
                     ...(debug ? [
