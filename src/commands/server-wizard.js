@@ -255,7 +255,7 @@ module.exports = {
                                         .setStyle(TextInputStyle.Paragraph)
                                 )
                         )
-                );
+                ).catch(() => null);
                 else if (int.customId === 'follow-up-modal') {
                     await int.deferUpdate().catch(() => int.reply(localize(locale, 'SENDING_FOLLOW_UP')).catch(() => int.editReply(localize(locale, 'SENDING_FOLLOW_UP')).catch(() => null)));
                     await interaction.editReply({
@@ -577,7 +577,7 @@ module.exports = {
                                         .setStyle(TextInputStyle.Paragraph)
                                 )
                         )
-                );
+                ).catch(() => null);
                 else if (int.customId === 'follow-up-modal') {
                     await int.deferUpdate().catch(() => int.reply(localize(locale, 'SENDING_FOLLOW_UP')).catch(() => int.editReply(localize(locale, 'SENDING_FOLLOW_UP')).catch(() => null)));
                     await interaction.editReply({
