@@ -511,7 +511,9 @@ module.exports = {
                                 };
                             };
 
-                            return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - **Color:** ${role.color}\n  - **Hoist:** ${role.hoist ? 'Enabled' : 'Disabled'}\n  - **Mentionable:** ${role.mentionable ? 'Enabled' : 'Disabled'}\n  - **Permissions:** ${permissions ?? 'Default'}`;
+                            if (!isUnicode && !interaction.guild.emojis.cache.has(role.icon)) role.icon = '✨';
+
+                            return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - **Color:** [#${role.color}](https://www.thecolorapi.com/id?hex=${role.color.toUpperCase()}&format=svg)\n  - **Hoist:** ${role.hoist ? 'Enabled' : 'Disabled'}\n  - **Mentionable:** ${role.mentionable ? 'Enabled' : 'Disabled'}\n  - **Permissions:** ${permissions ?? 'Default'}`;
                         }).join('\n')),
                     ...(debug ? [
                         new EmbedMaker(interaction.client)
