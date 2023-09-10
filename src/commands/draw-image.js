@@ -88,7 +88,7 @@ module.exports = {
 
         async function respond() {
             await interaction.editReply({
-                files: response.data.data.map(image => image.url),
+                files: response.body.data.map(image => image.url),
                 embeds: debug ? [
                     new EmbedMaker(interaction.client)
                         .setColor('9b59b6')
