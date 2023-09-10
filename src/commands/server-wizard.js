@@ -116,8 +116,7 @@ module.exports = {
                 method: RequestMethod.Post,
                 body: {
                     model: 'gpt-4',
-                    messages,
-                    temperature: 2
+                    messages
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -246,8 +245,7 @@ module.exports = {
                         method: RequestMethod.Post,
                         body: {
                             model: 'gpt-4',
-                            messages,
-                            temperature: 2
+                            messages
                         },
                         headers: {
                             'Content-Type': 'application/json',
