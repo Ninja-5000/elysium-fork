@@ -231,11 +231,19 @@ client.on('interactionCreate', async interaction => {
                     functions: [
                         {
                             name: 'fetch_channels',
-                            description: 'Fetches all channels in the server.'
+                            description: 'Fetches all channels in the server.',
+                            parameters: {
+                                type: 'object',
+                                properties: {}
+                            }
                         },
                         {
                             name: 'fetch_roles',
-                            description: 'Fetches all roles in the server.'
+                            description: 'Fetches all roles in the server.',
+                            parameters: {
+                                type: 'object',
+                                properties: {}
+                            }
                         }
                     ]
                 },
