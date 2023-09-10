@@ -257,6 +257,7 @@ client.on('interactionCreate', async interaction => {
                 let end = false;
 
                 console.log('Used model', response.body.model);
+                console.log('Response', JSON.stringify(response.body, null, 4));
 
                 while (!end) {
                     let isFunction = response.body.choices[0].finish_reason === 'function_call';
@@ -272,8 +273,8 @@ client.on('interactionCreate', async interaction => {
 
                     console.log('Function call detected', usedFunction);
 
-                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).toJSON());
-                    else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON());
+                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
+                    else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON().map(role => `@${role.name}`));
 
                     messages.push({
                         role: 'function',
@@ -353,6 +354,7 @@ client.on('interactionCreate', async interaction => {
                 let end = false;
 
                 console.log('Used model', response.body.model);
+                console.log('Response', JSON.stringify(response.body, null, 4));
 
                 while (!end) {
                     let isFunction = response.body.choices[0].finish_reason === 'function_call';
@@ -368,8 +370,8 @@ client.on('interactionCreate', async interaction => {
 
                     console.log('Function call detected', usedFunction);
 
-                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).toJSON());
-                    else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON());
+                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
+                    else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON().map(role => `@${role.name}`));
 
                     messages.push({
                         role: 'function',
