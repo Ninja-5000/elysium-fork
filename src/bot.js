@@ -273,7 +273,7 @@ client.on('interactionCreate', async interaction => {
 
                     console.log('Function call detected', usedFunction);
 
-                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
+                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).filter(channel => channel.type !== ChannelType.GuildCategory).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
                     else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON().map(role => `@${role.name}`));
 
                     messages.push({
@@ -376,7 +376,7 @@ client.on('interactionCreate', async interaction => {
 
                     console.log('Function call detected', usedFunction);
 
-                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
+                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).filter(channel => channel.type !== ChannelType.GuildCategory).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
                     else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON().map(role => `@${role.name}`));
 
                     messages.push({
