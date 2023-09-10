@@ -502,8 +502,16 @@ module.exports = {
                         .setDescription(roles.map(role => {
                             // whether role icon a unicode emoji or not
                             let isUnicode = role.icon.match(/<a?:.+?:\d+>/g);
+                            let permissions = 'Default';
 
-                            return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - Color: ${role.color}\n  - Hoist: ${role.hoist}\n  - Mentionable: ${role.mentionable}\n  - Permissions: ${new PermissionsBitField(role.permissions).toArray()}`;
+                            if (permissions !== 'default') {
+                                try {
+                                    permissions = new PermissionsBitField(role.permissions);
+                                } catch (error) {
+                                };
+                            };
+
+                            return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - Color: ${role.color}\n  - Hoist: ${role.hoist}\n  - Mentionable: ${role.mentionable}\n  - Permissions: ${.toArray()}`;
                         }).join('\n')),
                     ...(debug ? [
                         new EmbedMaker(interaction.client)
