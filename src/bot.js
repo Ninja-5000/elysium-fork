@@ -250,7 +250,7 @@ client.on('interactionCreate', async interaction => {
                     Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
                 }
             }, {
-                isNotOk: response => console.log(JSON.stringify(response.body, null, 4))
+                isNotOk: response => console.log('openai is dead', response.status, response.statusText)
             });
 
             if (response.ok) {
