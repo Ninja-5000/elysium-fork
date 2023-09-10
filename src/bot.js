@@ -223,11 +223,21 @@ client.on('interactionCreate', async interaction => {
                 url: 'https://beta.purgpt.xyz/openai/chat/completions',
                 method: RequestMethod.Post,
                 body: {
-                    model: 'gpt-4-32k',
+                    model: 'gpt-4-0613',
                     messages,
-                    fallbacks: ['gpt-4', 'gpt-3.5-turbo', 'gpt-3.5-turbo-16k'],
+                    fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613'],
                     max_tokens: 2000,
-                    maxTokens: 2000
+                    maxTokens: 2000,
+                    functions: [
+                        {
+                            name: 'fetch_channels',
+                            description: 'Fetches all channels in the server.'
+                        },
+                        {
+                            name: 'fetch_roles',
+                            description: 'Fetches all roles in the server.'
+                        }
+                    ]
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -237,7 +247,63 @@ client.on('interactionCreate', async interaction => {
                 isNotOk: response => console.log(response.body)
             });
 
-            if (response.ok) return respond();
+            if (response.ok) {
+                let end = false;
+
+                while (!end) {
+                    let isFunction = response.body.choices[0].finish_reason === 'function_call';
+
+                    if (!isFunction) {
+                        end = true;
+
+                        break;
+                    };
+
+                    let usedFunction = response.body.choices[0].message?.function_call;
+                    let functionResponse;
+
+                    console.log('Function call detected', usedFunction);
+
+                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).toJSON());
+                    else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON());
+
+                    messages.push({
+                        role: 'function',
+                        name: usedFunction.name,
+                        content: functionResponse
+                    });
+
+                    response = await request({
+                        url: 'https://beta.purgpt.xyz/openai/chat/completions',
+                        method: RequestMethod.Post,
+                        body: {
+                            model: 'gpt-4-0613',
+                            messages,
+                            fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613'],
+                            max_tokens: 2000,
+                            maxTokens: 2000,
+                            functions: [
+                                {
+                                    name: 'fetch_channels',
+                                    description: 'Fetches all channels in the server.'
+                                },
+                                {
+                                    name: 'fetch_roles',
+                                    description: 'Fetches all roles in the server.'
+                                }
+                            ]
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                        }
+                    }, {
+                        isNotOk: response => console.log(response.body)
+                    });
+                };
+
+                return respond();
+            };
 
             response = await request({
                 url: 'https://beta.purgpt.xyz/hugging-face/chat/completions',
