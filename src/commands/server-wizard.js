@@ -603,6 +603,7 @@ module.exports = {
                             Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
                         }
                     }, {
+                        isOk: (response) => console.log(JSON.stringify(response.body, null, 2)),
                         isNotOk: (response) => console.log(response.body, response.status)
                     });
 
