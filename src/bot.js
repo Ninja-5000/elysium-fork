@@ -225,7 +225,7 @@ client.on('interactionCreate', async interaction => {
                 body: {
                     model: 'gpt-4-0613',
                     messages,
-                    fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613'],
+                    fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613', 'gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
                     max_tokens: 2000,
                     maxTokens: 2000,
                     functions: [
