@@ -283,31 +283,37 @@ client.on('interactionCreate', async interaction => {
                     });
 
                     response = await request({
-                        url: 'https://beta.purgpt.xyz/openai/chat/completions',
+                        url: 'https://api.openai.com/v1/chat/completions',
                         method: RequestMethod.Post,
                         body: {
-                            model: 'gpt-4-0613',
+                            model: 'gpt-3.5-turbo-0613',
                             messages,
-                            fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613'],
                             max_tokens: 2000,
-                            maxTokens: 2000,
                             functions: [
                                 {
                                     name: 'fetch_channels',
-                                    description: 'Fetches all channels in the server.'
+                                    description: 'Fetches all channels in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {}
+                                    }
                                 },
                                 {
                                     name: 'fetch_roles',
-                                    description: 'Fetches all roles in the server.'
+                                    description: 'Fetches all roles in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {}
+                                    }
                                 }
                             ]
                         },
                         headers: {
                             'Content-Type': 'application/json',
-                            Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
                         }
                     }, {
-                        isNotOk: response => console.log(response.body)
+                        isNotOk: response => console.log(JSON.stringify(response.body, null, 4))
                     });
                 };
 
@@ -385,17 +391,25 @@ client.on('interactionCreate', async interaction => {
                         body: {
                             model: 'gpt-4-0613',
                             messages,
-                            fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613'],
+                            fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613', 'gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
                             max_tokens: 2000,
                             maxTokens: 2000,
                             functions: [
                                 {
                                     name: 'fetch_channels',
-                                    description: 'Fetches all channels in the server.'
+                                    description: 'Fetches all channels in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {}
+                                    }
                                 },
                                 {
                                     name: 'fetch_roles',
-                                    description: 'Fetches all roles in the server.'
+                                    description: 'Fetches all roles in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {}
+                                    }
                                 }
                             ]
                         },
@@ -404,7 +418,7 @@ client.on('interactionCreate', async interaction => {
                             Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
                         }
                     }, {
-                        isNotOk: response => console.log(response.body)
+                        isNotOk: response => console.log(JSON.stringify(response.body, null, 4))
                     });
                 };
 
