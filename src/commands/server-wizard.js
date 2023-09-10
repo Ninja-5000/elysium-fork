@@ -455,6 +455,7 @@ module.exports = {
                     Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
                 }
             }, {
+                isOk: (response) => console.log(JSON.stringify(response.body, null, 2)),
                 isNotOk: (response) => console.log(response.body, response.status)
             });
 
@@ -595,8 +596,9 @@ module.exports = {
                         url: 'https://beta.purgpt.xyz/openai/chat/completions',
                         method: RequestMethod.Post,
                         body: {
-                            model: 'gpt-4',
-                            messages
+                            model: 'gpt-4-32k',
+                            messages,
+                            fallbacks: ['gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo']
                         },
                         headers: {
                             'Content-Type': 'application/json',
