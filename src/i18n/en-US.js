@@ -19,5 +19,6 @@ module.exports = {
     FOLLOW_UP: 'Add Follow Up',
     SETUP_CHANNELS: 'Setup Channels',
     SETTING_UP_CHANNELS: 'Setting up channels...',
-    MISSING_PERMISSION: 'I need the **{{0}}** permission to do this!'
+    MISSING_PERMISSION: 'I need the **{{0}}** permission to do this!',
+    SETUP_ROLES: 'Setup Roles',
 };

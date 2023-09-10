@@ -82,14 +82,14 @@ module.exports = {
             url: 'https://beta.purgpt.xyz/openai/chat/completions',
             method: RequestMethod.Post,
             body: {
-                model: 'gpt-4-32k',
+                model: 'gpt-4',
                 messages: [
                     {
                         role: 'user',
                         content: question
                     }
                 ],
-                fallbacks: ['gpt-4', 'gpt-3.5-turbo', 'gpt-3.5-turbo-16k'],
+                fallbacks: ['gpt-4-32k', 'gpt-3.5-turbo', 'gpt-3.5-turbo-16k'],
                 max_tokens: 2000,
                 maxTokens: 2000
             },
