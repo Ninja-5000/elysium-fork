@@ -139,7 +139,9 @@ module.exports = {
             let channels;
 
             try {
-                let matched = message.content.match(/\[([\s\S]+?)\]/)[0];
+                let matched = message.content.match(/\[[^\[\]]*?(?:\[[^\[\]]*?\][^\[\]]*?)*\]/g)[0];
+
+                console.log(matched);
 
                 channels = JSON.parse(matched);
             } catch (error) {
@@ -149,7 +151,7 @@ module.exports = {
             };
 
             if (!Array.isArray(channels)) return interaction.editReply(localize(locale, 'INVALID_RESPONSE'));
-
+            
             await interaction.editReply({
                 embeds: [
                     new EmbedMaker(interaction.client)
@@ -254,7 +256,7 @@ module.exports = {
                         messages.push(responseMessage);
                     } catch (error) {
                         try {
-                            let matched = responseMessage.content.match(/\[([\s\S]+?)\]/)[0];
+                            let matched = responseMessage.content.match(/\[[^\[\]]*?(?:\[[^\[\]]*?\][^\[\]]*?)*\]/g)[0];
                             
                             channels = JSON.parse(matched);
 
