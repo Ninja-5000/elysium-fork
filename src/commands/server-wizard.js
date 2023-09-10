@@ -138,7 +138,7 @@ module.exports = {
             let channels;
 
             try {
-                let matched = message.content.match(/\[.*?\]/)?.[0];
+                let matched = message.content.match(/\[([\s\S]+?)\]/)[0];
 
                 channels = JSON.parse(matched);
             } catch (error) {
@@ -253,9 +253,9 @@ module.exports = {
                         messages.push(responseMessage);
                     } catch (error) {
                         try {
-                            let content = responseMessage.content.match(/\[.*?\]/)?.[0];
-
-                            channels = JSON.parse(content);
+                            let matched = responseMessage.content.match(/\[([\s\S]+?)\]/)[0];
+                            
+                            channels = JSON.parse(matched);
 
                             messages.push({
                                 role: 'assistant',
