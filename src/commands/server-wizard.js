@@ -257,7 +257,7 @@ module.exports = {
                         )
                 );
                 else if (int.customId === 'follow-up-modal') {
-                    await int.deferUpdate().catch(() => int.reply(localize(locale, 'SENDING_FOLLOW_UP')).catch(() => int.editReply(localize(locale, 'SENDING_FOLLOW_UP'))));
+                    await int.deferUpdate().catch(() => int.reply(localize(locale, 'SENDING_FOLLOW_UP')).catch(() => int.editReply(localize(locale, 'SENDING_FOLLOW_UP')).catch(() => null)));
                     await interaction.editReply({
                         content: ''
                     });
@@ -577,7 +577,7 @@ module.exports = {
                         )
                 );
                 else if (int.customId === 'follow-up-modal') {
-                    await int.deferUpdate().catch(() => int.reply(localize(locale, 'SENDING_FOLLOW_UP')).catch(() => int.editReply(localize(locale, 'SENDING_FOLLOW_UP'))));
+                    await int.deferUpdate().catch(() => int.reply(localize(locale, 'SENDING_FOLLOW_UP')).catch(() => int.editReply(localize(locale, 'SENDING_FOLLOW_UP')).catch(() => null)));
                     await interaction.editReply({
                         content: ''
                     });
