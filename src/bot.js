@@ -245,7 +245,15 @@ client.on('interactionCreate', async interaction => {
                         },
                         {
                             name: 'fetch_emojis',
-                            description: 'Fetches emojis roles in the server.',
+                            description: 'Fetches all emojis in the server.',
+                            parameters: {
+                                type: 'object',
+                                properties: {}
+                            }
+                        },
+                        {
+                            name: 'fetch_pins',
+                            description: 'Fetches all pins in the server.',
                             parameters: {
                                 type: 'object',
                                 properties: {}
@@ -265,23 +273,6 @@ client.on('interactionCreate', async interaction => {
                                 required: ['name']
                             }
                         },
-                        {
-                            name: 'channel_description',
-                            description: 'Fetches the description of the channel. One of the name and id parameters required.',
-                            parameters: {
-                                type: 'object',
-                                properties: {
-                                    name: {
-                                        type: 'string',
-                                        description: 'Name of the channel to fetch description.'
-                                    },
-                                    id: {
-                                        type: 'string',
-                                        description: 'ID of the channel to fetch description.'
-                                    }
-                                }
-                            }
-                        }
                     ]
                 },
                 headers: {
@@ -318,8 +309,8 @@ client.on('interactionCreate', async interaction => {
                     if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).filter(channel => channel.type !== ChannelType.GuildCategory).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
                     else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON().map(role => `@${role.name}`));
                     else if (usedFunction.name === 'search_members') functionResponse = JSON.stringify(message.guild.members.cache.filter(member => member.displayName.toLowerCase().includes(parameters.name.toLowerCase())).toJSON().map(member => `@${member.displayName} (<@${member.id}>)`));
-                    else if (usedFunction.name === 'channel_description') functionResponse = JSON.stringify(parameters.id ? message.guild.channels.cache.get(parameters.id)?.topic : message.guild.channels.cache.filter(channel => channel.name.toLowerCase() === parameters.name.toLowerCase())[0]?.topic ?? 'Description not set or channel not found.');
                     else if (usedFunction.name === 'fetch_emojis') functionResponse = JSON.stringify(message.guild.emojis.cache.toJSON().map(emoji => `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`));
+                    else if (usedFunction.name === 'fetch_pins') functionResponse = JSON.stringify((await message.channel.messages.fetchPinned()).toJSON().map(message => `@${message.author.username} (<@${message.author.id}>)\n${message.cleanContent}`));
 
                     console.log('Function response', functionResponse);
 
@@ -354,6 +345,22 @@ client.on('interactionCreate', async interaction => {
                                     }
                                 },
                                 {
+                                    name: 'fetch_emojis',
+                                    description: 'Fetches all emojis in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {}
+                                    }
+                                },
+                                {
+                                    name: 'fetch_pins',
+                                    description: 'Fetches all pins in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {}
+                                    }
+                                },
+                                {
                                     name: 'search_members',
                                     description: 'Searches members in the server.',
                                     parameters: {
@@ -367,23 +374,6 @@ client.on('interactionCreate', async interaction => {
                                         required: ['name']
                                     }
                                 },
-                                {
-                                    name: 'channel_description',
-                                    description: 'Fetches the description of the channel. One of the name and id parameters required.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {
-                                            name: {
-                                                type: 'string',
-                                                description: 'Name of the channel to fetch description.'
-                                            },
-                                            id: {
-                                                type: 'string',
-                                                description: 'ID of the channel to fetch description.'
-                                            }
-                                        }
-                                    }
-                                }
                             ]
                         },
                         headers: {
@@ -424,7 +414,37 @@ client.on('interactionCreate', async interaction => {
                                 type: 'object',
                                 properties: {}
                             }
-                        }
+                        },
+                        {
+                            name: 'fetch_emojis',
+                            description: 'Fetches all emojis in the server.',
+                            parameters: {
+                                type: 'object',
+                                properties: {}
+                            }
+                        },
+                        {
+                            name: 'fetch_pins',
+                            description: 'Fetches all pins in the server.',
+                            parameters: {
+                                type: 'object',
+                                properties: {}
+                            }
+                        },
+                        {
+                            name: 'search_members',
+                            description: 'Searches members in the server.',
+                            parameters: {
+                                type: 'object',
+                                properties: {
+                                    name: {
+                                        type: 'string',
+                                        description: 'Name of the member to search.'
+                                    }
+                                },
+                                required: ['name']
+                            }
+                        },
                     ]
                 },
                 headers: {
@@ -458,8 +478,8 @@ client.on('interactionCreate', async interaction => {
                     if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).filter(channel => channel.type !== ChannelType.GuildCategory).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
                     else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON().map(role => `@${role.name}`));
                     else if (usedFunction.name === 'search_members') functionResponse = JSON.stringify(message.guild.members.cache.filter(member => member.displayName.toLowerCase().includes(parameters.name.toLowerCase())).toJSON().map(member => `@${member.displayName} (<@${member.id}>)`));
-                    else if (usedFunction.name === 'channel_description') functionResponse = JSON.stringify(parameters.id ? message.guild.channels.cache.get(parameters.id)?.topic : message.guild.channels.cache.filter(channel => channel.name.toLowerCase() === parameters.name.toLowerCase())[0]?.topic ?? 'Description not set or channel not found.');
                     else if (usedFunction.name === 'fetch_emojis') functionResponse = JSON.stringify(message.guild.emojis.cache.toJSON().map(emoji => `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`));
+                    else if (usedFunction.name === 'fetch_pins') functionResponse = JSON.stringify((await message.channel.messages.fetchPinned()).toJSON().map(message => `@${message.author.username} (<@${message.author.id}>)\n${message.cleanContent}`));
 
                     messages.push({
                         role: 'function',
@@ -492,7 +512,37 @@ client.on('interactionCreate', async interaction => {
                                         type: 'object',
                                         properties: {}
                                     }
-                                }
+                                },
+                                {
+                                    name: 'fetch_emojis',
+                                    description: 'Fetches all emojis in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {}
+                                    }
+                                },
+                                {
+                                    name: 'fetch_pins',
+                                    description: 'Fetches all pins in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {}
+                                    }
+                                },
+                                {
+                                    name: 'search_members',
+                                    description: 'Searches members in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {
+                                            name: {
+                                                type: 'string',
+                                                description: 'Name of the member to search.'
+                                            }
+                                        },
+                                        required: ['name']
+                                    }
+                                },
                             ]
                         },
                         headers: {
