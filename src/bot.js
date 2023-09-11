@@ -1,4 +1,4 @@
-const { Client, Collection, ChannelType, MessageType } = require('discord.js');
+const { Client, Collection, ChannelType, MessageType, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { readdirSync } = require('node:fs');
 const { default: axios } = require('axios');
 const logger = require('./modules/logger');
@@ -7,6 +7,8 @@ const { ownerId, developerIds } = require('../config');
 const { QuickDB } = require('quick.db');
 const { randomNumber } = require('@tolga1452/toolbox.js');
 const { request, RequestMethod } = require("fetchu.js");
+const timer = require('./modules/timer');
+const EmbedMaker = require('./modules/embed');
 
 const client = new Client({
     intents: [
@@ -93,7 +95,31 @@ client.on('interactionCreate', async interaction => {
     } else if (interaction.isMessageComponent()) {
         logger('debug', 'COMMAND', 'Received message component', `${interaction.customId} (${interaction.componentType})`, 'from', interaction.guild ? `${interaction.guild.name} (${interaction.guild.id})` : 'DMs', 'by', `${interaction.user.tag} (${interaction.user.id})`);
 
+        let [id, ...args] = interaction.customId.split(':');
+
         try {
+            switch (id) {
+                case 'functions':
+                    await interaction.deferReply({ ephemeral: true });
+
+                    let functions = await db.get(`functions.${args[0]}`);
+
+                    if (!functions) return interaction.editReply({
+                        content: localize(interaction.locale, 'FUNCTIONS_DELETED'),
+                        ephemeral: true
+                    });
+
+                    interaction.editReply({
+                        embeds: [
+                            new EmbedMaker(client)
+                                .setTitle(localize(interaction.locale, 'USED_FUNCTIONS'))
+                                .setFields(functions.map(func => ({
+                                    name: func.name,
+                                    value: `**Parameters:**\n\`\`\`json\n${JSON.stringify(func.parameters)}\n\`\`\`\n\n**Response:** ${func.response}`
+                                })))
+                        ]
+                    });
+            };
         } catch (error) {
             logger('error', 'COMMAND', 'Error while executing message component:', `${error.message}\n`, error.stack);
 
@@ -156,15 +182,38 @@ client.on('interactionCreate', async interaction => {
 
             messages.pop();
 
-            function respond() {
+            let functions = [];
+
+            async function respond() {
                 let respondMessage = (response?.body?.choices?.[0]?.message?.content ?? 'An error occured, please try again later.').replace(/(User:(\n| ).*|)(\nUser Roles:(\n| ).*|)(\nReplied Message Author:(\n| ).*|)(\nReplied Message:(\n| ).*|)(\nMessage:(\n| )|)/g, '')
+
+                if (functions.length > 0) {
+                    await db.set(`functions.${message.id}`, functions);
+
+                    timer('custom', { // 24 hours
+                        time: 24 * 60 * 60 * 1000,
+                        callback: async () => await db.delete(`functions.${c.messageId}`),
+                        config: {
+                            messageId: message.id
+                        }
+                    });
+                };
 
                 message.reply({
                     content: respondMessage,
                     allowedMentions: {
                         parse: [],
                         repliedUser: false
-                    }
+                    },
+                    components: functions.length > 0 ? [
+                        new ActionRowBuilder()
+                            .setComponents(
+                                new ButtonBuilder()
+                                    .setCustomId(`functions:${message.id}`)
+                                    .setLabel(localize(locale, 'SHOW_FUNCTIONS'))
+                                    .setStyle(ButtonStyle.Secondary)
+                            )
+                    ] : []
                 }).catch(() => null);
 
                 if (message.mentions.users.has(client.user.id)) {
@@ -318,6 +367,11 @@ client.on('interactionCreate', async interaction => {
                         role: 'function',
                         name: usedFunction.name,
                         content: functionResponse
+                    });
+                    functions.push({
+                        name: usedFunction.name,
+                        parameters,
+                        response: functionResponse
                     });
 
                     response = await request({
@@ -485,6 +539,11 @@ client.on('interactionCreate', async interaction => {
                         role: 'function',
                         name: usedFunction.name,
                         content: functionResponse
+                    });
+                    functions.push({
+                        name: usedFunction.name,
+                        parameters,
+                        response: functionResponse
                     });
 
                     response = await request({

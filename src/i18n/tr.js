@@ -22,4 +22,12 @@ module.exports = {
     MISSING_PERMISSION: 'Bunu yapmak için **{{0}}** iznine ihtiyacım var!',
     SETUP_ROLES: 'Rolleri Ayarla',
     ROLES_SETUP: 'Roller başarıyla ayarlandı!',
+    SHOW_FUNCTIONS: 'Kullanılan Fonksiyonları Göster',
+    FUNCTIONS_DELETED: 'Fonksiyonlar mesaj gönderildikten 24 saat sonra silinir.',
+    USED_FUNCTIONS: 'Kullanılan Fonksiyonlar',
+    COLOR: 'Renk',
+    HOIST: 'Yukarıda Göster',
+    MENTIONABLE: 'Etiketlenebilir',
+    PERMISSIONS: 'İzinler',
+    DEFAULT: 'Varsayılan',
 };

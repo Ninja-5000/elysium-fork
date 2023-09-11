@@ -506,7 +506,7 @@ module.exports = {
                         .setTitle('Roles')
                         .setDescription(roles.map(role => {
                             let isUnicode = /[\u{1F000}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E6}-\u{1F1FF}]/u.test(role.icon);
-                            let permissions = 'Default';
+                            let permissions = localize(locale, 'DEFAULT');
 
                             if (permissions !== 'default') {
                                 try {
@@ -519,7 +519,7 @@ module.exports = {
 
                             isUnicode = /[\u{1F000}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E6}-\u{1F1FF}]/u.test(role.icon);
 
-                            return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - **Color:** [#${role.color}](https://www.thecolorapi.com/id?hex=${role.color.toUpperCase()}&format=svg)\n  - **Hoist:** ${role.hoist ? 'Enabled' : 'Disabled'}\n  - **Mentionable:** ${role.mentionable ? 'Enabled' : 'Disabled'}\n  - **Permissions:** ${permissions ?? 'Default'}`;
+                            return `- ${isUnicode ? role.icon : `<:role_icon:${role.icon}>`} ${role.name}\n  - **${localize(locale, 'COLOR')}:** [#${role.color}](https://www.thecolorapi.com/id?hex=${role.color.toUpperCase()}&format=svg)\n  - **${localize(locale, 'HOIST')}:** ${role.hoist ? 'Enabled' : 'Disabled'}\n  - **${localize(locale, 'MENTIONABLE')}:** ${role.mentionable ? 'Enabled' : 'Disabled'}\n  - **${localize(locale, 'PERMISSIONS')}:** ${permissions ?? localize(locale, 'DEFAULT')}`;
                         }).join('\n')),
                     ...(debug ? [
                         new EmbedMaker(interaction.client)

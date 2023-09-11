@@ -22,4 +22,12 @@ module.exports = {
     MISSING_PERMISSION: 'I need the **{{0}}** permission to do this!',
     SETUP_ROLES: 'Setup Roles',
     ROLES_SETUP: 'Roles setup successfully!',
+    SHOW_FUNCTIONS: 'Show Used Functions',
+    FUNCTIONS_DELETED: 'Functions are removing after 24 hours since the message was sent.',
+    USED_FUNCTIONS: 'Used Functions',
+    COLOR: 'Color',
+    HOIST: 'Hoist',
+    MENTIONABLE: 'Mentionable',
+    PERMISSIONS: 'Permissions',
+    DEFAULT: 'Default',
 };
