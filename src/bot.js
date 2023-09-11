@@ -157,7 +157,7 @@ client.on('interactionCreate', async interaction => {
             messages.pop();
 
             function respond() {
-                let respondMessage = response.body.choices[0].message.content.replace(/(User:(\n| ).*|)(\nUser Roles:(\n| ).*|)(\nReplied Message Author:(\n| ).*|)(\nReplied Message:(\n| ).*|)(\nMessage:(\n| )|)/g, '')
+                let respondMessage = (response?.body?.choices?.[0]?.message?.content ?? 'An error occured, please try again later.').replace(/(User:(\n| ).*|)(\nUser Roles:(\n| ).*|)(\nReplied Message Author:(\n| ).*|)(\nReplied Message:(\n| ).*|)(\nMessage:(\n| )|)/g, '')
 
                 message.reply({
                     content: respondMessage,
