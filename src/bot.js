@@ -321,6 +321,8 @@ client.on('interactionCreate', async interaction => {
                     else if (usedFunction.name === 'channel_description') functionResponse = JSON.stringify(parameters.id ? message.guild.channels.cache.get(parameters.id)?.topic : message.guild.channels.cache.filter(channel => channel.name.toLowerCase() === parameters.name.toLowerCase())[0]?.topic ?? 'Description not set or channel not found.');
                     else if (usedFunction.name === 'fetch_emojis') functionResponse = JSON.stringify(message.guild.emojis.cache.toJSON().map(emoji => `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`));
 
+                    console.log('Function response', functionResponse);
+
                     messages.push({
                         role: 'function',
                         name: usedFunction.name,
