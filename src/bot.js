@@ -224,7 +224,7 @@ client.on('interactionCreate', async interaction => {
                 method: RequestMethod.Post,
                 body: {
                     model: 'gpt-3.5-turbo-0613',
-                    messages,
+                    messages: messages.slice(-5),
                     max_tokens: 2000,
                     functions: [
                         {
@@ -241,6 +241,20 @@ client.on('interactionCreate', async interaction => {
                             parameters: {
                                 type: 'object',
                                 properties: {}
+                            }
+                        },
+                        {
+                            name: 'search_members',
+                            description: 'Searches members in the server.',
+                            parameters: {
+                                type: 'object',
+                                properties: {
+                                    name: {
+                                        type: 'string',
+                                        description: 'Name of the member to search.'
+                                    }
+                                },
+                                required: ['name']
                             }
                         }
                     ]
@@ -270,11 +284,15 @@ client.on('interactionCreate', async interaction => {
 
                     let usedFunction = response.body.choices[0].message?.function_call;
                     let functionResponse;
+                    let parameters = {};
 
-                    console.log('Function call detected', usedFunction);
+                    if (usedFunction.arguments) parameters = JSON.stringify(usedFunction.arguments);
+
+                    console.log('Function call detected', usedFunction, parameters);
 
                     if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).filter(channel => channel.type !== ChannelType.GuildCategory).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
                     else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON().map(role => `@${role.name}`));
+                    else if (usedFunction.name === 'search_members') functionResponse = JSON.stringify((await message.guild.members.fetch()).filter(member => member.displayName.toLowerCase().includes(parameters.name.toLowerCase())).toJSON().map(member => `@${member.displayName}`));
 
                     messages.push({
                         role: 'function',
@@ -287,7 +305,7 @@ client.on('interactionCreate', async interaction => {
                         method: RequestMethod.Post,
                         body: {
                             model: 'gpt-3.5-turbo-0613',
-                            messages,
+                            messages: messages.slice(-5),
                             max_tokens: 2000,
                             functions: [
                                 {
@@ -304,6 +322,20 @@ client.on('interactionCreate', async interaction => {
                                     parameters: {
                                         type: 'object',
                                         properties: {}
+                                    }
+                                },
+                                {
+                                    name: 'search_members',
+                                    description: 'Searches members in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {
+                                            name: {
+                                                type: 'string',
+                                                description: 'Name of the member to search.'
+                                            }
+                                        },
+                                        required: ['name']
                                     }
                                 }
                             ]
