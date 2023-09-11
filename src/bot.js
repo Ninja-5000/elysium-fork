@@ -286,7 +286,7 @@ client.on('interactionCreate', async interaction => {
                     let functionResponse;
                     let parameters = {};
 
-                    if (usedFunction.arguments) parameters = JSON.stringify(usedFunction.arguments);
+                    if (usedFunction.arguments) parameters = JSON.parse(usedFunction.arguments);
 
                     console.log('Function call detected', usedFunction, parameters);
 
