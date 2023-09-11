@@ -292,7 +292,7 @@ client.on('interactionCreate', async interaction => {
 
                     if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).filter(channel => channel.type !== ChannelType.GuildCategory).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
                     else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON().map(role => `@${role.name}`));
-                    else if (usedFunction.name === 'search_members') functionResponse = JSON.stringify((await message.guild.members.fetch()).filter(member => member.displayName.toLowerCase().includes(parameters.name.toLowerCase())).toJSON().map(member => `@${member.displayName}`));
+                    else if (usedFunction.name === 'search_members') functionResponse = JSON.stringify((await message.guild.members.fetch()).filter(member => member.displayName.toLowerCase().includes(parameters.name.toLowerCase())).toJSON().map(member => `@${member.displayName} (<@${member.id}>)`));
 
                     messages.push({
                         role: 'function',
@@ -345,6 +345,7 @@ client.on('interactionCreate', async interaction => {
                             Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
                         }
                     }, {
+                        isOk: response => console.log('Function call OK', JSON.stringify(response.body, null, 4)),
                         isNotOk: response => console.log(JSON.stringify(response.body, null, 4))
                     });
                 };
