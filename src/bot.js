@@ -118,7 +118,7 @@ console.log(...functions.map(func => ({
                                 .setTitle(localize(interaction.locale, 'USED_FUNCTIONS'))
                                 .setFields(...functions.map(func => ({
                                     name: func.name,
-                                    value: `**Parameters:**\n\`\`\`json\n${JSON.stringify(func.parameters)}\n\`\`\`\n\n**Response:** ${func.response}`
+                                    value: `**Parameters:**\n\`\`\`json\n${JSON.stringify(func.parameters)}\n\`\`\`\n\n**Response:** ${func.response.splice(0, 100)}`
                                 })))
                         ]
                     });
