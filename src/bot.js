@@ -108,7 +108,7 @@ client.on('interactionCreate', async interaction => {
                         content: localize(interaction.locale, 'FUNCTIONS_DELETED'),
                         ephemeral: true
                     });
-                    
+
                     interaction.editReply({
                         embeds: [
                             new EmbedMaker(client)
@@ -368,6 +368,10 @@ client.on('interactionCreate', async interaction => {
                         name: usedFunction.name,
                         content: functionResponse
                     });
+                    messages.push({
+                        role: 'system',
+                        content: 'You will NOT repeat functions.'
+                    });
                     functions.push({
                         name: usedFunction.name,
                         parameters,
@@ -539,6 +543,10 @@ client.on('interactionCreate', async interaction => {
                         role: 'function',
                         name: usedFunction.name,
                         content: functionResponse
+                    });
+                    messages.push({
+                        role: 'system',
+                        content: 'You will NOT repeat functions.'
                     });
                     functions.push({
                         name: usedFunction.name,
