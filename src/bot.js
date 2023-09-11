@@ -108,17 +108,14 @@ client.on('interactionCreate', async interaction => {
                         content: localize(interaction.locale, 'FUNCTIONS_DELETED'),
                         ephemeral: true
                     });
-console.log(...functions.map(func => ({
-    name: func.name,
-    value: `**Parameters:**\n\`\`\`json\n${JSON.stringify(func.parameters)}\n\`\`\`\n\n**Response:** ${func.response}`
-})))
+                    
                     interaction.editReply({
                         embeds: [
                             new EmbedMaker(client)
                                 .setTitle(localize(interaction.locale, 'USED_FUNCTIONS'))
                                 .setFields(...functions.map(func => ({
-                                    name: func.name,
-                                    value: `**Parameters:**\n\`\`\`json\n${JSON.stringify(func.parameters)}\n\`\`\`\n\n**Response:** ${func.response.splice(0, 100)}`
+                                    name: `\`${func.name}\``,
+                                    value: `**Parameters:**\n\`\`\`json\n${JSON.stringify(func.parameters)}\n\`\`\`\n\n**Response:** ${func.response.slice(0, 100)}`
                                 })))
                         ]
                     });
