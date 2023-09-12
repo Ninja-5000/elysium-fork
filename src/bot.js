@@ -216,7 +216,7 @@ client.on('interactionCreate', async interaction => {
                     ] : []
                 }).catch(() => null);
 
-                if (message.mentions.users.has(client.user.id)) {
+                if (message.mentions.users.has(client.user.id) || (guild.randomChat.status && guild.randomChat.channel === message.channelId)) {
                     user.usage++;
 
                     db.set(`users.${message.author.id}`, user);
