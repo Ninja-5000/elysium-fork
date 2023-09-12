@@ -162,6 +162,7 @@ client.on('interactionCreate', async interaction => {
                 usage: 0,
                 premium: false
             };
+            let guild = await db.get(`guilds.${message.guild.id}`);
             let locale = message.locale;
 
             if (user.usage >= 25 && !user.premium) {
@@ -216,7 +217,7 @@ client.on('interactionCreate', async interaction => {
                     ] : []
                 }).catch(() => null);
 
-                if (message.mentions.users.has(client.user.id)) {
+                if (message.mentions.users.has(client.user.id) || (guild.randomChat.status && guild.randomChat.channel === message.channelId)) {
                     user.usage++;
 
                     db.set(`users.${message.author.id}`, user);

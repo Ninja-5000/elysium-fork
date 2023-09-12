@@ -66,7 +66,7 @@ module.exports = {
                     })
                     .setRequired(true)
                     .setMinValue(1)
-                    .setMaxValue(100)
+                    .setMaxValue(25)
                 )
             )
         )
