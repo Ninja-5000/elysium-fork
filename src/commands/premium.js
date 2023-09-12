@@ -1,56 +1,50 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require("discord.js");
-const timer = require("../modules/timer");
-const { ownerId } = require("../../config");
-const { QuickDB } = require("quick.db");
-
-const db = new QuickDB();
+const { SlashCommandBuilder, ChatInputCommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const EmbedMaker = require("../modules/embed");
+const { localize } = require("../modules/localization");
+const { emojis } = require("../../config");
 
 module.exports = {
-    category: 'Owner',
+    category: 'General',
     data: new SlashCommandBuilder()
-        .setName('premium')
-        .setDescription('Makes the user premium')
-        .addUserOption(option => option
-            .setName('user')
-            .setDescription('The user you want to make premium')
-            .setRequired(true)
-        )
-        .addStringOption(option => option
-            .setName('github')
-            .setDescription(`The user's GitHub username`)
-            .setRequired(true)
-        ),
+    .setName('premium')
+    .setDescription("Shows information about the premium")
+    .setDescriptionLocalizations({
+        tr: 'Premium hakkında bilgi gösterir'
+    }),
     /**
      * @param {ChatInputCommandInteraction} interaction 
      */
     async execute(interaction) {
         await interaction.deferReply();
 
-        let user = interaction.options.getUser('user');
-        let github = interaction.options.getString('github');
-        let userData = await db.get(`users.${user.id}`) ?? {
-            usage: 0,
-            premium: false
-        };
+        let locale = interaction.locale;
 
-        userData.premium = true;
-
-        await db.set(`users.${user.id}`, userData);
-
-        timer('sendUserMessage', { // 1 month
-            time: 2592000000,
-            callback: async () => {
-                await db.set(`users.${c.userId}.premium`, false);
-            },
-            userId: ownerId,
-            message: `The premium of **[\`${user.id}\`](https://github.com/${github})** has expired! The check notifier will be sent in 1 day.`
+        interaction.editReply({
+            embeds: [
+                new EmbedMaker(interaction.client)
+                .setTitle(`${emojis.premium} Premium`)
+                .setDescription(localize(locale, 'PREMIUM_DESCRIPTION'))
+                .setFields(
+                    {
+                        name: localize(locale, 'WHAT_WILL_YOU_GET'),
+                        value: localize(locale, 'PREMIUM_PERKS')
+                    },
+                    {
+                        name: localize(locale, 'PRICE'),
+                        value: localize(locale, 'PREMIUM_PRICE')
+                    }
+                )
+            ],
+            components: [
+                new ActionRowBuilder()
+                .setComponents(
+                    new ButtonBuilder()
+                    .setEmoji(emojis.premium)
+                    .setLabel(localize(locale, 'BUY_NOW'))
+                    .setStyle(ButtonStyle.Link)
+                    .setURL('https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=316102&preview=false')
+                )
+            ]
         });
-        timer('sendUserMessage', { // 1 month + 1 day
-            time: 2592000000 + 86400000,
-            userId: ownerId,
-            message: `The premium of **[\`${user.id}\`](https://github.com/${github})** has expired! It's time to check the premium status.`
-        });
-
-        interaction.editReply(`Successfully made <@${user.id}> premium!`);
     }
 };

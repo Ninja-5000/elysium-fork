@@ -11,6 +11,7 @@ module.exports = {
         stageChannel: '<:stage:1150009459670790256>',
         categoryChannel: '<:folder:1077255295543296020>',
         send: '<:send:1079025451294527569>',
-        update: '<:update:1078021955879448596>'
+        update: '<:update:1078021955879448596>',
+        premium: '<:highlight:1077611464317218907>'
     }
 };

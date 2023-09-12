@@ -30,4 +30,10 @@ module.exports = {
     MENTIONABLE: 'Mentionable',
     PERMISSIONS: 'Permissions',
     DEFAULT: 'Default',
+    PREMIUM_DESCRIPTION: 'Premium is a feature that allows you to use the bot without any limits.',
+    WHAT_WILL_YOU_GET: 'What will you get?',
+    PREMIUM_PERKS: 'You will be able to use the bot without any limitations.',
+    PRICE: 'What is the price?',
+    PREMIUM_PRICE: "It's only 2$ per month!",
+    BUY_NOW: 'Buy Now!'
 };

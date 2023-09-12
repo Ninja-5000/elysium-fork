@@ -30,4 +30,10 @@ module.exports = {
     MENTIONABLE: 'Etiketlenebilir',
     PERMISSIONS: 'İzinler',
     DEFAULT: 'Varsayılan',
+    PREMIUM_DESCRIPTION: 'Premium, botu herhangi bir sınırlama olmadan kullanmanızı sağlayan bir özelliktir. Premiumu [buradan](<https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=316102&preview=false>) alabilirsiniz.',
+    WHAT_WILL_YOU_GET: 'Neler alacaksınız?',
+    PREMIUM_PERKS: 'Botu herhangi bir sınırlama olmadan kullanabileceksiniz.',
+    PRICE: 'Fiyatı nedir?',
+    PREMIUM_PRICE: 'Sadece aylık $2!',
+    BUY_NOW: 'Şimdi Satın Al!'
 };
