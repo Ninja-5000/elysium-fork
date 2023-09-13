@@ -11,7 +11,7 @@ module.exports = {
     DEVELOPER_ONLY: 'This action can only be performed by the developers of the bot!',
     OUTPUT: 'Output',
     ERROR: 'Error',
-    LIMIT_REACHED: 'You have reached the limit of {{0}} requests per day. You can get [premium](<https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=316102&preview=false>) to remove this limit.',
+    LIMIT_REACHED: 'You have reached the limit of {{0}} requests per day. You can get premium by using the </premium:1149719096515104901> command to remove this limit.',
     MODELS_DOWN: 'All models we use are currently down. Please try again later and DO NOT ping the developers about this.',
     INVALID_RESPONSE: 'AI returned an invalid response. Please try again later.',
     CHANNELS_SETUP: 'Channels setup successfully!',
@@ -33,7 +33,7 @@ module.exports = {
     PREMIUM_DESCRIPTION: 'Premium is a feature that allows you to use the bot without any limits.',
     WHAT_WILL_YOU_GET: 'What will you get?',
     PREMIUM_PERKS: 'You will be able to use the bot without any limitations.',
-    PRICE: 'What is the price?',
-    PREMIUM_PRICE: "It's only 2$ per month!",
-    BUY_NOW: 'Buy Now!'
+    BUY_ON_GITHUB: 'Buy on GitHub (2$/month)',
+    BUY_ON_SERVER: 'Buy on Discord Server (2.99$ for 1 month)',
+    BUY_NOW: 'Buy now!'
 };

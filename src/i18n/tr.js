@@ -11,7 +11,7 @@ module.exports = {
     DEVELOPER_ONLY: 'Bu eylem yalnızca botun geliştiricileri tarafından gerçekleştirilebilir!',
     OUTPUT: 'Çıktı',
     ERROR: 'Hata',
-    LIMIT_REACHED: 'Günlük {{0}} istek limitine ulaştınız. Bu limiti kaldırmak için [premium](<https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=316102&preview=false>) alabilirsiniz.',
+    LIMIT_REACHED: 'Günlük {{0}} istek limitine ulaştınız. Bu limiti kaldırmak için </premium:1149719096515104901> komutunu kullanarak premium alabilirsiniz.',
     MODELS_DOWN: 'Kullandığımız tüm modeller şu anda kapalı. Lütfen daha sonra tekrar deneyin ve bunun hakkında geliştiricileri ETİKETLEMEYİN.',
     INVALID_RESPONSE: 'Yapay zeka geçersiz bir yanıt döndürdü. Lütfen daha sonra tekrar deneyin.',
     CHANNELS_SETUP: 'Kanallar başarıyla ayarlandı!',
@@ -33,7 +33,7 @@ module.exports = {
     PREMIUM_DESCRIPTION: 'Premium, botu herhangi bir sınırlama olmadan kullanmanızı sağlayan bir özelliktir. Premiumu [buradan](<https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=316102&preview=false>) alabilirsiniz.',
     WHAT_WILL_YOU_GET: 'Neler alacaksınız?',
     PREMIUM_PERKS: 'Botu herhangi bir sınırlama olmadan kullanabileceksiniz.',
-    PRICE: 'Fiyatı nedir?',
-    PREMIUM_PRICE: 'Sadece aylık $2!',
-    BUY_NOW: 'Şimdi Satın Al!'
+    BUY_ON_GITHUB: 'GitHub üzerinden satın al ($2/ay)',
+    BUY_ON_SERVER: 'Discord Sunucusu üzerinden satın al (1 ay için 2.99$)',
+    BUY_NOW: 'Şimdi satın al!'
 };

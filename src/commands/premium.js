@@ -30,19 +30,9 @@ module.exports = {
                         value: localize(locale, 'PREMIUM_PERKS')
                     },
                     {
-                        name: localize(locale, 'PRICE'),
-                        value: localize(locale, 'PREMIUM_PRICE')
+                        name: `${emojis.premium} ${localize(locale, 'BUY_NOW')}`,
+                        value: `- [${localize(locale, 'BUY_ON_GITHUB')}](https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=316102&preview=false)\n- [${localize(locale, 'BUY_ON_SERVER')}](https://discord.gg/experiments)`
                     }
-                )
-            ],
-            components: [
-                new ActionRowBuilder()
-                .setComponents(
-                    new ButtonBuilder()
-                    .setEmoji(emojis.premium)
-                    .setLabel(localize(locale, 'BUY_NOW'))
-                    .setStyle(ButtonStyle.Link)
-                    .setURL('https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=316102&preview=false')
                 )
             ]
         });
