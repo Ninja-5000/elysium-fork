@@ -18,6 +18,7 @@ module.exports = {
         await interaction.deferReply();
 
         let locale = interaction.locale;
+        let isInDEH = await interaction.client.guilds.cache.get('1089540433010491392').members.fetch(interaction.user.id).catch(() => null) !== null;
 
         interaction.editReply({
             embeds: [
@@ -31,7 +32,7 @@ module.exports = {
                     },
                     {
                         name: `${emojis.premium} ${localize(locale, 'BUY_NOW')}`,
-                        value: `- [${localize(locale, 'BUY_ON_GITHUB')}](https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=316102&preview=false)\n- [${localize(locale, 'BUY_ON_SERVER')}](https://discord.gg/experiments)`
+                        value: `- [${localize(locale, 'BUY_ON_GITHUB')}](https://github.com/sponsors/Tolga1452/sponsorships?sponsor=Tolga1452&tier_id=316102&preview=false)\n- [${localize(locale, 'BUY_ON_SERVER')}](${isInDEH ? 'https://discord.com/channels/1089540433010491392/shop/1151516725070807070' : 'https://discord.gg/experiments'})`
                     }
                 )
             ]
