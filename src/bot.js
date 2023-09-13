@@ -356,7 +356,7 @@ client.on('interactionCreate', async interaction => {
 
                     console.log('Function call detected', usedFunction, parameters);
 
-                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).filter(channel => channel.type !== ChannelType.GuildCategory).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
+                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).filter(channel => channel && channel.type !== ChannelType.GuildCategory).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
                     else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON().map(role => `@${role.name}`));
                     else if (usedFunction.name === 'search_members') functionResponse = JSON.stringify(message.guild.members.cache.filter(member => member.displayName.toLowerCase().includes(parameters.name.toLowerCase())).toJSON().map(member => `@${member.displayName} (<@${member.id}>)`));
                     else if (usedFunction.name === 'fetch_emojis') functionResponse = JSON.stringify(message.guild.emojis.cache.toJSON().map(emoji => `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`));
@@ -534,7 +534,7 @@ client.on('interactionCreate', async interaction => {
 
                     console.log('Function call detected', usedFunction);
 
-                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).filter(channel => channel.type !== ChannelType.GuildCategory).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
+                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).filter(channel => channel && channel.type !== ChannelType.GuildCategory).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
                     else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON().map(role => `@${role.name}`));
                     else if (usedFunction.name === 'search_members') functionResponse = JSON.stringify(message.guild.members.cache.filter(member => member.displayName.toLowerCase().includes(parameters.name.toLowerCase())).toJSON().map(member => `@${member.displayName} (<@${member.id}>)`));
                     else if (usedFunction.name === 'fetch_emojis') functionResponse = JSON.stringify(message.guild.emojis.cache.toJSON().map(emoji => `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`));
