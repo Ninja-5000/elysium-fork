@@ -379,6 +379,9 @@ client.on('interactionCreate', async interaction => {
                         response: functionResponse
                     });
 
+                    // wait 1 second to prevent rate limit
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
                     response = await request({
                         url: 'https://api.openai.com/v1/chat/completions',
                         method: RequestMethod.Post,
@@ -554,6 +557,9 @@ client.on('interactionCreate', async interaction => {
                         parameters,
                         response: functionResponse
                     });
+
+                    // wait 1 second to prevent rate limit
+                    await new Promise(resolve => setTimeout(resolve, 1000));
 
                     response = await request({
                         url: 'https://beta.purgpt.xyz/openai/chat/completions',
