@@ -748,12 +748,15 @@ client.on('interactionCreate', async interaction => {
         };
     });
 
-app.post('/verify', (req, res) => {
+app.get('/verify', (req, res) => {
     let key = req.headers.authorization;
 
     if (key !== process.env.VERIFY_KEY) return res.status(401).send('Unauthorized');
 
-    console.log(req);
+    let user = req.query.user;
+    let id = req.query.id;
+
+    console.log('Verify request', user, id);
 });
 
 app.listen(3200, () => console.log('Listening on port 3200'));
