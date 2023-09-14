@@ -181,7 +181,7 @@ client.on('interactionCreate', async interaction => {
                 return;
             };
 
-            if (!(await db.has(`users.${message.author.id}.verified`))) return message.reply({
+            if (message.mentions.users.has(client.user.id) && !(await db.has(`users.${message.author.id}.verified`))) return message.reply({
                 content: localize(locale, 'NOT_VERIFIED'),
                 components: [
                     new ActionRowBuilder()
