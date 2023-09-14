@@ -748,7 +748,7 @@ client.on('interactionCreate', async interaction => {
         };
     });
 
-app.get('/verify', (req, res) => {
+app.post('/verify', (req, res) => {
     let key = req.headers.authorization;
 
     if (key !== process.env.VERIFY_KEY) return res.status(401).send('Unauthorized');
