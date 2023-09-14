@@ -108,7 +108,7 @@ module.exports = {
             let messages = [
                 {
                     role: 'system',
-                    content: 'You are Server Wizard. You will setup channels for a Discord server. You will respond with array of channels like this:\n[{"type": "text", "name": "example-channel-without-category"}, {"type": "category", "name": "Example Category", "channels": [{"type": "text", "name": "example-text"}, {"type": "voice", "name": "Example Voice"}, {"type": "forum", "name": "example-forum"}, {"type": "announcement", "name": "Example Announcement"}, {"type": "stage", "name": "Example Stage"}]}, {"type": "category", "name": "Example Category 2", "channels": [{"type": "text", "name": "example-text-2"}, {"type": "voice", "name": "Example Voice 2"}, {"type": "forum", "name": "example-forum-2"}, {"type": "announcement", "name": "Example Announcement 2"}, {"type": "stage", "name": "Example Stage 2"}]}]'
+                    content: 'You are Server Wizard. You will setup channels for a Discord server. You will respond with array of channels like this:\n[{"type": "text", "name": "example-channel-without-category", "description": "Maximum 1024 characters description."}, {"type": "category", "name": "Example Category", "channels": [{"type": "text", "name": "example-text", "description": "Maximum 1024 characters description."}, {"type": "voice", "name": "Example Voice"}, {"type": "forum", "name": "example-forum", "description": "Maximum 1024 characters description."}, {"type": "announcement", "name": "Example Announcement", "description": "Maximum 1024 characters description."}, {"type": "stage", "name": "Example Stage"}]}, {"type": "category", "name": "Example Category 2", "channels": [{"type": "text", "name": "example-text-2", "description": "Maximum 1024 characters description."}, {"type": "voice", "name": "Example Voice 2"}, {"type": "forum", "name": "example-forum-2", "description": "Maximum 1024 characters description."}, {"type": "announcement", "name": "example-announcement-2", "description": "Maximum 1024 characters description."}, {"type": "stage", "name": "Example Stage 2"}]}]'
                 },
                 {
                     role: 'system',
@@ -121,7 +121,7 @@ module.exports = {
                 },
                 {
                     role: 'assistant',
-                    content: '[\n  {\n    \"type\": \"category\",\n    \"name\": \"General\",\n    \"channels\": [\n      {\n        \"type\": \"text\",\n        \"name\": \"general-chat\"\n      },\n      {\n        \"type\": \"voice\",\n        \"name\": \"Voice Chat\"\n      }\n    ]\n  },\n  {\n    \"type\": \"category\",\n    \"name\": \"Game Discussion\",\n    \"channels\": [\n      {\n        \"type\": \"text\",\n        \"name\": \"game-news\"\n      },\n      {\n        \"type\": \"text\",\n        \"name\": \"game-strategies\"\n      },\n      {\n        \"type\": \"voice\",\n        \"name\": \"Game Voice Chat\"\n      }\n    ]\n  }\n]',
+                    content: '[{\"type\": \"category\", \"name\": \"General\", \"channels\": [{\"type\": \"text\", \"name\": \"general-chat\", \"description\": \"General chat for all topics.\"}, {\"type\": \"voice\", \"name\": \"voice-chat\", \"description\": \"Voice chat for gaming sessions.\"}, {\"type\": \"text\", \"name\": \"announcements\", \"description\": \"Important announcements and updates.\"}]}, {\"type\": \"category\", \"name\": \"Game Discussions\", \"channels\": [{\"type\": \"text\", \"name\": \"game-news\", \"description\": \"Latest news and updates about the game.\"}, {\"type\": \"text\", \"name\": \"strategy-discussion\", \"description\": \"Discuss strategies and tactics.\"}, {\"type\": \"voice\", \"name\": \"game-voice-chat\", \"description\": \"Voice chat dedicated to game sessions.\"}]}]',
                     name: 'example_assistant'
                 },
                 {
@@ -131,7 +131,7 @@ module.exports = {
                 },
                 {
                     role: 'assistant',
-                    content: '[\n  {\n    \"type\": \"category\",\n    \"name\": \"General\",\n    \"channels\": [\n      {\n        \"type\": \"text\",\n        \"name\": \"general-chat\"\n      },\n      {\n        \"type\": \"voice\",\n        \"name\": \"Voice Chat\"\n      }\n    ]\n  },\n  {\n    \"type\": \"category\",\n    \"name\": \"Game Discussion\",\n    \"channels\": [\n      {\n        \"type\": \"text\",\n        \"name\": \"game-news\"\n      },\n      {\n        \"type\": \"text\",\n        \"name\": \"game-strategies\"\n      },\n      {\n        \"type\": \"voice\",\n        \"name\": \"Game Voice Chat\"\n      }\n    ]\n  },\n  {\n    \"type\": \"category\",\n    \"name\": \"Announcements\",\n    \"channels\": [\n      {\n        \"type\": \"announcement\",\n        \"name\": \"announcements\"\n      }\n    ]\n  }\n]',
+                    content: '[{\"type\": \"category\", \"name\": \"General\", \"channels\": [{\"type\": \"text\", \"name\": \"general-chat\", \"description\": \"General chat for all topics.\"}, {\"type\": \"voice\", \"name\": \"voice-chat\", \"description\": \"Voice chat for gaming sessions.\"}, {\"type\": \"text\", \"name\": \"announcements\", \"description\": \"Important announcements and updates.\"}]}, {\"type\": \"category\", \"name\": \"Game Discussions\", \"channels\": [{\"type\": \"text\", \"name\": \"game-news\", \"description\": \"Latest news and updates about the game.\"}, {\"type\": \"text\", \"name\": \"strategy-discussion\", \"description\": \"Discuss strategies and tactics.\"}, {\"type\": \"voice\", \"name\": \"game-voice-chat\", \"description\": \"Voice chat dedicated to game sessions.\"}]}]',
                     name: 'example_assistant'
                 },
                 {
@@ -382,7 +382,8 @@ module.exports = {
                                 await interaction.guild.channels.create({
                                     name: subchannel.name,
                                     type: subchannel.type === 'text' ? ChannelType.GuildText : subchannel.type === 'voice' ? ChannelType.GuildVoice : subchannel.type === 'forum' ? communityServer ? ChannelType.GuildForum : ChannelType.GuildText : subchannel.type === 'announcement' ? communityServer ? ChannelType.GuildAnnouncement : ChannelType.GuildText : communityServer ? ChannelType.GuildStageVoice : ChannelType.GuildVoice,
-                                    parent: category.id
+                                    parent: category.id,
+                                    topic: subchannel.description
                                 });
 
                                 await new Promise(resolve => setTimeout(resolve, 1000));
@@ -390,6 +391,7 @@ module.exports = {
                         } else await interaction.guild.channels.create({
                             name: channel.name,
                             type: channel.type === 'text' ? ChannelType.GuildText : channel.type === 'voice' ? ChannelType.GuildVoice : channel.type === 'forum' ? ChannelType.GuildForum : channel.type === 'announcement' ? (interaction.guild.features.includes(GuildFeature.Community) ? ChannelType.GuildAnnouncement : ChannelType.GuildText) : ChannelType.GuildStageVoice,
+                            topic: channel.description
                         });
 
                         await new Promise(resolve => setTimeout(resolve, 1000));
