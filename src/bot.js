@@ -9,6 +9,7 @@ const { randomNumber } = require('@tolga1452/toolbox.js');
 const { request, RequestMethod } = require("fetchu.js");
 const timer = require('./modules/timer');
 const EmbedMaker = require('./modules/embed');
+const express = require('express');
 
 const client = new Client({
     intents: [
@@ -21,6 +22,7 @@ const client = new Client({
     ]
 });
 const db = new QuickDB();
+const app = express();
 
 client.commands = new Collection();
 
@@ -743,6 +745,12 @@ client.on('interactionCreate', async interaction => {
             console.log('Error', error);
         };
     });
+
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
+
+app.listen(3200, () => console.log('Listening on port 3200'));
 
 async function runAtMidnight() {
     let users = await db.get('users') ?? {};
