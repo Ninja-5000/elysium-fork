@@ -446,6 +446,72 @@ client.on('interactionCreate', async interaction => {
                         isOk: response => console.log('Function call OK', JSON.stringify(response.body, null, 4)),
                         isNotOk: response => console.log(JSON.stringify(response.body, null, 4))
                     });
+
+                    if (!response.ok) response = await request({
+                        url: 'https://beta.purgpt.xyz/openai/chat/completions',
+                        method: RequestMethod.Post,
+                        body: {
+                            model: 'gpt-4-0613',
+                            messages,
+                            fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613', 'gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
+                            max_tokens: 2000,
+                            maxTokens: 2000,
+                            functions: [
+                                {
+                                    name: 'fetch_channels',
+                                    description: 'Fetches all channels in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {}
+                                    }
+                                },
+                                {
+                                    name: 'fetch_roles',
+                                    description: 'Fetches all roles in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {}
+                                    }
+                                },
+                                {
+                                    name: 'fetch_emojis',
+                                    description: 'Fetches all emojis in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {}
+                                    }
+                                },
+                                {
+                                    name: 'fetch_pins',
+                                    description: 'Fetches all pins in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {}
+                                    }
+                                },
+                                {
+                                    name: 'search_members',
+                                    description: 'Searches members in the server.',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {
+                                            name: {
+                                                type: 'string',
+                                                description: 'Name of the member to search.'
+                                            }
+                                        },
+                                        required: ['name']
+                                    }
+                                },
+                            ]
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                        }
+                    }, {
+                        isNotOk: response => console.log(JSON.stringify(response.body, null, 4))
+                    });
                 };
 
                 return respond();
