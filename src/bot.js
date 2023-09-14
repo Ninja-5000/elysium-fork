@@ -41,9 +41,11 @@ for (const file of commandFiles) {
     logger('success', 'COMMAND', 'Loaded command', command.data.name);
 };
 
-client.on('ready', () => {
+client.on('ready', async () => {
     logger('info', 'BOT', 'Logged in as', client.user.tag);
     logger('info', 'COMMAND', 'Registering commands');
+
+    await db.delete('verified')
 
     axios.put(`https://discord.com/api/v10/applications/${client.user.id}/commands`, client.commands.map(command => command.data.toJSON()), {
         headers: {
