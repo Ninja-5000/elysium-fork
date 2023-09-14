@@ -35,5 +35,7 @@ module.exports = {
     PREMIUM_PERKS: 'You will be able to use the bot without any limitations.',
     BUY_ON_GITHUB: 'Buy on GitHub (2$/month)',
     BUY_ON_SERVER: 'Buy on Discord Server (2.99$ for 1 month)',
-    BUY_NOW: 'Buy now!'
+    BUY_NOW: 'Buy now!',
+    NOT_VERIFIED: 'Hold on! I guess you are new here, right? Please verify your account first.',
+    VERIFY_NOW: 'Verify Now'
 };

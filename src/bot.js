@@ -45,8 +45,6 @@ client.on('ready', async () => {
     logger('info', 'BOT', 'Logged in as', client.user.tag);
     logger('info', 'COMMAND', 'Registering commands');
 
-    await db.delete('verified')
-
     axios.put(`https://discord.com/api/v10/applications/${client.user.id}/commands`, client.commands.map(command => command.data.toJSON()), {
         headers: {
             'Content-Type': 'application/json',
@@ -182,6 +180,19 @@ client.on('interactionCreate', async interaction => {
 
                 return;
             };
+
+            if (!(await db.has(`users.${message.author.id}.verified`))) return message.reply({
+                content: localize(locale, 'NOT_VERIFIED'),
+                components: [
+                    new ActionRowBuilder()
+                    .setComponents(
+                        new ButtonBuilder()
+                        .setLabel(localize(locale, 'VERIFY_NOW'))
+                        .setStyle(ButtonStyle.Link)
+                        .setURL('https://discord.com/api/oauth2/authorize?client_id=786480896928645131&redirect_uri=https%3A%2F%2Felysium-verify.glitch.me%2F&response_type=code&scope=identify')
+                    )
+                ]
+            });
 
             await message.channel.sendTyping();
 
@@ -766,6 +777,7 @@ app.get('/verify', async (req, res) => {
         return client.users.cache.get(id).send('You are blocked because you are using multiple accounts.').catch(() => null);
     } else {
         await db.set(`verified.${user}`, id);
+        await db.set(`users.${id}.verified`, user);
 
         if (!client.users.cache.get(id).dmChannel) await client.users.cache.get(id).createDM();
 

@@ -35,5 +35,7 @@ module.exports = {
     PREMIUM_PERKS: 'Botu herhangi bir sınırlama olmadan kullanabileceksiniz.',
     BUY_ON_GITHUB: 'GitHub üzerinden satın al ($2/ay)',
     BUY_ON_SERVER: 'Discord Sunucusu üzerinden satın al (1 ay için 2.99$)',
-    BUY_NOW: 'Şimdi satın al!'
+    BUY_NOW: 'Şimdi satın al!',
+    NOT_VERIFIED: 'Hop, dur bakalım! Sanırım buralarda yenisin, değil mi? Lütfen önce hesabını doğrula.',
+    VERIFY_NOW: 'Şimdi Doğrula'
 };
