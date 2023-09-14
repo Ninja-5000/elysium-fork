@@ -748,15 +748,27 @@ client.on('interactionCreate', async interaction => {
         };
     });
 
-app.get('/verify', (req, res) => {
+app.get('/verify', async (req, res) => {
     let key = req.headers.authorization;
 
     if (key !== process.env.VERIFY_KEY) return res.status(401).send('Unauthorized');
 
+    res.status(204).send();
+
     let user = req.query.user;
     let id = req.query.id;
 
-    console.log('Verify request', user, id);
+    if (await db.has(`verified.${user}`)) {
+        if (!client.users.cache.get(id).dmChannel) await client.users.cache.get(id).createDM();
+
+        return client.users.cache.get(id).send('You are blocked because you are using multiple accounts.').catch(() => null);
+    } else {
+        await db.set(`verified.${user}`, id);
+
+        if (!client.users.cache.get(id).dmChannel) await client.users.cache.get(id).createDM();
+
+        return client.users.cache.get(id).send('You are successfully verified!').catch(() => null);
+    };
 });
 
 app.listen(3200, () => console.log('Listening on port 3200'));
