@@ -24,6 +24,8 @@ const client = new Client({
 const db = new QuickDB();
 const app = express();
 
+app.use(express.json());
+
 client.commands = new Collection();
 
 const commandFiles = readdirSync('src/commands').filter(file => file.endsWith('.js'));
@@ -746,8 +748,12 @@ client.on('interactionCreate', async interaction => {
         };
     });
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
+app.get('/verify', (req, res) => {
+    let key = req.headers.authorization;
+
+    if (key !== process.env.VERIFY_KEY) return res.status(401).send('Unauthorized');
+
+    console.log(req.body);
 });
 
 app.listen(3200, () => console.log('Listening on port 3200'));
