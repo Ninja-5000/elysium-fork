@@ -90,8 +90,8 @@ module.exports = {
                     }
                 ],
                 fallbacks: ['gpt-4-32k', 'gpt-3.5-turbo', 'gpt-3.5-turbo-16k'],
-                max_tokens: 2000,
-                maxTokens: 2000
+                max_tokens: 1900,
+                maxTokens: 1900
             },
             headers: {
                 'Content-Type': 'application/json',
@@ -113,8 +113,8 @@ module.exports = {
                     }
                 ],
                 fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b'],
-                max_tokens: 2000,
-                maxTokens: 2000
+                max_tokens: 1900,
+                maxTokens: 1900
             },
             headers: {
                 'Content-Type': 'application/json',
@@ -135,8 +135,8 @@ module.exports = {
                         content: question
                     }
                 ],
-                max_tokens: 2000,
-                maxTokens: 2000,
+                max_tokens: 1900,
+                maxTokens: 1900,
                 fallbacks: ['pur-001', 'pur-rp']
             },
             headers: {

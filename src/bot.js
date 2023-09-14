@@ -275,7 +275,7 @@ client.on('interactionCreate', async interaction => {
                 body: {
                     model: 'gpt-3.5-turbo-0613',
                     messages: messages.slice(-5),
-                    max_tokens: 2000,
+                    max_tokens: 1900,
                     functions: [
                         {
                             name: 'fetch_channels',
@@ -388,7 +388,7 @@ client.on('interactionCreate', async interaction => {
                         body: {
                             model: 'gpt-3.5-turbo-0613',
                             messages: messages.slice(-5),
-                            max_tokens: 2000,
+                            max_tokens: 1900,
                             functions: [
                                 {
                                     name: 'fetch_channels',
@@ -454,8 +454,8 @@ client.on('interactionCreate', async interaction => {
                             model: 'gpt-4-0613',
                             messages,
                             fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613', 'gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
-                            max_tokens: 2000,
-                            maxTokens: 2000,
+                            max_tokens: 1900,
+                            maxTokens: 1900,
                             functions: [
                                 {
                                     name: 'fetch_channels',
@@ -524,8 +524,8 @@ client.on('interactionCreate', async interaction => {
                     model: 'gpt-4-0613',
                     messages,
                     fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613', 'gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
-                    max_tokens: 2000,
-                    maxTokens: 2000,
+                    max_tokens: 1900,
+                    maxTokens: 1900,
                     functions: [
                         {
                             name: 'fetch_channels',
@@ -634,8 +634,8 @@ client.on('interactionCreate', async interaction => {
                             model: 'gpt-4-0613',
                             messages,
                             fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613', 'gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
-                            max_tokens: 2000,
-                            maxTokens: 2000,
+                            max_tokens: 1900,
+                            maxTokens: 1900,
                             functions: [
                                 {
                                     name: 'fetch_channels',
@@ -704,8 +704,8 @@ client.on('interactionCreate', async interaction => {
                     model: 'llama-2-70b-chat',
                     messages,
                     fallbacks: ['llama-2-13b-chat', 'llama-2-7b-chat', 'llama-80b'],
-                    max_tokens: 2000,
-                    maxTokens: 2000
+                    max_tokens: 1900,
+                    maxTokens: 1900
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -721,8 +721,8 @@ client.on('interactionCreate', async interaction => {
                 body: {
                     model: 'vicuna-7b-v1.5-16k',
                     messages,
-                    max_tokens: 2000,
-                    maxTokens: 2000,
+                    max_tokens: 1900,
+                    maxTokens: 1900,
                     fallbacks: ['pur-001', 'pur-rp']
                 },
                 headers: {
