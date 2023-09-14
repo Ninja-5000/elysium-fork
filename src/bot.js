@@ -774,7 +774,7 @@ app.get('/verify', async (req, res) => {
     if (await db.has(`verified.${user}`)) {
         if (!client.users.cache.get(id).dmChannel) await client.users.cache.get(id).createDM();
 
-        return client.users.cache.get(id).send('You are blocked because you are using multiple accounts.').catch(() => null);
+        return client.users.cache.get(id).send('Your verification denied because you are probably using multiple accounts.').catch(() => null);
     } else {
         await db.set(`verified.${user}`, id);
         await db.set(`users.${id}.verified`, user);
