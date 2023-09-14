@@ -753,7 +753,7 @@ app.post('/verify', (req, res) => {
 
     if (key !== process.env.VERIFY_KEY) return res.status(401).send('Unauthorized');
 
-    console.log(req.body);
+    console.log(req);
 });
 
 app.listen(3200, () => console.log('Listening on port 3200'));
