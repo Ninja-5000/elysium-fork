@@ -185,12 +185,12 @@ client.on('interactionCreate', async interaction => {
                 content: localize(locale, 'NOT_VERIFIED'),
                 components: [
                     new ActionRowBuilder()
-                    .setComponents(
-                        new ButtonBuilder()
-                        .setLabel(localize(locale, 'VERIFY_NOW'))
-                        .setStyle(ButtonStyle.Link)
-                        .setURL('https://discord.com/api/oauth2/authorize?client_id=786480896928645131&redirect_uri=https%3A%2F%2Felysium-verify.glitch.me%2F&response_type=code&scope=identify')
-                    )
+                        .setComponents(
+                            new ButtonBuilder()
+                                .setLabel(localize(locale, 'VERIFY_NOW'))
+                                .setStyle(ButtonStyle.Link)
+                                .setURL('https://discord.com/api/oauth2/authorize?client_id=786480896928645131&redirect_uri=https%3A%2F%2Felysium-verify.glitch.me%2F&response_type=code&scope=identify')
+                        )
                 ]
             });
 
@@ -774,7 +774,18 @@ app.get('/verify', async (req, res) => {
     if (await db.has(`verified.${user}`)) {
         if (!client.users.cache.get(id).dmChannel) await client.users.cache.get(id).createDM();
 
-        return client.users.cache.get(id).send('Your verification denied because you are probably using multiple accounts.').catch(() => null);
+        return client.users.cache.get(id).send({
+            content: 'Your verification denied because you are probably using multiple accounts. If you think this is a mistake, please join our Discord server.',
+            components: [
+                new ActionRowBuilder()
+                    .setComponents(
+                        new ButtonBuilder()
+                            .setLabel('Join Discord Server')
+                            .setStyle(ButtonStyle.Link)
+                            .setURL('https://discord.gg/experiments')
+                    )
+            ]
+        }).catch(() => null);
     } else {
         await db.set(`verified.${user}`, id);
         await db.set(`users.${id}.verified`, user);
