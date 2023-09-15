@@ -6,6 +6,9 @@ const db = new QuickDB();
 
 (async () => {
     let data = readFileSync('trainMessages.json', 'utf-8');
+
+    data = JSON.parse(data);
+
     let model = new recurrent.LSTM();
 
     console.log('Training started...');
