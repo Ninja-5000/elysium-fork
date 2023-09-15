@@ -822,7 +822,7 @@ async function runAtMidnight() {
 
     let data = await db.get('trainMessages');
 
-    writeFileSync('./trainMessages.json', JSON.stringify((data ?? []).filter(message => message.length > 0), null, 4));
+    writeFileSync('./trainMessages.json', JSON.stringify((data ?? []).filter(message => message.length > 0), null, 4), 'utf-8');
     execSync('git add . && git commit -m "Save train messages" && git push');
 
     console.log('Saved train messages');

@@ -1,10 +1,11 @@
 const { recurrent } = require("brain.js");
 const { QuickDB } = require("quick.db");
+const { readFileSync } = require("node:fs");
 
 const db = new QuickDB();
 
 (async () => {
-    let data = await db.get('trainMessages');
+    let data = readFileSync('trainMessages.json', 'utf-8');
     let model = new recurrent.LSTM();
 
     console.log('Training started...');
