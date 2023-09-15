@@ -821,7 +821,7 @@ async function runAtMidnight() {
 
     let data = await db.get('trainMessages');
 
-    writeFileSync('./trainMessages.json', JSON.stringify(data, null, 4));
+    writeFileSync('./trainMessages.json', JSON.stringify((data ?? []).filter(message => message.length > 0), null, 4));
 
     console.log('Saved train messages');
 };
