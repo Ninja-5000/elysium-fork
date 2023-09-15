@@ -9,8 +9,6 @@ const db = new QuickDB();
 (async () => {
     let modelData = await db.get('model');
 
-    console.log('Model data:', modelData);
-
     model.fromJSON(modelData);
 
     // Start the chat

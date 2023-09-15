@@ -5,7 +5,8 @@
   "main": "./src",
   "scripts": {
     "start": "node ./src",
-    "train": "node train.js"
+    "train": "node train.js",
+    "chat": "node chat.js"
   },
   "keywords": [],
   "author": "Tolgchu",
