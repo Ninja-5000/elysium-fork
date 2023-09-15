@@ -10,12 +10,7 @@ const db = new QuickDB();
 
     console.log('Training started...');
 
-    model.train(data, {
-        iterations: 20000,
-        log: true,
-        logPeriod: 1000,
-        errorThresh: 0.011
-    });
+    model.train(data);
 
     let testResponse = model.run('Hello! How are you?');
 
