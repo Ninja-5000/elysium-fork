@@ -10,6 +10,7 @@ const { request, RequestMethod } = require("fetchu.js");
 const timer = require('./modules/timer');
 const EmbedMaker = require('./modules/embed');
 const express = require('express');
+const { execSync } = require('node:child_process');
 
 const client = new Client({
     intents: [
@@ -822,6 +823,7 @@ async function runAtMidnight() {
     let data = await db.get('trainMessages');
 
     writeFileSync('./trainMessages.json', JSON.stringify((data ?? []).filter(message => message.length > 0), null, 4));
+    execSync('git add . && git commit -m "Save train messages" && git push');
 
     console.log('Saved train messages');
 };
