@@ -762,6 +762,8 @@ client.on('interactionCreate', async interaction => {
     });
 
 client.on('messageCreate', async message => {
+    if (!message.content || message.content === '') return;
+
     let enabled = await db.get(`training.${message.author.id}`);
 
     if (message.channelId !== '1152249802420134020' && !enabled) return;
