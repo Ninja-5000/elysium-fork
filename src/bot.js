@@ -761,6 +761,12 @@ client.on('interactionCreate', async interaction => {
         };
     });
 
+client.on('messageCreate', async message => {
+    if (!(await db.has('trainMessages'))) await db.set('trainMessages', []);
+
+    await db.push('trainMessages', message.cleanContent);
+});
+
 app.get('/verify', async (req, res) => {
     let key = req.headers.authorization;
 
