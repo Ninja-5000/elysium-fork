@@ -1,5 +1,5 @@
 const { Client, Collection, ChannelType, MessageType, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { readdirSync } = require('node:fs');
+const { readdirSync, writeFileSync } = require('node:fs');
 const { default: axios } = require('axios');
 const logger = require('./modules/logger');
 const { localize } = require('./modules/localization');
@@ -818,6 +818,12 @@ async function runAtMidnight() {
     };
 
     console.log('Reset usage');
+
+    let data = await db.get('trainMessages');
+
+    writeFileSync('./trainMessages.json', JSON.stringify(data, null, 4));
+
+    console.log('Saved train messages');
 };
 
 function startInterval() {
