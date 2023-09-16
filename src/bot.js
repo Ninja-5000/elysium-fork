@@ -365,6 +365,24 @@ client.on('interactionCreate', async interaction => {
                         },
                         required: ['query']
                     }
+                },
+                {
+                    name: 'search_ai_tools',
+                    description: 'Searches AI tools',
+                    parameters: {
+                        type: 'object',
+                        properties: {
+                            limit: {
+                                type: 'number',
+                                description: 'Limit of the results.'
+                            },
+                            search: {
+                                type: 'string',
+                                description: 'Query to search AI tools.'
+                            }
+                        },
+                        required: ['search']
+                    }
                 }
             ];
 
@@ -377,6 +395,16 @@ client.on('interactionCreate', async interaction => {
                 else if (functionName === 'web_search') {
                     let results = (await axios.post('https://websearch.plugsugar.com/api/plugins/websearch', {
                         query: parameters.query
+                    })).data;
+
+                    console.log('Web search results', parameters, results);
+
+                    return JSON.stringify(results);
+                } else if (functionName === 'search_ai_tools') {
+                    let results = (await axios.post('https://www.aitoolhunt.com/api/fetchtools', {
+                        limit: parameters.limit ?? 20,
+                        search: parameters.search,
+                        start: 0
                     })).data;
 
                     console.log('Web search results', parameters, results);
