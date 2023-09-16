@@ -655,7 +655,7 @@ client.on('interactionCreate', async interaction => {
                 method: RequestMethod.Post,
                 body: {
                     model: model === 'purgpt' ? 'pur-rp' : 'vicuna-7b-v1.5-16k',
-                    messages,
+                    messages: messages.slice(-5),
                     max_tokens: 1900,
                     maxTokens: 1900,
                     fallbacks: ['vicuna-7b-v1.5-16k', 'pur-001', 'pur-rp']
