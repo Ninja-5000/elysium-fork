@@ -410,6 +410,24 @@ client.on('interactionCreate', async interaction => {
                     console.log('Web search results', parameters, results);
 
                     return JSON.stringify(results);
+                } else if (functionName === 'draw_image') {
+                    let result = await request({
+                        url: 'https://beta.purgpt.xyz/stabilityai/images/generations',
+                        method: RequestMethod.Post,
+                        body: {
+                            model: 'sdxl',
+                            prompt: parameters.prompt,
+                            n: parameters.count
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
+                        }
+                    });
+
+                    console.log('Web search results', parameters, results);
+
+                    return result.ok ? 'Function call failed.' : JSON.stringify(result.body.data);
                 };
             };
 
