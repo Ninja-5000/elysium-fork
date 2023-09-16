@@ -383,6 +383,24 @@ client.on('interactionCreate', async interaction => {
                         },
                         required: ['search']
                     }
+                },
+                {
+                    name: 'draw_image',
+                    description: 'Draws an image',
+                    parameters: {
+                        type: 'object',
+                        properties: {
+                            prompt: {
+                                type: 'string',
+                                description: 'The prompt you want to draw.'
+                            },
+                            count: {
+                                type: 'number',
+                                description: 'The number of images you want to draw.'
+                            }
+                        },
+                        required: ['prompt']
+                    }
                 }
             ];
 
@@ -417,7 +435,7 @@ client.on('interactionCreate', async interaction => {
                         body: {
                             model: 'sdxl',
                             prompt: parameters.prompt,
-                            n: parameters.count
+                            n: parameters.count ?? 1
                         },
                         headers: {
                             'Content-Type': 'application/json',
