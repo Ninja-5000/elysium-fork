@@ -61,9 +61,9 @@ client.on('ready', async () => {
     app.use(IpFilter(deniedIps));
     app.listen(3200, () => console.log('Listening on port 3200'));
 
+    /*
     let users = await db.get('users') ?? {};
 
-    /*
     await db.delete('verified');
 
     for (let user of Object.keys(users)) {
