@@ -16,7 +16,6 @@
     "@tolga1452/toolbox.js": "^1.1.0",
     "axios": "^1.4.0",
     "better-sqlite3": "^8.6.0",
-    "brain.js": "^2.0.0-beta.23",
     "chalk": "^4.1.2",
     "discord.js": "^14.12.1",
     "dotenv": "^16.3.1",
