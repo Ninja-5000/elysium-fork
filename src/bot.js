@@ -377,7 +377,7 @@ client.on('interactionCreate', async interaction => {
                 else if (functionName === 'web_search') {
                     let results = (await axios.post('https://websearch.plugsugar.com/api/plugins/websearch', {
                         query: parameters.query
-                    })).body;
+                    })).data;
 
                     console.log('Web search results', parameters, results);
 
