@@ -374,13 +374,19 @@ client.on('interactionCreate', async interaction => {
                     else if (functionName === 'search_members') return JSON.stringify(message.guild.members.cache.filter(member => member.displayName.toLowerCase().includes(parameters.name.toLowerCase())).toJSON().map(member => `@${member.displayName} (<@${member.id}>)`));
                     else if (functionName === 'fetch_emojis') return JSON.stringify(message.guild.emojis.cache.toJSON().map(emoji => `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`));
                     else if (functionName === 'fetch_pins') return JSON.stringify((await message.channel.messages.fetchPinned()).toJSON().map(message => `@${message.author.username} (<@${message.author.id}>)\n${message.cleanContent}`));
-                    else if (functionName === 'web_search') return JSON.stringify((await request({
-                        url: 'https://websearch.plugsugar.com/api/plugins/websearch',
-                        method: RequestMethod.Post,
-                        body: {
-                            query: parameters.query
-                        }
-                    })).body);
+                    else if (functionName === 'web_search') {
+                        let results = (await request({
+                            url: 'https://websearch.plugsugar.com/api/plugins/websearch',
+                            method: RequestMethod.Post,
+                            body: {
+                                query: parameters.query
+                            }
+                        })).body;
+
+                        console.log('Web search results', parameters, results);
+
+                        return JSON.stringify(results);
+                    };
             };
 
             response = await request({
