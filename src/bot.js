@@ -665,7 +665,7 @@ client.on('interactionCreate', async interaction => {
                     Authorization: `Bearer ${process.env.PURGPT_API_KEY}`
                 }
             }, {
-                isNotOk: response => console.log(JSON.stringify(response.body, null, 4))
+                isNotOk: response => console.log(response)
             });
 
             if (response.ok) return respond();
