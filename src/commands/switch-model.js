@@ -44,4 +44,4 @@ module.exports = {
         
         await interaction.editReply(localize(interaction.locale, 'SWITCH_MODEL_SUCCESS'));
     }
-};z
+};
