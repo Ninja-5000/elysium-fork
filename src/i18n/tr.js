@@ -37,5 +37,6 @@ module.exports = {
     BUY_ON_SERVER: 'Discord Sunucusu üzerinden satın al (1 ay için 2.99$)',
     BUY_NOW: 'Şimdi satın al!',
     NOT_VERIFIED: 'Hop, dur bakalım! Sanırım buralarda yenisin, değil mi? Lütfen önce hesabını doğrula.',
-    VERIFY_NOW: 'Şimdi Doğrula'
+    VERIFY_NOW: 'Şimdi Doğrula',
+    SWITCH_MODEL_SUCCESS: 'Model başarıyla değiştirildi!',
 };

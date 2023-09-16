@@ -37,5 +37,6 @@ module.exports = {
     BUY_ON_SERVER: 'Buy on Discord Server (2.99$ for 1 month)',
     BUY_NOW: 'Buy now!',
     NOT_VERIFIED: 'Hold on! I guess you are new here, right? Please verify your account first.',
-    VERIFY_NOW: 'Verify Now'
+    VERIFY_NOW: 'Verify Now',
+    SWITCH_MODEL_SUCCESS: 'Model switched successfully!',
 };

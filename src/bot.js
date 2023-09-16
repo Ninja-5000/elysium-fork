@@ -183,8 +183,10 @@ client.on('interactionCreate', async interaction => {
 
             let user = await db.get(`users.${message.author.id}`) ?? {
                 usage: 0,
-                premium: false
+                premium: false,
+                model: 'openai'
             };
+            let model = user.model ?? 'openai';
             let guild = await db.get(`guilds.${message.guild.id}`);
             let locale = message.locale;
 
@@ -443,7 +445,7 @@ client.on('interactionCreate', async interaction => {
                 };
             };
 
-            response = await request({
+            if (['openai', 'auto'].includes(model)) response = await request({
                 url: 'https://api.openai.com/v1/chat/completions',
                 method: RequestMethod.Post,
                 body: {
@@ -546,7 +548,7 @@ client.on('interactionCreate', async interaction => {
                 return respond();
             };
 
-            response = await request({
+            if (['openai', 'auto'].includes(model)) response = await request({
                 url: 'https://beta.purgpt.xyz/openai/chat/completions',
                 method: RequestMethod.Post,
                 body: {
@@ -631,7 +633,7 @@ client.on('interactionCreate', async interaction => {
                 return respond();
             };
 
-            response = await request({
+            if (['llama', 'auto'].includes(model)) response = await request({
                 url: 'https://beta.purgpt.xyz/hugging-face/chat/completions',
                 method: RequestMethod.Post,
                 body: {
@@ -649,15 +651,15 @@ client.on('interactionCreate', async interaction => {
 
             if (response.ok) return respond();
 
-            response = await request({
+            if (['purgpt', 'auto'].includes(model)) response = await request({
                 url: 'https://beta.purgpt.xyz/purgpt/chat/completions',
                 method: RequestMethod.Post,
                 body: {
-                    model: 'vicuna-7b-v1.5-16k',
+                    model: model === 'purgpt' ? 'pur-rp' : 'vicuna-7b-v1.5-16k',
                     messages,
                     max_tokens: 1900,
                     maxTokens: 1900,
-                    fallbacks: ['pur-001', 'pur-rp']
+                    fallbacks: ['vicuna-7b-v1.5-16k', 'pur-001', 'pur-rp']
                 },
                 headers: {
                     'Content-Type': 'application/json',
