@@ -11,6 +11,7 @@ const timer = require('./modules/timer');
 const EmbedMaker = require('./modules/embed');
 const express = require('express');
 const { execSync } = require('node:child_process');
+const { IpFilter } = require('express-ipfilter');
 
 const client = new Client({
     intents: [
@@ -52,6 +53,22 @@ client.on('ready', async () => {
             'Authorization': `Bot ${process.env.DISCORD_TOKEN}`
         }
     }).then(() => logger('success', 'COMMAND', 'Registered commands')).catch(error => logger('error', 'COMMAND', 'Error while registering commands', `${error.response.status} ${error.response.statusText}\n`, JSON.stringify(error.response.data, null, 4)));
+
+    let deniedIps = request({
+        url: 'https://raw.githubusercontent.com/X4BNet/lists_vpn/main/ipv4.txt',
+        method: RequestMethod.Get
+    });
+
+    deniedIps = deniedIps.body.split('\n');
+
+    app.use(IpFilter(deniedIps));
+    app.listen(3200, () => console.log('Listening on port 3200'));
+
+    let users = await db.get('users') ?? {};
+
+    for (let user of Object.keys(users)) {
+        await db.set(`users.${user}.verified`, false);
+    };
 });
 
 client.on('interactionCreate', async interaction => {
@@ -808,8 +825,6 @@ app.get('/verify', async (req, res) => {
         return client.users.cache.get(id).send('You are successfully verified!').catch(() => null);
     };
 });
-
-app.listen(3200, () => console.log('Listening on port 3200'));
 
 async function runAtMidnight() {
     let users = await db.get('users') ?? {};
