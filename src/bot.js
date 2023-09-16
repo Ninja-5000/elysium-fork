@@ -415,8 +415,6 @@ client.on('interactionCreate', async interaction => {
                         query: parameters.query
                     })).data;
 
-                    console.log('Web search results', parameters, results);
-
                     return JSON.stringify(results);
                 } else if (functionName === 'search_ai_tools') {
                     let results = (await axios.post('https://www.aitoolhunt.com/api/fetchtools', {
@@ -425,11 +423,9 @@ client.on('interactionCreate', async interaction => {
                         start: 0
                     })).data;
 
-                    console.log('Web search results', parameters, results);
-
                     return JSON.stringify(results);
                 } else if (functionName === 'draw_image') {
-                    let result = await request({
+                    let results = await request({
                         url: 'https://beta.purgpt.xyz/stabilityai/images/generations',
                         method: RequestMethod.Post,
                         body: {
@@ -443,9 +439,7 @@ client.on('interactionCreate', async interaction => {
                         }
                     });
 
-                    console.log('Web search results', parameters, results);
-
-                    return result.ok ? 'Function call failed.' : JSON.stringify(result.body.data);
+                    return results.ok ? 'Function call failed.' : JSON.stringify(results.body.data);
                 };
             };
 
