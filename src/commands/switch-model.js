@@ -42,6 +42,6 @@ module.exports = {
 
         await db.set(`users.${interaction.user.id}.model`, model);
         
-        await interaction.editReply(localize('SWITCH_MODEL_SUCCESS'));
+        await interaction.editReply(localize(interaction.locale, 'SWITCH_MODEL_SUCCESS'));
     }
-};
+};z

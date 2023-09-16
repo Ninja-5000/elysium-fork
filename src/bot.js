@@ -264,7 +264,7 @@ client.on('interactionCreate', async interaction => {
                 console.log(`${message.author.username} (${message.author.id}) used the bot. Usage: ${user.usage}`);
             };
 
-            let response;
+            let response = {};
             let oldMessages = messages;
 
             messages = [];
@@ -504,7 +504,6 @@ client.on('interactionCreate', async interaction => {
                         response: functionResponse
                     });
 
-                    // wait 1 second to prevent rate limit
                     await new Promise(resolve => setTimeout(resolve, 1000));
 
                     response = await request({
