@@ -59,6 +59,8 @@ client.on('ready', async () => {
         method: RequestMethod.Get
     });
 
+    console.log(deniedIps)
+
     deniedIps = deniedIps.body.split('\n');
 
     app.use(IpFilter(deniedIps));
