@@ -439,7 +439,7 @@ client.on('interactionCreate', async interaction => {
                         }
                     });
 
-                    return results.ok ? 'Function call failed.' : JSON.stringify(results.body.data);
+                    return results.ok ? JSON.stringify(results.body.data) : 'Function call failed.';
                 };
             };
 
