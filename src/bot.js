@@ -54,14 +54,9 @@ client.on('ready', async () => {
         }
     }).then(() => logger('success', 'COMMAND', 'Registered commands')).catch(error => logger('error', 'COMMAND', 'Error while registering commands', `${error.response.status} ${error.response.statusText}\n`, JSON.stringify(error.response.data, null, 4)));
 
-    let deniedIps = await request({
-        url: 'https://raw.githubusercontent.com/X4BNet/lists_vpn/main/ipv4.txt',
-        method: RequestMethod.Get
-    });
+    let deniedIps = await axios.get('https://raw.githubusercontent.com/X4BNet/lists_vpn/main/ipv4.txt');
 
-    console.log(deniedIps)
-
-    deniedIps = deniedIps.body.split('\n');
+    deniedIps = deniedIps.data.split('\n');
 
     app.use(IpFilter(deniedIps));
     app.listen(3200, () => console.log('Listening on port 3200'));
