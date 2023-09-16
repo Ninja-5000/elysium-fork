@@ -54,7 +54,7 @@ client.on('ready', async () => {
         }
     }).then(() => logger('success', 'COMMAND', 'Registered commands')).catch(error => logger('error', 'COMMAND', 'Error while registering commands', `${error.response.status} ${error.response.statusText}\n`, JSON.stringify(error.response.data, null, 4)));
 
-    let deniedIps = request({
+    let deniedIps = await request({
         url: 'https://raw.githubusercontent.com/X4BNet/lists_vpn/main/ipv4.txt',
         method: RequestMethod.Get
     });
