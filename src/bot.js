@@ -303,6 +303,84 @@ client.on('interactionCreate', async interaction => {
             // log last 5 messages
             console.log(messages.slice(-5));
 
+            let requestFunctions = [
+                {
+                    name: 'fetch_channels',
+                    description: 'Fetches all channels in the server.',
+                    parameters: {
+                        type: 'object',
+                        properties: {}
+                    }
+                },
+                {
+                    name: 'fetch_roles',
+                    description: 'Fetches all roles in the server.',
+                    parameters: {
+                        type: 'object',
+                        properties: {}
+                    }
+                },
+                {
+                    name: 'fetch_emojis',
+                    description: 'Fetches all emojis in the server.',
+                    parameters: {
+                        type: 'object',
+                        properties: {}
+                    }
+                },
+                {
+                    name: 'fetch_pins',
+                    description: 'Fetches all pins in the server.',
+                    parameters: {
+                        type: 'object',
+                        properties: {}
+                    }
+                },
+                {
+                    name: 'search_members',
+                    description: 'Searches members in the server.',
+                    parameters: {
+                        type: 'object',
+                        properties: {
+                            name: {
+                                type: 'string',
+                                description: 'Name of the member to search.'
+                            }
+                        },
+                        required: ['name']
+                    }
+                },
+                {
+                    name: 'web_search',
+                    description: 'Search Google and return top 10 results',
+                    parameters: {
+                        type: 'object',
+                        properties: {
+                            query: {
+                                type: 'string',
+                                description: 'Query to search on Google.'
+                            }
+                        },
+                        required: ['query']
+                    }
+                }
+            ];
+
+            async function useFunction(functionName, parameters) {
+                if (functionName === 'fetch_channels') return JSON.stringify((await message.guild.channels.fetch()).filter(channel => channel && channel.type !== ChannelType.GuildCategory).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
+                    else if (functionName === 'fetch_roles') return JSON.stringify((await message.guild.roles.fetch()).toJSON().map(role => `@${role.name}`));
+                    else if (functionName === 'search_members') return JSON.stringify(message.guild.members.cache.filter(member => member.displayName.toLowerCase().includes(parameters.name.toLowerCase())).toJSON().map(member => `@${member.displayName} (<@${member.id}>)`));
+                    else if (functionName === 'fetch_emojis') return JSON.stringify(message.guild.emojis.cache.toJSON().map(emoji => `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`));
+                    else if (functionName === 'fetch_pins') return JSON.stringify((await message.channel.messages.fetchPinned()).toJSON().map(message => `@${message.author.username} (<@${message.author.id}>)\n${message.cleanContent}`));
+                    else if (functionName === 'web_search') return JSON.stringify((await request({
+                        url: 'https://websearch.plugsugar.com/api/plugins/websearch',
+                        method: RequestMethod.Post,
+                        body: {
+                            query: parameters.query
+                        }
+                    })).body);
+            };
+
             response = await request({
                 url: 'https://api.openai.com/v1/chat/completions',
                 method: RequestMethod.Post,
@@ -310,54 +388,7 @@ client.on('interactionCreate', async interaction => {
                     model: 'gpt-3.5-turbo-0613',
                     messages: messages.slice(-5),
                     max_tokens: 1900,
-                    functions: [
-                        {
-                            name: 'fetch_channels',
-                            description: 'Fetches all channels in the server.',
-                            parameters: {
-                                type: 'object',
-                                properties: {}
-                            }
-                        },
-                        {
-                            name: 'fetch_roles',
-                            description: 'Fetches all roles in the server.',
-                            parameters: {
-                                type: 'object',
-                                properties: {}
-                            }
-                        },
-                        {
-                            name: 'fetch_emojis',
-                            description: 'Fetches all emojis in the server.',
-                            parameters: {
-                                type: 'object',
-                                properties: {}
-                            }
-                        },
-                        {
-                            name: 'fetch_pins',
-                            description: 'Fetches all pins in the server.',
-                            parameters: {
-                                type: 'object',
-                                properties: {}
-                            }
-                        },
-                        {
-                            name: 'search_members',
-                            description: 'Searches members in the server.',
-                            parameters: {
-                                type: 'object',
-                                properties: {
-                                    name: {
-                                        type: 'string',
-                                        description: 'Name of the member to search.'
-                                    }
-                                },
-                                required: ['name']
-                            }
-                        },
-                    ]
+                    functions: requestFunctions
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -390,11 +421,7 @@ client.on('interactionCreate', async interaction => {
 
                     console.log('Function call detected', usedFunction, parameters);
 
-                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).filter(channel => channel && channel.type !== ChannelType.GuildCategory).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
-                    else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON().map(role => `@${role.name}`));
-                    else if (usedFunction.name === 'search_members') functionResponse = JSON.stringify(message.guild.members.cache.filter(member => member.displayName.toLowerCase().includes(parameters.name.toLowerCase())).toJSON().map(member => `@${member.displayName} (<@${member.id}>)`));
-                    else if (usedFunction.name === 'fetch_emojis') functionResponse = JSON.stringify(message.guild.emojis.cache.toJSON().map(emoji => `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`));
-                    else if (usedFunction.name === 'fetch_pins') functionResponse = JSON.stringify((await message.channel.messages.fetchPinned()).toJSON().map(message => `@${message.author.username} (<@${message.author.id}>)\n${message.cleanContent}`));
+                    functionResponse = await useFunction(usedFunction.name, parameters);
 
                     console.log('Function response', functionResponse);
 
@@ -423,54 +450,7 @@ client.on('interactionCreate', async interaction => {
                             model: 'gpt-3.5-turbo-0613',
                             messages: messages.slice(-5),
                             max_tokens: 1900,
-                            functions: [
-                                {
-                                    name: 'fetch_channels',
-                                    description: 'Fetches all channels in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {}
-                                    }
-                                },
-                                {
-                                    name: 'fetch_roles',
-                                    description: 'Fetches all roles in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {}
-                                    }
-                                },
-                                {
-                                    name: 'fetch_emojis',
-                                    description: 'Fetches all emojis in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {}
-                                    }
-                                },
-                                {
-                                    name: 'fetch_pins',
-                                    description: 'Fetches all pins in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {}
-                                    }
-                                },
-                                {
-                                    name: 'search_members',
-                                    description: 'Searches members in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {
-                                            name: {
-                                                type: 'string',
-                                                description: 'Name of the member to search.'
-                                            }
-                                        },
-                                        required: ['name']
-                                    }
-                                },
-                            ]
+                            functions: requestFunctions
                         },
                         headers: {
                             'Content-Type': 'application/json',
@@ -490,54 +470,7 @@ client.on('interactionCreate', async interaction => {
                             fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613', 'gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
                             max_tokens: 1900,
                             maxTokens: 1900,
-                            functions: [
-                                {
-                                    name: 'fetch_channels',
-                                    description: 'Fetches all channels in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {}
-                                    }
-                                },
-                                {
-                                    name: 'fetch_roles',
-                                    description: 'Fetches all roles in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {}
-                                    }
-                                },
-                                {
-                                    name: 'fetch_emojis',
-                                    description: 'Fetches all emojis in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {}
-                                    }
-                                },
-                                {
-                                    name: 'fetch_pins',
-                                    description: 'Fetches all pins in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {}
-                                    }
-                                },
-                                {
-                                    name: 'search_members',
-                                    description: 'Searches members in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {
-                                            name: {
-                                                type: 'string',
-                                                description: 'Name of the member to search.'
-                                            }
-                                        },
-                                        required: ['name']
-                                    }
-                                },
-                            ]
+                            functions: requestFunctions
                         },
                         headers: {
                             'Content-Type': 'application/json',
@@ -560,54 +493,7 @@ client.on('interactionCreate', async interaction => {
                     fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613', 'gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
                     max_tokens: 1900,
                     maxTokens: 1900,
-                    functions: [
-                        {
-                            name: 'fetch_channels',
-                            description: 'Fetches all channels in the server.',
-                            parameters: {
-                                type: 'object',
-                                properties: {}
-                            }
-                        },
-                        {
-                            name: 'fetch_roles',
-                            description: 'Fetches all roles in the server.',
-                            parameters: {
-                                type: 'object',
-                                properties: {}
-                            }
-                        },
-                        {
-                            name: 'fetch_emojis',
-                            description: 'Fetches all emojis in the server.',
-                            parameters: {
-                                type: 'object',
-                                properties: {}
-                            }
-                        },
-                        {
-                            name: 'fetch_pins',
-                            description: 'Fetches all pins in the server.',
-                            parameters: {
-                                type: 'object',
-                                properties: {}
-                            }
-                        },
-                        {
-                            name: 'search_members',
-                            description: 'Searches members in the server.',
-                            parameters: {
-                                type: 'object',
-                                properties: {
-                                    name: {
-                                        type: 'string',
-                                        description: 'Name of the member to search.'
-                                    }
-                                },
-                                required: ['name']
-                            }
-                        },
-                    ]
+                    functions: requestFunctions
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -634,14 +520,13 @@ client.on('interactionCreate', async interaction => {
 
                     let usedFunction = response.body.choices[0].message?.function_call;
                     let functionResponse;
+                    let parameters = {};
 
                     console.log('Function call detected', usedFunction);
 
-                    if (usedFunction.name === 'fetch_channels') functionResponse = JSON.stringify((await message.guild.channels.fetch()).filter(channel => channel && channel.type !== ChannelType.GuildCategory).toJSON().map(channel => `#${channel.name} (<#${channel.id}>)`));
-                    else if (usedFunction.name === 'fetch_roles') functionResponse = JSON.stringify((await message.guild.roles.fetch()).toJSON().map(role => `@${role.name}`));
-                    else if (usedFunction.name === 'search_members') functionResponse = JSON.stringify(message.guild.members.cache.filter(member => member.displayName.toLowerCase().includes(parameters.name.toLowerCase())).toJSON().map(member => `@${member.displayName} (<@${member.id}>)`));
-                    else if (usedFunction.name === 'fetch_emojis') functionResponse = JSON.stringify(message.guild.emojis.cache.toJSON().map(emoji => `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`));
-                    else if (usedFunction.name === 'fetch_pins') functionResponse = JSON.stringify((await message.channel.messages.fetchPinned()).toJSON().map(message => `@${message.author.username} (<@${message.author.id}>)\n${message.cleanContent}`));
+                    if (usedFunction.arguments) parameters = JSON.parse(usedFunction.arguments);
+
+                    functionResponse = await useFunction(usedFunction.name, parameters);
 
                     messages.push({
                         role: 'function',
@@ -670,54 +555,7 @@ client.on('interactionCreate', async interaction => {
                             fallbacks: ['gpt-3.5-turbo-16k-0613', 'gpt-3.5-turbo-0613', 'gpt-4', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo'],
                             max_tokens: 1900,
                             maxTokens: 1900,
-                            functions: [
-                                {
-                                    name: 'fetch_channels',
-                                    description: 'Fetches all channels in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {}
-                                    }
-                                },
-                                {
-                                    name: 'fetch_roles',
-                                    description: 'Fetches all roles in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {}
-                                    }
-                                },
-                                {
-                                    name: 'fetch_emojis',
-                                    description: 'Fetches all emojis in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {}
-                                    }
-                                },
-                                {
-                                    name: 'fetch_pins',
-                                    description: 'Fetches all pins in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {}
-                                    }
-                                },
-                                {
-                                    name: 'search_members',
-                                    description: 'Searches members in the server.',
-                                    parameters: {
-                                        type: 'object',
-                                        properties: {
-                                            name: {
-                                                type: 'string',
-                                                description: 'Name of the member to search.'
-                                            }
-                                        },
-                                        required: ['name']
-                                    }
-                                },
-                            ]
+                            functions: requestFunctions
                         },
                         headers: {
                             'Content-Type': 'application/json',
