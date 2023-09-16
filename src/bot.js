@@ -63,6 +63,8 @@ client.on('ready', async () => {
 
     let users = await db.get('users') ?? {};
 
+    await db.delete('verified');
+
     for (let user of Object.keys(users)) {
         await db.delete(`users.${user}.verified`);
     };
